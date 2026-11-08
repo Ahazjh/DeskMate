@@ -1,25 +1,27 @@
-[简体中文](README.md) | [繁體中文](README_zh-HK.md) | **English**
-
 <!-- markdownlint-disable -->
+
+[简体中文](README.md) | [繁體中文](README_zh-HK.md) | **English**
 
 <div align="center">
 
-<img src="./src-tauri/icons/icon.png" width="120" alt="DeskMate Icon">
+<img src="./src-tauri/icons/icon.png" width="120" alt="DeskMate icon">
 
 # DeskMate
 
-A lightweight, elegant, and modern sticky note app for your desktop<br>
-Built with Tauri 2 + React
+A local-first desktop app for timetables, schedules and todos<br>
+No account · No cloud · All data stays on your computer<br>
+Built with Tauri 2 + React + Rust
 
-[Report an Issue](https://github.com/Ahazjh/DeskMate/issues) · [Changelog](https://github.com/Ahazjh/DeskMate/releases) <br>
-[Quick Start](#quick-start) · [FAQ](https://github.com/Ahazjh/DeskMate/wiki) · [Building from Source](#building-from-source)
+[Report an issue](https://github.com/Ahazjh/DeskMate/issues) · [Releases](https://github.com/Ahazjh/DeskMate/releases)<br>
+[Download](#download) · [Features](#features) · [Build from source](#build-from-source)
 
 [![Version](https://img.shields.io/github/v/release/Ahazjh/DeskMate)](https://github.com/Ahazjh/DeskMate/releases/latest)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 ![Stars](https://img.shields.io/github/stars/Ahazjh/DeskMate?color=ffcb47&labelColor=black)</br>
 ![React 19](https://img.shields.io/badge/React-19-blue?logo=react)
 ![Tauri v2](https://img.shields.io/badge/Tauri-v2-%2324C8D8?logo=tauri)
-![Rust Edition 2021](https://img.shields.io/badge/Rust-2021-%23000000?logo=rust)<br>
+![Rust Edition 2021](https://img.shields.io/badge/Rust-2021-%23000000?logo=rust)
+
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/Ahazjh/DeskMate)
 
 </div>
@@ -30,75 +32,61 @@ Built with Tauri 2 + React
 
 ## Why DeskMate
 
-Most note-taking or sticky note apps out there are either bloated and steep to learn, or dated and long abandoned. DeskMate was built to be different — quick to summon, light to use, and a pleasure to look at.
+Most note, calendar and todo apps require an account, a long onboarding and a slow startup. DeskMate puts quick notes, timetables, schedules and todos into one local window: summon it instantly, close it, and never depend on a service.
 
 ## Features
 
-- **Markdown Editing & Preview** — Full GitHub Flavored Markdown support with seamless toggling between edit and preview modes
+- **Markdown notes** — GFM, LaTeX, live preview, categories, `.md` import/export
+- **Quick notes & tiles** — global hotkey (`Ctrl+Space` by default), pin notes as desktop tiles
+- **Timetable** — semester weeks, odd/even weeks, rescheduled/cancelled classes, timeline & table views, print/PDF, free-text import
+- **Shared timetable** — import a partner's classes, overlapping slots, five relationship icons, automatic common free slots
+- **Schedule & todos** — time-block events, due-date todos, overdue grouping, smart planning, DDL pressure strip, daily habits & streaks
+- **Desktop widget** — one "Today" window shows schedule and todos stacked, four font sizes, always-on-top, remembered position, auto-restore on startup
+- **Light / dark theme** — circular reveal expanding from the button you clicked; respects reduced-motion
+- **Local reminders** — class/event/todo notifications without network access
 
-  ![Main window screenshot](Docs/images/主窗口截图.png)
+![Main window](Docs/images/主窗口截图.png)
 
-- **Quick Note** — Summon a note window instantly from the system tray or via a global hotkey (default: `Ctrl+Space`)
+![Desktop widget](Docs/images/小窗多开示例.gif)
 
-  ![Multi-window example](Docs/images/小窗多开示例.gif)
+## Download
 
-- **Pin Mode** — Pin a note to a fixed spot on your desktop for quick reference and easy copying
+**Windows x64 only for now** (Windows 10/11 with WebView2 Runtime; usually preinstalled on Win11).
 
-  ![Pin mode example](Docs/images/AI绘画截图.png)
+Get it from [GitHub Releases](https://github.com/Ahazjh/DeskMate/releases/latest):
 
-- **Import & Export** — Import and export notes as `.md` files
+| File | Description |
+| --- | --- |
+| `DeskMate_<version>_x64-setup.exe` | Installer (recommended): Start menu and desktop shortcut |
+| `DeskMate_<version>_x64_portable.exe` | Portable: single exe, run from any folder |
 
-## Use Cases
+> Upgrading from 1.2.0 or earlier migrates notes, schedule and timetable into the new data folders; the old folders are kept as a backup.
 
-- Use it as an always-visible clipboard to stash and copy text on the fly
-- Jot things down while gaming or watching videos
-- Capture a quick thought or burst of inspiration
-- Keep a to-do list right on your desktop
+### Data & privacy
 
-## Quick Start
+- Config: `%APPDATA%\deskmate`
+- Notes, schedule, todos and timetable: `Documents\DeskMate`
+- Everything is local; no upload, no analytics, no account. See [PRIVACY](PRIVACY)
 
-### Download
+### Getting started
 
-#### Via GitHub
+1. Install or run the exe; the tray icon starts automatically and the "Today" widget opens on startup
+2. Switch between Notes / Schedule / Todos in the main window; the timetable lives under Schedule
+3. Use `Aa` in the widget title bar for font size and `Axis / Table` for view mode; drag position is remembered
+4. Toggle light/dark in settings to see the circular theme reveal
 
-Head over to the [Releases page](https://github.com/Ahazjh/DeskMate/releases/latest) to download.
+## Build from source
 
-##### Download Reference
+Requires Node.js, the Rust toolchain and Visual Studio Build Tools. A PowerShell helper is included:
 
-| Platform | Arch                    | Type                    | Filename                                 |
-| -------- | ----------------------- | ----------------------- | ---------------------------------------- |
-| Windows  | x64                     | Installer (Recommended) | deskmate_x.y.z_x64-setup.exe     |
-| Windows  | x64                     | Portable                | deskmate_x.y.z.exe               |
-| Windows  | x64                     | MSIX Package            | deskmate_x.y.z_x64.msix          |
-| Windows  | AArch64                 | Installer (Recommended) | deskmate_x.y.z_aarch64-setup.exe |
-| Windows  | AArch64                 | MSIX Package            | deskmate_x.y.z_aarch64.msix      |
-| macOS    | AArch64 (Apple Silicon) | DMG                     | deskmate_x.y.z_aarch64.dmg       |
-| macOS    | x64 (Intel)             | DMG                     | deskmate_x.y.z_x64.dmg           |
+```powershell
+cd C:\Users\<you>\Desktop\DeskMate
+npm ci
+.\start-deskmate.ps1              # dev mode (hot reload)
+.\start-deskmate.ps1 -Release     # build the Windows installer
+```
 
-#### Via Microsoft Store
-
-Download DeskMate from the [Microsoft Store](https://apps.microsoft.com/detail/9NRCC0ZSG81R)
-
-> Note: MSIX installs (from the Microsoft Store or sideloaded .msix files) do not support in-app updates. Get the latest version from the Microsoft Store or GitHub Releases.
-
-<!-- markdownlint-disable -->
-
-<a href="https://apps.microsoft.com/detail/9NRCC0ZSG81R?referrer=appbadge&mode=full" target="_blank"  rel="noopener noreferrer">
-	<img src="https://get.microsoft.com/images/en-us%20dark.svg" width="200"/>
-</a>
-
-<!-- markdownlint-restore -->
-
-#### macOS Installation Guidance
-
-If you encounter installation issues, please refer to:
-
-- Wiki: [macOS Installation Guidance](https://github.com/Ahazjh/DeskMate/wiki/macOS-%E5%AE%89%E8%A3%85%E6%8C%87%E5%BC%95-%7C-macOS-Installation-Guidance)
-- Or video (Bilibili): [Mac云课堂 - Installing software on Mac means learning to wrestle with Apple](https://www.bilibili.com/video/BV1tg411t7hN)
-
-### Building from Source
-
-Please refer to [CONTRIBUTING.md](CONTRIBUTING.md).
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the full build and release guide.
 
 ## Star History
 
@@ -110,12 +98,8 @@ Please refer to [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Sponsors
 
-<!-- markdownlint-disable -->
-
 | <img src="https://signpath.org/assets/favicon.png" alt="SignPath Logo" width=50> | Free code signing provided by [SignPath.io](https://signpath.io), certificate by [SignPath Foundation](https://signpath.org/) |
-| -------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-
-<!-- markdownlint-restore -->
+| --- | --- |
 
 ## License
 
