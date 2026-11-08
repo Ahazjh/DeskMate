@@ -57,8 +57,9 @@
 
 | 文件 | 说明 |
 | --- | --- |
-| `DeskMate_<版本号>_x64-setup.exe` | 安装版（推荐）：创建开始菜单与桌面快捷方式 |
-| `DeskMate_<版本号>_x64_portable.exe` | 便携版：单个 exe，放到任意目录直接运行 |
+| [DeskMate_1.2.0_x64-setup.exe](https://github.com/Ahazjh/DeskMate/releases/download/v1.2.0/DeskMate_1.2.0_x64-setup.exe) | 安装版（推荐）：创建开始菜单与桌面快捷方式 |
+| [DeskMate_1.2.0_x64_portable.exe](https://github.com/Ahazjh/DeskMate/releases/download/v1.2.0/DeskMate_1.2.0_x64_portable.exe) | 便携版：单个 exe，放到任意目录直接运行 |
+| [SHA256SUMS.txt](https://github.com/Ahazjh/DeskMate/releases/download/v1.2.0/SHA256SUMS.txt) | 校验和 |
 
 > 从 1.2.0 及更早版本升级时，原有笔记、日程与课表会自动迁移到新的数据目录，旧目录保留作为备份。
 

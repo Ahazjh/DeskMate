@@ -57,8 +57,9 @@
 
 | 檔案 | 說明 |
 | --- | --- |
-| `DeskMate_<版本號>_x64-setup.exe` | 安裝版（推薦）：建立開始功能表與桌面捷徑 |
-| `DeskMate_<版本號>_x64_portable.exe` | 攜帶版：單一 exe，放到任意目錄直接執行 |
+| [DeskMate_1.2.0_x64-setup.exe](https://github.com/Ahazjh/DeskMate/releases/download/v1.2.0/DeskMate_1.2.0_x64-setup.exe) | 安裝版（推薦）：建立開始功能表與桌面捷徑 |
+| [DeskMate_1.2.0_x64_portable.exe](https://github.com/Ahazjh/DeskMate/releases/download/v1.2.0/DeskMate_1.2.0_x64_portable.exe) | 攜帶版：單一 exe，放到任意目錄直接執行 |
+| [SHA256SUMS.txt](https://github.com/Ahazjh/DeskMate/releases/download/v1.2.0/SHA256SUMS.txt) | 校驗和 |
 
 > 從 1.2.0 及更早版本升級時，原有筆記、日程與課表會自動遷移到新的資料目錄，舊目錄保留作為備份。
 

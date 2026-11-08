@@ -57,8 +57,9 @@ Get it from [GitHub Releases](https://github.com/Ahazjh/DeskMate/releases/latest
 
 | File | Description |
 | --- | --- |
-| `DeskMate_<version>_x64-setup.exe` | Installer (recommended): Start menu and desktop shortcut |
-| `DeskMate_<version>_x64_portable.exe` | Portable: single exe, run from any folder |
+| [DeskMate_1.2.0_x64-setup.exe](https://github.com/Ahazjh/DeskMate/releases/download/v1.2.0/DeskMate_1.2.0_x64-setup.exe) | Installer (recommended): Start menu and desktop shortcut |
+| [DeskMate_1.2.0_x64_portable.exe](https://github.com/Ahazjh/DeskMate/releases/download/v1.2.0/DeskMate_1.2.0_x64_portable.exe) | Portable: single exe, run from any folder |
+| [SHA256SUMS.txt](https://github.com/Ahazjh/DeskMate/releases/download/v1.2.0/SHA256SUMS.txt) | Checksums |
 
 > Upgrading from 1.2.0 or earlier migrates notes, schedule and timetable into the new data folders; the old folders are kept as a backup.
 
