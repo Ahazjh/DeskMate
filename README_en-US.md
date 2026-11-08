@@ -76,6 +76,10 @@ Get it from [GitHub Releases](https://github.com/Ahazjh/DeskMate/releases/latest
 3. Use `Aa` in the widget title bar for font size and `Axis / Table` for view mode; drag position is remembered
 4. Toggle light/dark in settings to see the circular theme reveal
 
+### Experience checklist
+
+To see everything DeskMate can do, or to prepare feedback, [Docs/EXPERIENCE-CHECKLIST.md](Docs/EXPERIENCE-CHECKLIST.md) is a task-by-task walkthrough organised by real usage path: Markdown notes, quick pads and tiles, schedule and todos, timetable import, dual timetables, reminders and the desktop widget, quick entry and daily review — 8 groups, about 60 items, each with "how to try it" and "what you should see". It takes about 15–20 minutes end to end.
+
 ## Build from source
 
 Requires Node.js, the Rust toolchain and Visual Studio Build Tools. A PowerShell helper is included:

@@ -76,6 +76,10 @@
 3. 点小窗标题栏的 `Aa` 调整字号，`轴 / 表` 切换视图；拖到顺手的位置会自动记住
 4. 在设置里切换浅色 / 深色，即可看到圆形扩散的主题切换效果
 
+### 体验清单
+
+想快速了解 DeskMate 能做什么、或准备给反馈，[Docs/EXPERIENCE-CHECKLIST.md](Docs/EXPERIENCE-CHECKLIST.md) 是一份按使用路径组织的逐项体验清单：Markdown 笔记、快捷便签与磁贴、日程待办、课程表导入、双人课表、提醒与桌面小窗、快速添加与每日回顾，共 8 组约 60 项，每项都写了「怎么试」和「想看到什么」，全程约 15–20 分钟。
+
 ## 从源码构建
 
 需要 Node.js、Rust 工具链与 Visual Studio Build Tools。仓库根目录自带 PowerShell 启动脚本：
