@@ -74,4 +74,5 @@ Docs/windows-install-chain-code-review.md
 ## Local release artifacts (uploaded to GitHub Releases, not committed)
 release/*.exe
 release/*.msi
+!release/
 !release/SHA256SUMS.txt
