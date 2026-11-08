@@ -1,0 +1,761 @@
+{
+  "about": {
+    "closeTitle": "關閉關於",
+    "productName": "DeskMate",
+    "summary": "輕量、優雅的本地課表與日程",
+    "title": "關於",
+    "version": "版本：v{{version}}"
+  },
+  "common": {
+    "back": "返回",
+    "blankNote": "空白筆記",
+    "cancel": "取消",
+    "default": "預設",
+    "delete": "刪除",
+    "externalFileCount": "{{count}} 個外部檔案",
+    "noteCount": "{{count}} 篇筆記",
+    "operationFailed": "操作失敗",
+    "save": "儲存",
+    "untitledNote": "無標題筆記",
+    "untitledFile": "未命名檔案",
+    "wordCount": "{{count}} 字",
+    "wordCountUnit": "字",
+    "close": "關閉",
+    "clear": "清除",
+    "loading": "載入中…",
+    "retry": "重試",
+    "saving": "儲存中…",
+    "edit": "編輯",
+    "done": "完成"
+  },
+  "contextMenu": {
+    "edit": {
+      "copy": "複製",
+      "cut": "剪下",
+      "paste": "貼上",
+      "selectAll": "全選"
+    },
+    "tile": {
+      "close": "取消釘屏",
+      "copy": "複製",
+      "save": "儲存",
+      "switchToPad": "轉為小窗"
+    }
+  },
+  "errors": {
+    "categoryAlreadyExists": "分類「{{category}}」已存在",
+    "categoryNameEmpty": "分類名稱不能為空",
+    "categoryNameInvalidChars": "分類名稱不能包含特殊字元",
+    "categoryNotFound": "分類「{{category}}」不存在",
+    "desktopConfig": "桌面配置更新失敗",
+    "duplicateShortcut": "三個快捷鍵不能重複，請為每個功能設定不同的組合",
+    "imagePasteFailed": "圖片貼上失敗",
+    "imageTooLarge": "圖片檔案過大（上限 20 MB）",
+    "noPool": "便箋視窗池尚未初始化",
+    "noteNotFound": "找不到該筆記",
+    "unsupportedFile": "僅支援匯入 .md 檔案",
+    "unsupportedImageFormat": "不支援的圖片格式",
+    "unsupportedShortcut": "{{field}} 配置無效",
+    "unsupportedShortcutGeneric": "快捷鍵配置無效"
+  },
+  "markdown": {
+    "copied": "已複製",
+    "copy": "複製",
+    "emptyHint": "預覽區會顯示目前筆記內容",
+    "alert": {
+      "note": "備註",
+      "tip": "提示",
+      "important": "重要",
+      "warning": "警告",
+      "caution": "注意"
+    }
+  },
+  "main": {
+    "category": {
+      "confirmDelete": "確認刪除「{{category}}」？",
+      "confirmDeleteAction": "確認刪除",
+      "delete": "刪除分類",
+      "emptyFolder": "空資料夾",
+      "new": "新增分類",
+      "placeholder": "輸入分類名稱…",
+      "rename": "重新命名",
+      "uncategorized": "未分類"
+    },
+    "confirm": {
+      "unsavedExternalFile": "「{{title}}」有未儲存的變更，是否儲存到原檔案？"
+    },
+    "editor": {
+      "confirmDelete": "確認刪除？",
+      "contentPlaceholder": "開始寫作……",
+      "emptyHint": "選擇或新增一篇筆記",
+      "pinToTile": "釘為磁貼",
+      "previewLabel": "預覽",
+      "undo": "還原（Ctrl+Z）",
+      "undoLabel": "還原",
+      "redo": "重做（Ctrl+Y）",
+      "redoLabel": "重做"
+    },
+    "externalFile": {
+      "label": "外部檔案 · {{path}}"
+    },
+    "externalFiles": {
+      "remove": "從清單移除",
+      "title": "外部檔案"
+    },
+    "formatSample": {
+      "boldText": "粗體文字",
+      "codeText": "程式碼",
+      "headingText": "標題",
+      "italicText": "斜體文字",
+      "listItem": "清單項目",
+      "quoteText": "引用文字"
+    },
+    "search": {
+      "empty": "還沒有筆記",
+      "noResults": "沒有符合的筆記"
+    },
+    "sidebar": {
+      "clearSearch": "清除搜尋",
+      "importMarkdown": "匯入 Markdown",
+      "newNote": "新增筆記",
+      "searchPlaceholder": "搜尋筆記…"
+    },
+    "images": {
+      "cleanUnused": "清理未使用圖片",
+      "cleaned": "已清理 {{count}} 張圖片",
+      "cleanedNone": "沒有需要清理的圖片"
+    },
+    "statusBar": {
+      "byteSize": "{{size}} KB",
+      "encoding": "UTF-8",
+      "format": "Markdown + LaTeX",
+      "lineNumber": "第 {{count}} 行",
+      "saveState": {
+        "dirty": "未儲存",
+        "error": "儲存失敗",
+        "idle": "尚未選取",
+        "saved": "已儲存",
+        "saving": "儲存中"
+      }
+    },
+    "toolbar": {
+      "blockMath": "區塊公式",
+      "bold": "粗體",
+      "code": "程式碼",
+      "heading": "標題",
+      "hr": "分隔線",
+      "inlineMath": "行內公式",
+      "italic": "斜體",
+      "ol": "有序清單",
+      "quote": "引用",
+      "ul": "無序清單"
+    },
+    "window": {
+      "close": "關閉",
+      "collapseSidebar": "摺疊側欄",
+      "expandSidebar": "展開側欄",
+      "maximize": "最大化",
+      "minimize": "最小化",
+      "about": "關於",
+      "quickNotepad": "快捷便箋",
+      "restore": "還原視窗",
+      "settings": "設定"
+    },
+    "workspace": {
+      "notes": "筆記",
+      "agenda": "日程待辦"
+    }
+  },
+  "noteMenu": {
+    "delete": "刪除筆記",
+    "export": "匯出 Markdown",
+    "moveToCategory": "移至分類…"
+  },
+  "notepad": {
+    "button": {
+      "clear": "清除"
+    },
+    "emptyState": "還沒有可開啟的筆記",
+    "search": {
+      "clear": "清除搜尋",
+      "noResults": "沒有符合的筆記",
+      "placeholder": "搜尋筆記…"
+    },
+    "error": {
+      "copyUnsupported": "目前環境不支援複製"
+    },
+    "placeholder": {
+      "content": "寫點什麼……",
+      "title": "標題（可選）"
+    },
+    "status": {
+      "copied": "已複製",
+      "empty": "空",
+      "opened": "已開啟",
+      "saveFailed": "儲存失敗",
+      "saved": "已儲存",
+      "unsaved": "未儲存"
+    },
+    "tab": {
+      "edit": "編輯",
+      "new": "新增",
+      "open": "開啟"
+    },
+    "tooltip": {
+      "close": "關閉",
+      "openInEditor": "在編輯器中開啟",
+      "pinToTile": "轉為磁貼"
+    }
+  },
+  "settings": {
+    "autoSave": {
+      "externalFile": "外部檔案自動儲存",
+      "note": "自動儲存筆記",
+      "surface": "小窗筆記自動儲存"
+    },
+    "autostart": "開機自啟",
+    "closeTitle": "關閉設定",
+    "closeToTray": "關閉至系統匣",
+    "defaultView": {
+      "edit": "編輯",
+      "label": "預設檢視",
+      "preview": "預覽",
+      "split": "分欄"
+    },
+    "fontSize": {
+      "editor": "編輯器字級",
+      "surface": "小窗／磁貼字級"
+    },
+    "locale": {
+      "enUS": "English",
+      "label": "語言",
+      "zhCN": "簡體中文",
+      "zhHK": "繁體中文"
+    },
+    "dataDir": "數據目錄",
+    "openAtCursor": "快捷鍵開啟時跟隨滑鼠位置",
+    "quickNoteShortcut": "快捷記錄快捷鍵",
+    "rememberSurfaceSize": "記住小窗尺寸",
+    "tabIndentSize": "Tab 縮排寬度",
+    "selectFolder": "選擇資料夾",
+    "shortcut": {
+      "cancelHint": "Esc 取消",
+      "clear": "清除",
+      "checkFailed": "快捷鍵檢測失敗",
+      "checking": "正在檢測快捷鍵...",
+      "cleared": "快捷鍵已清除",
+      "clickToRecord": "點擊錄製",
+      "conflict": {
+        "current": "快捷鍵 {{shortcut}} 目前正在使用",
+        "invalid": "快捷鍵 {{shortcut}} 不受支援",
+        "none": "快捷鍵 {{shortcut}} 未檢測到衝突",
+        "registered": "快捷鍵 {{shortcut}} 可能已被系統或其他應用程式佔用",
+        "system": "快捷鍵 {{shortcut}} 與系統快捷鍵衝突",
+        "unknown": "檢測完成，但釋放臨時快捷鍵失敗"
+      },
+      "forQuickNote": "用於開啟快捷記錄小窗",
+      "needsModifier": "快捷鍵需要包含 Ctrl、Option/Alt 或 Command/Meta",
+      "notSet": "未設定",
+      "pressHint": "按下快捷鍵；按 Delete 清除。"
+    },
+    "theme": {
+      "dark": "深色",
+      "label": "主題",
+      "light": "淺色",
+      "system": "跟隨系統"
+    },
+    "tileColor": {
+      "custom": "自訂",
+      "followTheme": "跟隨主題",
+      "label": "磁貼顏色"
+    },
+    "tileCtrlClose": "Ctrl+右鍵快速關閉磁貼",
+    "tileRenderMarkdown": "磁貼渲染 Markdown",
+    "tileDoubleClickToEdit": "雙擊磁貼進入編輯",
+    "tileSaveReturnsToPin": "儲存後回到磁貼",
+    "renderHtmlMarkdown": "允許 HTML 標籤渲染",
+    "splitScrollSync": "分欄同步捲動",
+    "title": "應用程式設定",
+    "update": {
+      "advanced": "進階",
+      "allowPrerelease": "允許預發佈版本",
+      "autoCheck": "自動檢查更新",
+      "autoDownload": "有新版本時自動下載",
+      "available": "發現新版本 {{version}}",
+      "busy": "處理中",
+      "cancel": "取消下載",
+      "cancelRequested": "已要求取消下載",
+      "cancelled": "下載已取消",
+      "channel": {
+        "beta": "beta",
+        "stable": "stable"
+      },
+      "check": "檢查更新",
+      "checking": "正在檢查...",
+      "confirmClearCdk": "確認清除 Mirror 醬 CDK？",
+      "currentVersion": "目前版本：{{version}}",
+      "error": {
+        "alreadyRunning": "已有更新任務正在執行",
+        "cancelUnavailable": "目前沒有可取消的更新任務",
+        "checkTaskJoinFailed": "檢查更新任務執行失敗",
+        "downloadHashMismatch": "下載檔案雜湊校驗失敗",
+        "downloadHttpStatus": "下載請求失敗，請稍後重試",
+        "downloadManifestUnavailable": "目前階段未配置 GitHub 更新清單，無法下載更新包",
+        "downloadManifestUnreadable": "無法讀取 GitHub 更新清單",
+        "downloadNotReady": "目前沒有可下載的更新包",
+        "downloadSizeMismatch": "下載檔案大小校驗失敗",
+        "downloadSourceInvalid": "無效的下載來源參數",
+        "downloadTaskJoinFailed": "下載任務執行失敗",
+        "downloadUrlInvalid": "下載地址無效或未使用 HTTPS",
+        "downloadUrlNotAllowed": "下載地址不在允許清單中",
+        "helperNotFound": "找不到更新安裝助手可執行檔",
+        "installAssetHashMismatch": "更新包雜湊校驗失敗",
+        "installAssetMissing": "更新包檔案不存在或無法讀取",
+        "installAssetSizeMismatch": "更新包大小校驗失敗",
+        "installHelperHandshakeFailed": "更新安裝助手未能在退出前完成就緒握手",
+        "installHelperFailed": "更新安裝助手執行失敗",
+        "installHelperInvalidArguments": "更新安裝助手參數無效",
+        "installInsufficientSpace": "磁碟剩餘空間不足，無法繼續安裝更新",
+        "installLogWriteFailed": "無法寫入安裝日誌",
+        "installNotReady": "目前沒有可安裝的更新包",
+        "installSaveFailed": "安裝前自動儲存失敗，請先處理目前未儲存內容後重試",
+        "installSaveTimedOut": "等待視窗儲存未儲存內容逾時，請稍後重試",
+        "installSpawnFailed": "啟動更新安裝助手失敗",
+        "installWaitTimedOut": "等待應用退出逾時，請重新安裝",
+        "installUnsupportedKind": "目前安裝型態暫不支援應用內安裝",
+        "installAssetExtractFailed": "無法解包更新資源，請重新下載後重試",
+        "installInstallerBusy": "另一個安裝程式正在執行，請稍後重試",
+        "installInstallerCancelled": "更新安裝已取消",
+        "installReplaceFailed": "替換目前安裝內容失敗，請稍後重試",
+        "installRelaunchFailed": "更新完成後重新啟動應用失敗，請手動重新打開應用",
+        "installStateWriteFailed": "無法寫入安裝狀態檔案",
+        "installCleanupFailed": "安裝後清理臨時檔案失敗",
+        "installInstallerFailed": "更新安裝程式執行失敗",
+        "installInstallerFatal": "更新安裝程式回傳致命錯誤",
+        "installInstallerTimedOut": "更新安裝程式執行逾時，請稍後重試",
+        "installTargetMissing": "目前安裝目標不存在，無法繼續",
+        "installVersionMismatch": "安裝後重新打開的仍是舊版本，請直接重試安裝",
+        "installTaskJoinFailed": "安裝任務執行失敗",
+        "platformUnsupported": "目前平台或安裝型態暫不支援應用內更新",
+        "portableManualOnly": "目前可攜版僅支援手動下載更新包後覆蓋升級",
+        "storeManagedManualOnly": "此版本由 Microsoft Store 管理更新，請在 Microsoft Store 中取得更新",
+        "providerFixtureUnreadable": "無法讀取本地更新測試清單",
+        "secureStoreUnavailable": "系統安全儲存區暫不可用，請稍後重試",
+        "sourceNotConfigured": "更新來源尚未配置，目前階段僅支援本地測試清單注入",
+        "githubApi": "GitHub API 請求失敗，請檢查網絡後重試",
+        "githubRateLimited": "GitHub API 頻率限制，請稍後重試",
+        "githubNoAssets": "GitHub Release 中沒有找到可用資產"
+      },
+      "confirmInstall": "應用會先儲存所有未儲存內容，然後關閉、安裝更新，並在完成後重新打開。是否繼續？",
+      "download": "下載更新",
+      "downloaded": "版本 {{version}} 已下載完成",
+      "interval": {
+        "custom": "{{hours}} 小時",
+        "daily": "每天",
+        "label": "檢查頻率",
+        "weekly": "每週"
+      },
+      "install": "安裝並重新啟動",
+      "installFailed": "最近一次安裝失敗，可查看日誌後重試或重新下載",
+      "installFailedTitle": "安裝更新失敗",
+      "installPreparing": "正在準備退出應用並安裝更新...",
+      "installRetry": "重新嘗試安裝",
+      "installScheduled": "偵測到舊版待安裝狀態，請重新點擊「安裝並重新啟動」完成替換",
+      "installValidated": "應用即將退出並安裝更新，完成後會自動重新打開",
+      "latestVersion": "待更新版本：{{version}}",
+      "loading": "正在讀取更新設定...",
+      "msixNoInAppUpdate": "MSIX 側載版本暫不支援應用程式內更新，請透過 GitHub 或 Microsoft Store 取得最新版本",
+      "notAvailable": "目前已是最新版本",
+      "openInStore": "在 Microsoft Store 中檢視更新",
+      "saved": "更新設定已儲存",
+      "settingsTitle": "更新設定",
+      "speed": "速度：{{speed}}",
+      "checkSource": {
+        "label": "檢查更新來源",
+        "github": "GitHub",
+        "mirrorChyan": "Mirror醬"
+      },
+      "source": {
+        "github": "GitHub",
+        "label": "下載來源"
+      },
+      "title": "更新"
+    },
+    "visibilityShortcut": "顯示／隱藏視窗快捷鍵",
+    "background": {
+      "label": "背景圖片",
+      "default": "預設背景",
+      "choose": "選擇",
+      "clear": "清除背景圖片",
+      "dim": "遮罩",
+      "scale": "縮放",
+      "positionX": "橫向",
+      "positionY": "縱向",
+      "blur": "模糊",
+      "fit": {
+        "cover": "填充",
+        "contain": "完整",
+        "repeat": "平鋪"
+      }
+    },
+    "quickTodoShortcut": "快速待辦快捷鍵"
+  },
+  "tile": {
+    "empty": "空"
+  },
+  "agenda": {
+    "title": "日程與待辦",
+    "nav": {
+      "calendar": "日程",
+      "todos": "待辦",
+      "courses": "課程表",
+      "daily": "每日必做"
+    },
+    "smart": {
+      "today": "今天",
+      "tomorrow": "明天",
+      "week": "本週",
+      "overdue": "逾期",
+      "all": "全部",
+      "done": "已完成"
+    },
+    "smartListTitle": "待辦清單",
+    "tags": "標籤",
+    "calendar": {
+      "prev": "上一頁",
+      "next": "下一頁",
+      "today": "今天",
+      "newEvent": "新增日程",
+      "allDay": "全天",
+      "more": "+{{count}} 項"
+    },
+    "view": {
+      "month": "月",
+      "week": "週"
+    },
+    "priority": {
+      "0": "無",
+      "1": "低",
+      "2": "中",
+      "3": "高"
+    },
+    "todo": {
+      "markDone": "標記為完成",
+      "markUndone": "標記為未完成",
+      "hasNotes": "備註",
+      "searchPlaceholder": "搜尋待辦…",
+      "new": "新增待辦",
+      "quickPlaceholder": "記一條待辦，按 Enter 儲存",
+      "emptyDone": "還沒有已完成的待辦",
+      "empty": "這裡還沒有待辦",
+      "emptyHint": "在上方輸入框記一條，按 Enter 即可儲存",
+      "noDate": "無日期",
+      "editTitle": "編輯待辦",
+      "titlePlaceholder": "要做什麼？",
+      "titleRequired": "請先填寫標題",
+      "dueDate": "日期",
+      "dueTime": "時間",
+      "priority": "優先級",
+      "estimate": "預估",
+      "estimateUnset": "未估算",
+      "estimateMinutes": "{{count}} 分鐘",
+      "tags": "標籤",
+      "tagsPlaceholder": "工作, 生活",
+      "notes": "備註",
+      "notesPlaceholder": "補充說明…",
+      "kind": {
+        "assignment": "作業",
+        "reminder": "提醒"
+      }
+    },
+    "event": {
+      "new": "新增日程",
+      "editTitle": "編輯日程",
+      "titlePlaceholder": "日程標題",
+      "titleRequired": "請先填寫標題",
+      "startDate": "開始日期",
+      "endDate": "結束日期",
+      "startTime": "開始時間",
+      "endTime": "結束時間",
+      "color": "顏色",
+      "notes": "備註",
+      "notesPlaceholder": "地點、參與人、議程…"
+    },
+    "toast": {
+      "saved": "已儲存",
+      "deleted": "已刪除"
+    },
+    "confirmDelete": "確定刪除？此操作無法復原。",
+    "weekday": {
+      "1": "週一",
+      "2": "週二",
+      "3": "週三",
+      "4": "週四",
+      "5": "週五",
+      "6": "週六",
+      "7": "週日"
+    },
+    "course": {
+      "new": "課程",
+      "add": "新增課程",
+      "editTitle": "編輯課程",
+      "nameRequired": "請填寫課程名稱",
+      "namePlaceholder": "課程名稱",
+      "period": "節次",
+      "addAt": "新增課程",
+      "weekday": "星期",
+      "startPeriod": "開始節",
+      "endPeriod": "結束節",
+      "location": "地點",
+      "locationPlaceholder": "教一101",
+      "teacher": "教師",
+      "teacherPlaceholder": "張老師",
+      "weeks": "週次",
+      "weeksPlaceholder": "1-16週 / 單週 / 雙週",
+      "color": "顏色",
+      "notes": "備註",
+      "notesPlaceholder": "考試範圍、作業要求…",
+      "clear": "清空本學期課表",
+      "clearConfirm": "確定清空本學期全部課程？此操作無法復原，調課例外也會一併清除。",
+      "cleared": "已清空 {{count}} 門課程",
+      "import": "匯入",
+      "overview": "課程概覽",
+      "total": "本學期",
+      "countUnit": "門",
+      "perWeek": "每週",
+      "periodUnit": "節",
+      "sidebarHint": "點網格空白處新增課程，也可以從表格或圖片匯入。",
+      "tasks": "作業與待辦",
+      "addTask": "新增",
+      "taskPlaceholder": "作業 / 待辦內容",
+      "platformPlaceholder": "提交平台，如學習通 / 雨課堂",
+      "taskTitleRequired": "請填寫作業或待辦內容",
+      "saveFirst": "先儲存課程，之後可以在這裡新增作業、待辦或提醒。",
+      "noTasks": "還沒有作業或待辦",
+      "currentWeek": "目前",
+      "weekUnset": "未設學期",
+      "periodShort": "第{{period}}節",
+      "taskKind": {
+        "assignment": "作業",
+        "task": "待辦",
+        "reminder": "提醒"
+      }
+    },
+    "import": {
+      "fileTab": "課表檔案",
+      "textTab": "文字貼上",
+      "fileHint": "直接選擇教務系統匯出的 .xls / .xlsx 課表檔案，自動辨識「星期 × 節次」表格並擷取課程名稱、週次、地點、教師，不需要複製貼上。",
+      "textHint": "貼上任意格式的課表文字，每行一門課，欄位順序不限。支援「週一 / 星期三 / Mon」「1-2節 / 第5節」「1-16週 / 單週」「@教室」「張老師」。",
+      "insertSample": "插入範例",
+      "preview": "將匯入 {{count}} 門課程",
+      "fileSheet": "（工作表：{{sheet}}）",
+      "fileReady": "辨識到 {{count}} 門課程",
+      "fileWarnings": "{{count}} 個儲存格無法解析，可匯入後手動補登",
+      "fileEmpty": "檔案裡沒有辨識到課程，請確認是教務系統匯出的課表檔案。",
+      "pickFile": "選擇課表檔案",
+      "parsingFile": "正在讀取課表…",
+      "fileFormats": "支援 .xls / .xlsx，最大 10 MB",
+      "confirm": "匯入 {{count}} 門",
+      "errorCount": "{{count}} 條無法解析",
+      "imported": "已匯入 {{count}} 門課程"
+    },
+    "daily": {
+      "progressTitle": "今日進度",
+      "progressHint": "每天重新開始，勾選記錄按日期儲存",
+      "empty": "還沒有每日必做，先加一條",
+      "add": "新增每日必做",
+      "addShort": "每日必做",
+      "editTitle": "編輯每日必做",
+      "titlePlaceholder": "例如：背 30 個單詞",
+      "titleRequired": "請填寫內容",
+      "active": "啟用",
+      "drawerHint": "停用後不再出現在今日清單，但歷史勾選記錄會保留。",
+      "history": "近 7 天",
+      "historyHint": "按目前清單計算",
+      "note": "每日必做獨立於待辦，不進入待辦清單；刪除清單項會同時清除它的歷史勾選。",
+      "sidebarHint": "每天 0 點重新開始，近 7 天記錄在右側。"
+    },
+    "timetable": {
+      "settingsTitle": "課程表設定",
+      "semesterStart": "學期開始日期",
+      "weekUnset": "設定後可推算目前第幾週",
+      "weekNotStarted": "還沒到開學日期",
+      "currentWeek": "目前第 {{week}} 週",
+      "weekShort": "第 {{week}} 週",
+      "notStartedShort": "未開學",
+      "currentWeekOnly": "本週",
+      "periodTimes": "每節具體時刻",
+      "reset": "恢復預設",
+      "hint": "這些時刻只影響課程表的顯示與目前週推算，不會修改日程或待辦的時間。"
+    },
+    "reminder": {
+      "settingsTitle": "提醒設定",
+      "bannerTitle": "DeskMate · 提醒",
+      "open": "查看",
+      "snooze5": "5 分鐘後",
+      "snooze60": "1 小時後",
+      "dismissToday": "今天不再",
+      "openFailed": "找不到對應事項",
+      "enabled": "啟用提醒",
+      "hint": "背景每 30 秒檢查一次；系統通知不可用時仍會顯示應用程式內提醒條。",
+      "defaultMinutes": "預設提前",
+      "minutesUnit": "分鐘",
+      "todoReminders": "待辦與課程提醒",
+      "quietHours": "免打擾時段",
+      "to": "至",
+      "muteDuringCourses": "上課時自動靜音",
+      "muteDuringCoursesHint": "按課程表節次判斷，課堂中不彈提醒；下課後 30 分鐘內的提醒會補發。",
+      "autoReview": "自動生成每日回顧"
+    },
+    "review": {
+      "generate": "生成今日回顧",
+      "generated": "回顧筆記已生成",
+      "weekly": "週回顧",
+      "weeklyGenerated": "本週回顧已生成",
+      "hint": "次日啟動時把前一天完成的待辦、日程、課程與每日必做寫成一篇筆記。"
+    },
+    "partner": {
+      "title": "雙人課表",
+      "short": "雙人",
+      "other": "對方",
+      "hint": "新增第二個人的課表後，課程表會上下並排顯示兩人的課程，並標示都沒有課的共同空檔；對方課程唯讀，不參與提醒。",
+      "name": "對方暱稱",
+      "namePlaceholder": "如：小夏",
+      "relation": "關係",
+      "relations": {
+        "partner": "伴侶",
+        "sibling": "兄弟姐妹",
+        "classmate": "同學",
+        "friend": "朋友",
+        "other": "其他"
+      },
+      "color": "顏色",
+      "saveProfile": "儲存資料",
+      "courses": "對方課程",
+      "importFile": "匯入對方課表",
+      "importReady": "匯入 {{count}} 門",
+      "imported": "已匯入 {{count}} 門對方課程",
+      "empty": "還沒有對方課表，可匯入檔案或稍後手動新增。",
+      "clear": "清空",
+      "clearConfirm": "確定清空對方全部課程？暱稱與關係會保留。",
+      "cleared": "已清空 {{count}} 門對方課程",
+      "show": "顯示對方課表",
+      "hide": "隱藏對方課表",
+      "visible": "在課表中顯示",
+      "hidden": "已隱藏",
+      "commonFree": "共同空檔"
+    },
+    "plan": {
+      "title": "智能排期",
+      "open": "排期",
+      "today": "今天",
+      "week": "本週",
+      "hint": "按 DDL 與預估時長填入空檔；預設全選，可逐項取消。",
+      "empty": "沒有可排期的待辦：先給待辦設定截止日期，或調大時間範圍。",
+      "skipped": "{{count}} 項沒有足夠空檔，未排入",
+      "selected": "將寫入 {{count}} 個日程",
+      "generated": "已寫入 {{count}} 個計畫區塊",
+      "generate": "寫入日程",
+      "none": "這些計畫已經在日程裡了"
+    },
+    "pressure": {
+      "title": "未來 14 天 DDL",
+      "overdue": "{{count}} 項逾期",
+      "peak": "峰值 {{day}}",
+      "peakCount": "{{count}} 項",
+      "clear": "暫無臨期 DDL"
+    },
+    "progress": {
+      "label": "第 {{current}} / {{total}} 週",
+      "remaining": "剩 {{count}} 週",
+      "hint": "按學期開始日期與課程週次推算"
+    },
+    "note": {
+      "create": "記筆記",
+      "createHint": "在筆記中歸檔本門課",
+      "created": "已歸檔到「{{name}}」分類"
+    },
+    "print": {
+      "title": "課程表",
+      "hint": "DeskMate · 本機離線產生，可直接列印或另存為 PDF",
+      "print": "列印 / 另存為 PDF",
+      "open": "列印"
+    },
+    "override": {
+      "title": "單次調課 / 停課 · {{name}}",
+      "short": "調課",
+      "hint": "只影響所選日期，不修改課程本身；課程表、智能排期與本週統計都會套用。",
+      "date": "日期",
+      "action": "類型",
+      "cancel": "停課",
+      "move": "調課",
+      "moveTo": "調至 {{start}}-{{end}} 節",
+      "notePlaceholder": "備註（可選），如：老師出差",
+      "existing": "已有例外"
+    },
+    "widget": {
+      "scheduleTitle": "今日日程",
+      "todosTitle": "今日待辦",
+      "timeline": "時間軸",
+      "timelineShort": "軸",
+      "table": "表格",
+      "tableShort": "表",
+      "pin": "置頂",
+      "refresh": "重新整理",
+      "allDay": "全天",
+      "typeEvent": "日程",
+      "typeCourse": "課程",
+      "typeTodo": "待辦",
+      "priorityHigh": "高",
+      "priorityMedium": "中",
+      "priorityLow": "低",
+      "period": "第{{period}}節",
+      "overdue": "逾期",
+      "emptySchedule": "今天沒有安排",
+      "emptyScheduleHint": "今天的日程和課程會自動出現在這裡；也可以在主視窗新增。",
+      "emptyTodos": "今天沒有待辦",
+      "emptyTodosHint": "逾期和今天到期的事項會自動出現在這裡。",
+      "upcomingCourses": "{{day}}有 {{count}} 節課",
+      "tomorrow": "明天",
+      "combinedTitle": "今日一覽",
+      "tabSchedule": "日程",
+      "tabTodos": "待辦",
+      "openCombined": "開啟合併後的桌面小窗（日程 / 待辦）",
+      "openCombinedShort": "桌面小窗",
+      "count": "{{count}} 項",
+      "updated": "更新於 {{time}}",
+      "colTime": "時間",
+      "colTitle": "事項",
+      "colInfo": "資訊",
+      "openSchedule": "把今日日程小窗固定在桌面",
+      "openScheduleShort": "日程窗",
+      "openTodos": "把今日待辦小窗固定在桌面",
+      "openTodosShort": "待辦窗",
+      "fontSize": {
+        "title": "字體大小",
+        "small": "小",
+        "normal": "標準",
+        "large": "大",
+        "xlarge": "特大"
+      }
+    }
+  },
+  "quickTodo": {
+    "title": "快速待辦",
+    "placeholder": "記一條待辦，按 Enter 儲存",
+    "hint": "Enter 儲存 · Esc 關閉",
+    "hintSyntax": "#標籤 · !優先級 · 明天 15:00 · 提前30分鐘",
+    "parsed": "輸入時自動識別標籤、日期與優先級",
+    "warnRecurrence": "重複規則暫未支援",
+    "warnDate": "有日期未能識別",
+    "empty": "先寫點什麼",
+    "due": {
+      "today": "今天",
+      "tomorrow": "明天",
+      "dayAfter": "後天",
+      "noDate": "無日期",
+      "custom": "自訂",
+      "customHint": "選擇任意日期"
+    }
+  }
+}

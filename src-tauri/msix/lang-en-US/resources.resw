@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="AppName">
+    <value>DeskMate</value>
+  </data>
+  <data name="AppDescription">
+    <value>DeskMate - lightweight local timetable and note app</value>
+  </data>
+</root>

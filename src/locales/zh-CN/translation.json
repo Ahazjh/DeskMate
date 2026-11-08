@@ -1,0 +1,780 @@
+{
+  "about": {
+    "closeTitle": "关闭关于",
+    "productName": "DeskMate",
+    "summary": "轻量、优雅的本地课表与日程",
+    "title": "关于",
+    "version": "版本：v{{version}}"
+  },
+  "common": {
+    "back": "返回",
+    "blankNote": "空白笔记",
+    "cancel": "取消",
+    "default": "默认",
+    "delete": "删除",
+    "externalFileCount": "{{count}} 个外部文件",
+    "noteCount": "{{count}} 篇笔记",
+    "operationFailed": "操作失败",
+    "save": "保存",
+    "untitledNote": "无标题笔记",
+    "untitledFile": "未命名文件",
+    "wordCount": "{{count}} 字",
+    "wordCountUnit": "字",
+    "close": "关闭",
+    "clear": "清除",
+    "loading": "加载中…",
+    "retry": "重试",
+    "saving": "保存中…",
+    "edit": "编辑",
+    "done": "完成"
+  },
+  "contextMenu": {
+    "edit": {
+      "copy": "复制",
+      "cut": "剪切",
+      "paste": "粘贴",
+      "selectAll": "全选"
+    },
+    "tile": {
+      "close": "取消钉屏",
+      "copy": "复制",
+      "save": "保存",
+      "switchToPad": "转为小窗"
+    }
+  },
+  "errors": {
+    "categoryAlreadyExists": "分类「{{category}}」已存在",
+    "categoryNameEmpty": "分类名不能为空",
+    "categoryNameInvalidChars": "分类名不能包含特殊字符",
+    "categoryNotFound": "分类「{{category}}」不存在",
+    "desktopConfig": "桌面配置更新失败",
+    "duplicateShortcut": "三个快捷键不能重复，请为每个功能设置不同的组合",
+    "imagePasteFailed": "图片粘贴失败",
+    "imageTooLarge": "图片文件过大（上限 20 MB）",
+    "noPool": "便签窗口池尚未初始化",
+    "noteNotFound": "找不到该笔记",
+    "unsupportedFile": "只支持导入 .md 文件",
+    "unsupportedImageFormat": "不支持的图片格式",
+    "unsupportedShortcut": "{{field}} 配置无效",
+    "unsupportedShortcutGeneric": "快捷键配置无效"
+  },
+  "markdown": {
+    "copied": "已复制",
+    "copy": "复制",
+    "emptyHint": "预览区会显示当前笔记内容",
+    "alert": {
+      "note": "备注",
+      "tip": "提示",
+      "important": "重要",
+      "warning": "警告",
+      "caution": "注意"
+    }
+  },
+  "main": {
+    "category": {
+      "confirmDelete": "确认删除「{{category}}」？",
+      "confirmDeleteAction": "确认删除",
+      "delete": "删除分类",
+      "emptyFolder": "空文件夹",
+      "new": "新建分类",
+      "placeholder": "输入分类名…",
+      "rename": "重命名",
+      "uncategorized": "未分类"
+    },
+    "confirm": {
+      "unsavedExternalFile": "「{{title}}」有未保存的更改，是否保存到原文件？"
+    },
+    "editor": {
+      "confirmDelete": "确认删除？",
+      "contentPlaceholder": "开始写作……",
+      "emptyHint": "选择或新建一篇笔记",
+      "pinToTile": "钉为磁贴",
+      "previewLabel": "预览",
+      "undo": "撤销（Ctrl+Z）",
+      "undoLabel": "撤销",
+      "redo": "重做（Ctrl+Y）",
+      "redoLabel": "重做"
+    },
+    "externalFile": {
+      "label": "外部文件 · {{path}}"
+    },
+    "externalFiles": {
+      "remove": "从列表移除",
+      "title": "外部文件"
+    },
+    "formatSample": {
+      "boldText": "粗体文本",
+      "codeText": "代码",
+      "headingText": "标题",
+      "italicText": "斜体文本",
+      "listItem": "列表项",
+      "quoteText": "引用文本"
+    },
+    "search": {
+      "empty": "还没有笔记",
+      "noResults": "没有匹配的笔记"
+    },
+    "sidebar": {
+      "clearSearch": "清空搜索",
+      "importMarkdown": "导入 Markdown",
+      "newNote": "新建笔记",
+      "searchPlaceholder": "搜索笔记…"
+    },
+    "images": {
+      "cleanUnused": "清理未使用图片",
+      "cleaned": "已清理 {{count}} 张图片",
+      "cleanedNone": "没有需要清理的图片"
+    },
+    "statusBar": {
+      "byteSize": "{{size}} KB",
+      "encoding": "UTF-8",
+      "format": "Markdown + LaTeX",
+      "lineNumber": "Ln {{count}}",
+      "saveState": {
+        "dirty": "未保存",
+        "error": "保存失败",
+        "idle": "未选择",
+        "saved": "已保存",
+        "saving": "保存中"
+      }
+    },
+    "toolbar": {
+      "blockMath": "块级公式",
+      "bold": "粗体",
+      "code": "代码",
+      "heading": "标题",
+      "hr": "分割线",
+      "inlineMath": "行内公式",
+      "italic": "斜体",
+      "ol": "有序列表",
+      "quote": "引用",
+      "ul": "无序列表"
+    },
+    "window": {
+      "close": "关闭",
+      "collapseSidebar": "收起侧栏",
+      "expandSidebar": "展开侧栏",
+      "maximize": "最大化",
+      "minimize": "最小化",
+      "about": "关于",
+      "quickNotepad": "快捷便签",
+      "restore": "还原",
+      "settings": "设置"
+    },
+    "workspace": {
+      "notes": "笔记",
+      "agenda": "日程待办"
+    }
+  },
+  "noteMenu": {
+    "delete": "删除笔记",
+    "export": "导出 Markdown",
+    "moveToCategory": "移动到分类…"
+  },
+  "notepad": {
+    "button": {
+      "clear": "清空"
+    },
+    "emptyState": "还没有可打开的笔记",
+    "search": {
+      "clear": "清空搜索",
+      "noResults": "没有匹配的笔记",
+      "placeholder": "搜索笔记…"
+    },
+    "error": {
+      "copyUnsupported": "当前环境不支持复制"
+    },
+    "placeholder": {
+      "content": "写点什么……",
+      "title": "标题（可选）"
+    },
+    "status": {
+      "copied": "已复制",
+      "empty": "空",
+      "opened": "已打开",
+      "saveFailed": "保存失败",
+      "saved": "已保存",
+      "unsaved": "未保存"
+    },
+    "tab": {
+      "edit": "编辑",
+      "new": "新建",
+      "open": "打开"
+    },
+    "tooltip": {
+      "close": "关闭",
+      "openInEditor": "在编辑器中打开",
+      "pinToTile": "转为磁贴"
+    }
+  },
+  "settings": {
+    "autoSave": {
+      "externalFile": "外部文件自动保存",
+      "note": "自动保存笔记",
+      "surface": "小窗笔记自动保存"
+    },
+    "autostart": "开机自启",
+    "closeTitle": "关闭设置",
+    "closeToTray": "关闭到托盘",
+    "defaultView": {
+      "edit": "编辑",
+      "label": "默认视图",
+      "preview": "预览",
+      "split": "分栏"
+    },
+    "fontSize": {
+      "editor": "编辑器字号",
+      "surface": "小窗/磁贴字号"
+    },
+    "locale": {
+      "enUS": "English",
+      "label": "语言",
+      "zhCN": "简体中文",
+      "zhHK": "繁體中文"
+    },
+    "dataDir": "数据目录",
+    "openAtCursor": "快捷键打开时跟随鼠标位置",
+    "quickNoteShortcut": "快捷记录快捷键",
+    "rememberSurfaceSize": "记住小窗尺寸",
+    "tabIndentSize": "Tab 缩进宽度",
+    "selectFolder": "选择文件夹",
+    "shortcut": {
+      "cancelHint": "Esc 取消",
+      "clear": "清除",
+      "checkFailed": "快捷键检测失败",
+      "checking": "正在检测快捷键...",
+      "cleared": "快捷键已清空",
+      "clickToRecord": "点击录制",
+      "conflict": {
+        "current": "快捷键 {{shortcut}} 当前正在使用",
+        "invalid": "快捷键 {{shortcut}} 不受支持",
+        "none": "快捷键 {{shortcut}} 未检测到冲突",
+        "registered": "快捷键 {{shortcut}} 可能已被系统或其他应用占用",
+        "system": "快捷键 {{shortcut}} 与系统快捷键冲突",
+        "unknown": "检测完成，但释放临时快捷键失败"
+      },
+      "forQuickNote": "用于打开快捷记录小窗",
+      "needsModifier": "快捷键需要包含 Ctrl、Option/Alt 或 Command/Meta",
+      "notSet": "未设置",
+      "pressHint": "按下快捷键；按 Delete 清空。"
+    },
+    "theme": {
+      "dark": "深色",
+      "label": "主题",
+      "light": "浅色",
+      "system": "跟随系统"
+    },
+    "tileColor": {
+      "custom": "自定义",
+      "followTheme": "跟随主题",
+      "label": "磁贴颜色"
+    },
+    "tileCtrlClose": "Ctrl+右键快速关闭磁贴",
+    "tileRenderMarkdown": "磁贴渲染 Markdown",
+    "tileDoubleClickToEdit": "双击磁贴进入编辑",
+    "tileSaveReturnsToPin": "保存后回到磁贴",
+    "renderHtmlMarkdown": "允许 HTML 标签渲染",
+    "splitScrollSync": "分栏同步滚动",
+    "title": "应用设置",
+    "update": {
+      "advanced": "高级",
+      "allowPrerelease": "允许预发布版本",
+      "autoCheck": "自动检查更新",
+      "autoDownload": "有新版本时自动下载",
+      "available": "发现新版本 {{version}}",
+      "busy": "处理中",
+      "cancel": "取消下载",
+      "cancelRequested": "已请求取消下载",
+      "cancelled": "下载已取消",
+      "channel": {
+        "beta": "beta",
+        "stable": "stable"
+      },
+      "check": "检查更新",
+      "checking": "正在检查...",
+      "confirmClearCdk": "确认清除 Mirror酱 CDK？",
+      "currentVersion": "当前版本：{{version}}",
+      "error": {
+        "alreadyRunning": "已有更新任务正在运行",
+        "cancelUnavailable": "当前没有可取消的更新任务",
+        "checkInterrupted": "上次检查更新被中断，已恢复为空闲状态",
+        "checkTaskJoinFailed": "检查更新任务执行失败",
+        "downloadAssetMismatch": "更新包信息与已检查结果不一致，请重新检查更新",
+        "downloadClientUnavailable": "下载客户端不可用，请稍后重试",
+        "downloadHashMismatch": "下载文件哈希校验失败",
+        "downloadHttpStatus": "下载请求失败，请稍后重试",
+        "downloadInterrupted": "上次下载被中断，请重新下载更新包",
+        "downloadManifestUnavailable": "当前阶段未配置 GitHub 更新清单，无法下载更新包",
+        "downloadManifestUnreadable": "无法读取 GitHub 更新清单",
+        "downloadNetwork": "下载过程中网络中断，请稍后重试",
+        "downloadNotReady": "当前没有可下载的更新包",
+        "downloadRedirectInvalid": "下载重定向地址无效",
+        "downloadRedirectLoop": "下载重定向次数过多，请稍后重试",
+        "downloadSizeMismatch": "下载文件大小校验失败",
+        "downloadSourceInvalid": "无效的下载源参数",
+        "downloadTaskJoinFailed": "下载任务执行失败",
+        "downloadTimeout": "下载请求超时，请稍后重试",
+        "downloadUrlInvalid": "下载地址无效或未使用 HTTPS",
+        "downloadUrlNotAllowed": "下载地址不在允许列表中",
+        "downloadVersionMismatch": "下载版本与已检查到的版本不一致，请重新检查更新",
+        "githubApi": "GitHub API 请求失败，请检查网络后重试",
+        "githubNoAssets": "GitHub Release 中没有找到可用资产",
+        "githubRateLimited": "GitHub API 频率限制，请稍后重试",
+        "helperNotFound": "找不到更新安装助手可执行文件",
+        "installAssetExtractFailed": "无法解包更新资源，请重新下载后重试",
+        "installAssetHashMismatch": "更新包哈希校验失败",
+        "installAssetMissing": "更新包文件不存在或无法读取",
+        "installAssetSizeMismatch": "更新包大小校验失败",
+        "installCleanupFailed": "安装后清理临时文件失败",
+        "installHelperFailed": "更新安装助手执行失败",
+        "installHelperHandshakeFailed": "更新安装助手未能在退出前完成就绪握手",
+        "installHelperInvalidArguments": "更新安装助手参数无效",
+        "installInstallerBusy": "另一个安装程序正在运行，请稍后重试",
+        "installInstallerCancelled": "更新安装已取消",
+        "installInstallerFailed": "更新安装程序执行失败",
+        "installInstallerFatal": "更新安装程序返回了致命错误",
+        "installInstallerTimedOut": "更新安装程序执行超时，请稍后重试",
+        "installInsufficientSpace": "磁盘剩余空间不足，无法继续安装更新",
+        "installInterrupted": "上次安装未完成，请重试安装",
+        "installLogWriteFailed": "无法写入安装日志",
+        "installNotReady": "当前没有可安装的更新包",
+        "installRelaunchFailed": "更新完成后重新启动应用失败，请手动重新打开应用",
+        "installReplaceFailed": "替换当前安装内容失败，请稍后重试",
+        "installSaveFailed": "安装前自动保存失败，请先处理当前未保存内容后重试",
+        "installSaveTimedOut": "等待窗口保存未保存内容超时，请稍后重试",
+        "installSpawnFailed": "启动更新安装助手失败",
+        "installStateWriteFailed": "无法写入安装状态文件",
+        "installTargetMissing": "当前安装目标不存在，无法继续",
+        "installTaskJoinFailed": "安装任务执行失败",
+        "installUnsupportedKind": "当前安装形态暂不支持应用内安装",
+        "installVersionMismatch": "安装后重新打开的仍是旧版本，请直接重试安装",
+        "installWaitTimedOut": "等待应用退出超时，请重试安装",
+        "manifestAppIdMismatch": "更新清单不属于当前应用",
+        "manifestAssetNotFound": "当前平台没有匹配的更新包",
+        "manifestInvalid": "更新清单格式无效",
+        "manifestMissingAssets": "更新清单未包含任何可下载资产",
+        "manifestUnsupportedSchema": "更新清单格式版本暂不受支持",
+        "platformUnsupported": "当前平台或安装形态暂不支持应用内更新",
+        "portableManualOnly": "当前便携版仅支持手动下载更新包后覆盖升级",
+        "storeManagedManualOnly": "此版本由 Microsoft Store 管理更新，请在 Microsoft Store 中获取更新",
+        "providerFixtureUnreadable": "无法读取本地更新测试清单",
+        "providerNotConfigured": "更新源尚未配置测试清单",
+        "secureStoreUnavailable": "系统安全存储暂不可用，请稍后重试",
+        "sourceNotConfigured": "更新源尚未配置，当前阶段仅支持本地测试清单注入",
+        "stateCorrupted": "更新状态文件已损坏，已重置",
+        "stateLockTimeout": "等待更新状态文件锁超时，请稍后重试",
+        "versionInvalid": "版本号格式无效"
+      },
+      "confirmInstall": "应用会先保存所有未保存内容，然后关闭、安装更新，并在完成后重新打开。是否继续？",
+      "download": "下载更新",
+      "downloaded": "版本 {{version}} 已下载完成",
+      "interval": {
+        "custom": "{{hours}} 小时",
+        "daily": "每天",
+        "label": "检查频率",
+        "weekly": "每周"
+      },
+      "install": "安装并重启",
+      "installFailed": "最近一次安装失败，可查看日志后重试或重新下载",
+      "installFailedTitle": "安装更新失败",
+      "installPreparing": "正在准备退出应用并安装更新...",
+      "installRetry": "重新尝试安装",
+      "installScheduled": "检测到旧版待安装状态，请重新点击“安装并重启”完成替换",
+      "installValidated": "即将退出应用并安装更新，完成后会自动重新打开",
+      "latestVersion": "待更新版本：{{version}}",
+      "loading": "正在读取更新设置...",
+      "msixNoInAppUpdate": "MSIX 侧载版本暂不支持应用内更新，请通过 GitHub 或 Microsoft Store 获取最新版本",
+      "notAvailable": "当前已是最新版本",
+      "openInStore": "在 Microsoft Store 中查看更新",
+      "saved": "更新设置已保存",
+      "settingsTitle": "更新设置",
+      "speed": "速度：{{speed}}",
+      "checkSource": {
+        "label": "检查更新源",
+        "github": "GitHub",
+        "mirrorChyan": "Mirror酱"
+      },
+      "source": {
+        "github": "GitHub",
+        "label": "下载源"
+      },
+      "title": "更新"
+    },
+    "visibilityShortcut": "显示/隐藏窗口快捷键",
+    "background": {
+      "label": "背景图片",
+      "default": "默认背景",
+      "choose": "选择",
+      "clear": "清除背景图片",
+      "dim": "遮罩",
+      "scale": "缩放",
+      "positionX": "横向",
+      "positionY": "纵向",
+      "blur": "模糊",
+      "fit": {
+        "cover": "填充",
+        "contain": "完整",
+        "repeat": "平铺"
+      }
+    },
+    "quickTodoShortcut": "快速待办快捷键"
+  },
+  "tile": {
+    "empty": "空"
+  },
+  "agenda": {
+    "title": "日程与待办",
+    "nav": {
+      "calendar": "日程",
+      "todos": "待办",
+      "courses": "课程表",
+      "daily": "每日必做"
+    },
+    "smart": {
+      "today": "今天",
+      "tomorrow": "明天",
+      "week": "本周",
+      "overdue": "逾期",
+      "all": "全部",
+      "done": "已完成"
+    },
+    "smartListTitle": "待办清单",
+    "tags": "标签",
+    "calendar": {
+      "prev": "上一页",
+      "next": "下一页",
+      "today": "今天",
+      "newEvent": "新建日程",
+      "allDay": "全天",
+      "more": "+{{count}} 项"
+    },
+    "view": {
+      "month": "月",
+      "week": "周"
+    },
+    "priority": {
+      "0": "无",
+      "1": "低",
+      "2": "中",
+      "3": "高"
+    },
+    "todo": {
+      "markDone": "标记为完成",
+      "markUndone": "标记为未完成",
+      "hasNotes": "备注",
+      "searchPlaceholder": "搜索待办…",
+      "new": "新建待办",
+      "quickPlaceholder": "记一条待办，回车保存",
+      "emptyDone": "还没有已完成的待办",
+      "empty": "这里还没有待办",
+      "emptyHint": "在上方输入框记一条，回车即可保存",
+      "noDate": "无日期",
+      "editTitle": "编辑待办",
+      "titlePlaceholder": "要做什么？",
+      "titleRequired": "请先填写标题",
+      "dueDate": "日期",
+      "dueTime": "时间",
+      "priority": "优先级",
+      "estimate": "预估",
+      "estimateUnset": "未估算",
+      "estimateMinutes": "{{count}} 分钟",
+      "tags": "标签",
+      "tagsPlaceholder": "工作, 生活",
+      "notes": "备注",
+      "notesPlaceholder": "补充说明…",
+      "kind": {
+        "assignment": "作业",
+        "reminder": "提醒"
+      }
+    },
+    "event": {
+      "new": "新建日程",
+      "editTitle": "编辑日程",
+      "titlePlaceholder": "日程标题",
+      "titleRequired": "请先填写标题",
+      "startDate": "开始日期",
+      "endDate": "结束日期",
+      "startTime": "开始时间",
+      "endTime": "结束时间",
+      "color": "颜色",
+      "notes": "备注",
+      "notesPlaceholder": "地点、参与人、议程…"
+    },
+    "toast": {
+      "saved": "已保存",
+      "deleted": "已删除"
+    },
+    "confirmDelete": "确定删除？此操作不可撤销。",
+    "weekday": {
+      "1": "周一",
+      "2": "周二",
+      "3": "周三",
+      "4": "周四",
+      "5": "周五",
+      "6": "周六",
+      "7": "周日"
+    },
+    "course": {
+      "new": "课程",
+      "add": "添加课程",
+      "editTitle": "编辑课程",
+      "nameRequired": "请填写课程名称",
+      "namePlaceholder": "课程名称",
+      "period": "节次",
+      "addAt": "添加课程",
+      "weekday": "星期",
+      "startPeriod": "开始节",
+      "endPeriod": "结束节",
+      "location": "地点",
+      "locationPlaceholder": "教一101",
+      "teacher": "教师",
+      "teacherPlaceholder": "张老师",
+      "weeks": "周次",
+      "weeksPlaceholder": "1-16周 / 单周 / 双周",
+      "color": "颜色",
+      "notes": "备注",
+      "notesPlaceholder": "考试范围、作业要求…",
+      "clear": "清空本学期课表",
+      "clearConfirm": "确定清空本学期全部课程？此操作不可撤销，调课例外也会一起清除。",
+      "cleared": "已清空 {{count}} 门课程",
+      "import": "导入",
+      "overview": "课程概览",
+      "total": "本学期",
+      "countUnit": "门",
+      "perWeek": "每周",
+      "periodUnit": "节",
+      "sidebarHint": "点网格空白处添加课程，也可以从表格或图片导入。",
+      "tasks": "作业与待办",
+      "addTask": "添加",
+      "taskPlaceholder": "作业 / 待办内容",
+      "platformPlaceholder": "提交平台，如学习通 / 雨课堂",
+      "taskTitleRequired": "请填写作业或待办内容",
+      "saveFirst": "先保存课程，之后可以在这里添加作业、待办或提醒。",
+      "noTasks": "还没有作业或待办",
+      "currentWeek": "当前",
+      "weekUnset": "未设学期",
+      "periodShort": "第{{period}}节",
+      "taskKind": {
+        "assignment": "作业",
+        "task": "待办",
+        "reminder": "提醒"
+      }
+    },
+    "import": {
+      "fileTab": "课表文件",
+      "textTab": "文字粘贴",
+      "fileHint": "直接选择教务系统导出的 .xls / .xlsx 课表文件，自动识别「星期 × 节次」表格并提取课程名、周次、地点、教师，不需要复制粘贴。",
+      "textHint": "粘贴任意格式的课表文字，每行一门课，字段顺序不限。支持「周一 / 星期三 / Mon」「1-2节 / 第5节」「1-16周 / 单周」「@教室」「张老师」。",
+      "insertSample": "插入示例",
+      "preview": "将导入 {{count}} 门课程",
+      "fileSheet": "（工作表：{{sheet}}）",
+      "fileReady": "识别到 {{count}} 门课程",
+      "fileWarnings": "{{count}} 个单元格无法解析，可导入后手工补录",
+      "fileEmpty": "文件里没有识别到课程，请确认是教务系统导出的课表文件。",
+      "pickFile": "选择课表文件",
+      "parsingFile": "正在读取课表…",
+      "fileFormats": "支持 .xls / .xlsx，最大 10 MB",
+      "confirm": "导入 {{count}} 门",
+      "errorCount": "{{count}} 条无法解析",
+      "imported": "已导入 {{count}} 门课程"
+    },
+    "daily": {
+      "progressTitle": "今日进度",
+      "progressHint": "每天重新开始，勾选记录按日期保存",
+      "empty": "还没有每日必做，先加一条",
+      "add": "添加每日必做",
+      "addShort": "每日必做",
+      "editTitle": "编辑每日必做",
+      "titlePlaceholder": "例如：背 30 个单词",
+      "titleRequired": "请填写内容",
+      "active": "启用",
+      "drawerHint": "停用后不再出现在今日清单，但历史勾选记录会保留。",
+      "history": "近 7 天",
+      "historyHint": "按当前清单计算",
+      "note": "每日必做独立于待办，不进入待办列表；删除清单项会同时清除它的历史勾选。",
+      "sidebarHint": "每天 0 点重新开始，近 7 天记录在右侧。"
+    },
+    "timetable": {
+      "settingsTitle": "课程表设置",
+      "semesterStart": "学期开始日期",
+      "weekUnset": "设置后可推算当前第几周",
+      "weekNotStarted": "还没到开学日期",
+      "currentWeek": "当前第 {{week}} 周",
+      "weekShort": "第 {{week}} 周",
+      "notStartedShort": "未开学",
+      "currentWeekOnly": "本周",
+      "periodTimes": "每节具体时刻",
+      "reset": "恢复默认",
+      "hint": "这些时刻只影响课程表的显示与当前周推算，不会修改日程或待办的时间。"
+    },
+    "reminder": {
+      "settingsTitle": "提醒设置",
+      "bannerTitle": "DeskMate · 提醒",
+      "open": "查看",
+      "snooze5": "5 分钟后",
+      "snooze60": "1 小时后",
+      "dismissToday": "今天不再",
+      "openFailed": "找不到对应事项",
+      "enabled": "启用提醒",
+      "hint": "后台每 30 秒检查一次；系统通知不可用时仍会显示应用内提醒条。",
+      "defaultMinutes": "默认提前",
+      "minutesUnit": "分钟",
+      "todoReminders": "待办与课程提醒",
+      "quietHours": "免打扰时段",
+      "to": "至",
+      "muteDuringCourses": "上课时自动静音",
+      "muteDuringCoursesHint": "按课程表节次判断，课堂中不弹提醒；下课后 30 分钟内的提醒会补发。",
+      "autoReview": "自动生成每日回顾"
+    },
+    "review": {
+      "generate": "生成今日回顾",
+      "generated": "回顾笔记已生成",
+      "weekly": "周回顾",
+      "weeklyGenerated": "本周回顾已生成",
+      "hint": "次日启动时把前一天完成的待办、日程、课程与每日必做写成一篇笔记。"
+    },
+    "partner": {
+      "title": "双人课表",
+      "short": "双人",
+      "other": "对方",
+      "hint": "添加第二个人的课表后，课程表会上下并排显示两人的课程，并高亮都没有课的共同空档；对方课程只读，不参与提醒。",
+      "name": "对方昵称",
+      "namePlaceholder": "如：小夏",
+      "relation": "关系",
+      "relations": {
+        "partner": "伴侣",
+        "sibling": "兄弟姐妹",
+        "classmate": "同学",
+        "friend": "朋友",
+        "other": "其他"
+      },
+      "color": "颜色",
+      "saveProfile": "保存资料",
+      "courses": "对方课程",
+      "importFile": "导入对方课表",
+      "importReady": "导入 {{count}} 门",
+      "imported": "已导入 {{count}} 门对方课程",
+      "empty": "还没有对方课表，可导入文件或稍后手动添加。",
+      "clear": "清空",
+      "clearConfirm": "确定清空对方全部课程？昵称与关系会保留。",
+      "cleared": "已清空 {{count}} 门对方课程",
+      "show": "显示对方课表",
+      "hide": "隐藏对方课表",
+      "visible": "在课表中显示",
+      "hidden": "已隐藏",
+      "commonFree": "共同空档"
+    },
+    "plan": {
+      "title": "智能排期",
+      "open": "排期",
+      "today": "今天",
+      "week": "本周",
+      "hint": "按 DDL 与预估时长填入空档；默认全选，可逐项取消。",
+      "empty": "没有可排期的待办：先给待办设置截止日期，或调大时间范围。",
+      "skipped": "{{count}} 项没有足够空档，未排入",
+      "selected": "将写入 {{count}} 个日程",
+      "generated": "已写入 {{count}} 个计划块",
+      "generate": "写入日程",
+      "none": "这些计划已经在日程里了"
+    },
+    "pressure": {
+      "title": "未来 14 天 DDL",
+      "overdue": "{{count}} 项逾期",
+      "peak": "峰值 {{day}}",
+      "peakCount": "{{count}} 项",
+      "clear": "暂无临期 DDL"
+    },
+    "progress": {
+      "label": "第 {{current}} / {{total}} 周",
+      "remaining": "剩 {{count}} 周",
+      "hint": "按学期开始日期与课程周次推算"
+    },
+    "note": {
+      "create": "记笔记",
+      "createHint": "在笔记中归档本门课",
+      "created": "已归档到「{{name}}」分类"
+    },
+    "print": {
+      "title": "课程表",
+      "hint": "DeskMate · 本地离线生成，可直接打印或另存为 PDF",
+      "print": "打印 / 另存为 PDF",
+      "open": "打印"
+    },
+    "override": {
+      "title": "单次调课 / 停课 · {{name}}",
+      "short": "调课",
+      "hint": "只影响所选日期，不修改课程本身；课程表、智能排期与本周统计都会应用。",
+      "date": "日期",
+      "action": "类型",
+      "cancel": "停课",
+      "move": "调课",
+      "moveTo": "调至 {{start}}-{{end}} 节",
+      "notePlaceholder": "备注（可选），如：老师出差",
+      "existing": "已有例外"
+    },
+    "widget": {
+      "scheduleTitle": "今日日程",
+      "todosTitle": "今日待办",
+      "timeline": "时间轴",
+      "timelineShort": "轴",
+      "table": "表格",
+      "tableShort": "表",
+      "pin": "置顶",
+      "refresh": "刷新",
+      "allDay": "全天",
+      "typeEvent": "日程",
+      "typeCourse": "课程",
+      "typeTodo": "待办",
+      "priorityHigh": "高",
+      "priorityMedium": "中",
+      "priorityLow": "低",
+      "period": "第{{period}}节",
+      "overdue": "逾期",
+      "emptySchedule": "今天没有安排",
+      "emptyScheduleHint": "今天的日程和课程会自动出现在这里；也可以在主窗口添加。",
+      "emptyTodos": "今天没有待办",
+      "emptyTodosHint": "逾期和今天到期的事项会自动出现在这里。",
+      "upcomingCourses": "{{day}}有 {{count}} 节课",
+      "tomorrow": "明天",
+      "combinedTitle": "今日一览",
+      "tabSchedule": "日程",
+      "tabTodos": "待办",
+      "openCombined": "打开合并后的桌面小窗（日程 / 待办）",
+      "openCombinedShort": "桌面小窗",
+      "count": "{{count}} 项",
+      "updated": "更新于 {{time}}",
+      "colTime": "时间",
+      "colTitle": "事项",
+      "colInfo": "信息",
+      "openSchedule": "把今日日程小窗固定到桌面",
+      "openScheduleShort": "日程窗",
+      "openTodos": "把今日待办小窗固定到桌面",
+      "openTodosShort": "待办窗",
+      "fontSize": {
+        "title": "字体大小",
+        "small": "小",
+        "normal": "标准",
+        "large": "大",
+        "xlarge": "特大"
+      }
+    }
+  },
+  "quickTodo": {
+    "title": "快速待办",
+    "placeholder": "记一条待办，回车保存",
+    "hint": "Enter 保存 · Esc 关闭",
+    "hintSyntax": "#标签 · !优先级 · 明天 15:00 · 提前30分钟",
+    "parsed": "输入时自动识别标签、日期与优先级",
+    "warnRecurrence": "重复规则暂未支持",
+    "warnDate": "有日期未能识别",
+    "empty": "先写点什么",
+    "due": {
+      "today": "今天",
+      "tomorrow": "明天",
+      "dayAfter": "后天",
+      "noDate": "无日期",
+      "custom": "自定义",
+      "customHint": "选择任意日期"
+    }
+  }
+}

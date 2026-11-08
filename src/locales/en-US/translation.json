@@ -1,0 +1,780 @@
+{
+  "about": {
+    "closeTitle": "Close About",
+    "productName": "DeskMate",
+    "summary": "A lightweight local timetable and daily planner",
+    "title": "About",
+    "version": "Version: v{{version}}"
+  },
+  "common": {
+    "back": "Back",
+    "blankNote": "Blank Note",
+    "cancel": "Cancel",
+    "default": "Default",
+    "delete": "Delete",
+    "externalFileCount": "{{count}} external file(s)",
+    "noteCount": "{{count}} note(s)",
+    "operationFailed": "Operation failed",
+    "save": "Save",
+    "untitledNote": "Untitled Note",
+    "untitledFile": "Untitled File",
+    "wordCount": "{{count}} characters",
+    "wordCountUnit": "characters",
+    "close": "Close",
+    "clear": "Clear",
+    "loading": "Loading…",
+    "retry": "Retry",
+    "saving": "Saving…",
+    "edit": "Edit",
+    "done": "Done"
+  },
+  "contextMenu": {
+    "edit": {
+      "copy": "Copy",
+      "cut": "Cut",
+      "paste": "Paste",
+      "selectAll": "Select All"
+    },
+    "tile": {
+      "close": "Unpin",
+      "copy": "Copy",
+      "save": "Save",
+      "switchToPad": "Switch to Window"
+    }
+  },
+  "errors": {
+    "categoryAlreadyExists": "Category \"{{category}}\" already exists",
+    "categoryNameEmpty": "Category name cannot be empty",
+    "categoryNameInvalidChars": "Category name cannot contain special characters",
+    "categoryNotFound": "Category \"{{category}}\" not found",
+    "desktopConfig": "Failed to update desktop configuration",
+    "duplicateShortcut": "Shortcuts cannot be duplicated. Give each action a different combination.",
+    "imagePasteFailed": "Image paste failed",
+    "imageTooLarge": "Image file too large (max 20 MB)",
+    "noPool": "Notepad window pool not yet initialized",
+    "noteNotFound": "Note not found",
+    "unsupportedFile": "Only .md files are supported",
+    "unsupportedImageFormat": "Unsupported image format",
+    "unsupportedShortcut": "{{field}} configuration is invalid",
+    "unsupportedShortcutGeneric": "Shortcut configuration is invalid"
+  },
+  "markdown": {
+    "copied": "Copied",
+    "copy": "Copy",
+    "emptyHint": "Preview of the current note",
+    "alert": {
+      "note": "Note",
+      "tip": "Tip",
+      "important": "Important",
+      "warning": "Warning",
+      "caution": "Caution"
+    }
+  },
+  "main": {
+    "category": {
+      "confirmDelete": "Delete \"{{category}}\"?",
+      "confirmDeleteAction": "Confirm Delete",
+      "delete": "Delete Category",
+      "emptyFolder": "Empty Folder",
+      "new": "New Category",
+      "placeholder": "Enter category name…",
+      "rename": "Rename",
+      "uncategorized": "Uncategorized"
+    },
+    "confirm": {
+      "unsavedExternalFile": "\"{{title}}\" has unsaved changes. Save to the original file?"
+    },
+    "editor": {
+      "confirmDelete": "Confirm delete?",
+      "contentPlaceholder": "Start writing…",
+      "emptyHint": "Select or create a note",
+      "pinToTile": "Pin to Tile",
+      "previewLabel": "Preview",
+      "undo": "Undo (Ctrl+Z)",
+      "undoLabel": "Undo",
+      "redo": "Redo (Ctrl+Y)",
+      "redoLabel": "Redo"
+    },
+    "externalFile": {
+      "label": "External File · {{path}}"
+    },
+    "externalFiles": {
+      "remove": "Remove from list",
+      "title": "External Files"
+    },
+    "formatSample": {
+      "boldText": "Bold text",
+      "codeText": "Code",
+      "headingText": "Heading",
+      "italicText": "Italic text",
+      "listItem": "List item",
+      "quoteText": "Blockquote"
+    },
+    "search": {
+      "empty": "No notes yet",
+      "noResults": "No matching notes"
+    },
+    "sidebar": {
+      "clearSearch": "Clear search",
+      "importMarkdown": "Import Markdown",
+      "newNote": "New Note",
+      "searchPlaceholder": "Search notes…"
+    },
+    "images": {
+      "cleanUnused": "Clean unused images",
+      "cleaned": "Cleaned {{count}} image(s)",
+      "cleanedNone": "No unused images"
+    },
+    "statusBar": {
+      "byteSize": "{{size}} KB",
+      "encoding": "UTF-8",
+      "format": "Markdown + LaTeX",
+      "lineNumber": "Ln {{count}}",
+      "saveState": {
+        "dirty": "Unsaved",
+        "error": "Save failed",
+        "idle": "No selection",
+        "saved": "Saved",
+        "saving": "Saving"
+      }
+    },
+    "toolbar": {
+      "blockMath": "Block math",
+      "bold": "Bold",
+      "code": "Code",
+      "heading": "Heading",
+      "hr": "Horizontal rule",
+      "inlineMath": "Inline math",
+      "italic": "Italic",
+      "ol": "Ordered list",
+      "quote": "Blockquote",
+      "ul": "Unordered list"
+    },
+    "window": {
+      "close": "Close",
+      "collapseSidebar": "Collapse sidebar",
+      "expandSidebar": "Expand sidebar",
+      "maximize": "Maximize",
+      "minimize": "Minimize",
+      "about": "About",
+      "quickNotepad": "Quick Note",
+      "restore": "Restore",
+      "settings": "Settings"
+    },
+    "workspace": {
+      "notes": "Notes",
+      "agenda": "Agenda"
+    }
+  },
+  "noteMenu": {
+    "delete": "Delete Note",
+    "export": "Export Markdown",
+    "moveToCategory": "Move to category…"
+  },
+  "notepad": {
+    "button": {
+      "clear": "Clear"
+    },
+    "emptyState": "No notes available",
+    "search": {
+      "clear": "Clear search",
+      "noResults": "No matching notes",
+      "placeholder": "Search notes…"
+    },
+    "error": {
+      "copyUnsupported": "Copy is not supported in this environment"
+    },
+    "placeholder": {
+      "content": "Write something…",
+      "title": "Title (optional)"
+    },
+    "status": {
+      "copied": "Copied",
+      "empty": "Empty",
+      "opened": "Opened",
+      "saveFailed": "Save failed",
+      "saved": "Saved",
+      "unsaved": "Unsaved"
+    },
+    "tab": {
+      "edit": "Edit",
+      "new": "New",
+      "open": "Open"
+    },
+    "tooltip": {
+      "close": "Close",
+      "openInEditor": "Open in Editor",
+      "pinToTile": "Pin to Tile"
+    }
+  },
+  "settings": {
+    "autoSave": {
+      "externalFile": "Auto-save external files",
+      "note": "Auto-save notes",
+      "surface": "Auto-save surface notes"
+    },
+    "autostart": "Launch on Startup",
+    "closeTitle": "Close Settings",
+    "closeToTray": "Close to Tray",
+    "defaultView": {
+      "edit": "Edit",
+      "label": "Default view",
+      "preview": "Preview",
+      "split": "Split"
+    },
+    "fontSize": {
+      "editor": "Editor font size",
+      "surface": "Surface font size"
+    },
+    "locale": {
+      "enUS": "English",
+      "label": "Language",
+      "zhCN": "简体中文",
+      "zhHK": "繁體中文"
+    },
+    "dataDir": "Data directory",
+    "openAtCursor": "Open near cursor with shortcut",
+    "quickNoteShortcut": "Quick Note shortcut",
+    "rememberSurfaceSize": "Remember surface size",
+    "tabIndentSize": "Tab indent width",
+    "selectFolder": "Select Folder",
+    "shortcut": {
+      "cancelHint": "Esc to cancel",
+      "clear": "Clear",
+      "checkFailed": "Shortcut check failed",
+      "checking": "Checking shortcut...",
+      "cleared": "Shortcut cleared",
+      "clickToRecord": "Click to record",
+      "conflict": {
+        "current": "Shortcut {{shortcut}} is currently in use",
+        "invalid": "Shortcut {{shortcut}} is not supported",
+        "none": "No conflict detected for {{shortcut}}",
+        "registered": "Shortcut {{shortcut}} may be occupied by the system or another app",
+        "system": "Shortcut {{shortcut}} conflicts with a system shortcut",
+        "unknown": "Check completed, but failed to release temporary shortcut"
+      },
+      "forQuickNote": "Opens the Quick Note window",
+      "needsModifier": "Shortcut must include Ctrl, Option/Alt, or Command/Meta",
+      "notSet": "Not set",
+      "pressHint": "Press shortcut...; press Delete to clear."
+    },
+    "theme": {
+      "dark": "Dark",
+      "label": "Theme",
+      "light": "Light",
+      "system": "System"
+    },
+    "tileColor": {
+      "custom": "Custom",
+      "followTheme": "Follow Theme",
+      "label": "Tile color"
+    },
+    "tileCtrlClose": "Ctrl+Right-click to close tile",
+    "tileRenderMarkdown": "Render Markdown on tile",
+    "tileDoubleClickToEdit": "Double-click tile to edit",
+    "tileSaveReturnsToPin": "Return to tile after saving",
+    "renderHtmlMarkdown": "Render HTML tags in Markdown",
+    "splitScrollSync": "Split view scroll sync",
+    "title": "Settings",
+    "update": {
+      "advanced": "Advanced",
+      "allowPrerelease": "Allow prerelease versions",
+      "autoCheck": "Automatically check for updates",
+      "autoDownload": "Download new versions automatically",
+      "available": "New version {{version}} is available",
+      "busy": "Working",
+      "cancel": "Cancel Download",
+      "cancelRequested": "Cancellation requested",
+      "cancelled": "Download cancelled",
+      "channel": {
+        "beta": "beta",
+        "stable": "stable"
+      },
+      "check": "Check Updates",
+      "checking": "Checking...",
+      "confirmClearCdk": "Clear the MirrorChyan CDK?",
+      "currentVersion": "Current version: {{version}}",
+      "error": {
+        "alreadyRunning": "An update task is already running",
+        "cancelUnavailable": "There is no update task to cancel",
+        "checkInterrupted": "The last update check was interrupted and has been reset to idle",
+        "checkTaskJoinFailed": "Update check task failed to complete",
+        "downloadAssetMismatch": "Update package info does not match the last check result; please re-check for updates",
+        "downloadClientUnavailable": "The download client is unavailable; please try again later",
+        "downloadHashMismatch": "The downloaded file hash did not match",
+        "downloadHttpStatus": "The download request failed. Please try again later.",
+        "downloadInterrupted": "The last download was interrupted; please download again",
+        "downloadManifestUnavailable": "The GitHub update manifest is not configured for this stage",
+        "downloadManifestUnreadable": "The GitHub update manifest could not be read",
+        "downloadNetwork": "The network connection was interrupted during download; please try again later",
+        "downloadNotReady": "There is no update package ready to download",
+        "downloadRedirectInvalid": "Invalid download redirect URL",
+        "downloadRedirectLoop": "Too many download redirects; please try again later",
+        "downloadSizeMismatch": "The downloaded file size did not match",
+        "downloadSourceInvalid": "The download source parameter is invalid",
+        "downloadTaskJoinFailed": "The download task failed to finish cleanly",
+        "downloadTimeout": "Download request timed out; please try again later",
+        "downloadUrlInvalid": "The download URL is invalid or not HTTPS",
+        "downloadUrlNotAllowed": "The download URL host is not allowlisted",
+        "downloadVersionMismatch": "Download version does not match the checked version; please re-check for updates",
+        "githubApi": "GitHub API request failed; check your network and try again",
+        "githubNoAssets": "No usable assets found in GitHub Release",
+        "githubRateLimited": "GitHub API rate limit exceeded; please try again later",
+        "helperNotFound": "Update helper executable was not found",
+        "installAssetExtractFailed": "Could not unpack the downloaded update asset",
+        "installAssetHashMismatch": "Update package hash verification failed",
+        "installAssetMissing": "Update package is missing or unreadable",
+        "installAssetSizeMismatch": "Update package size verification failed",
+        "installCleanupFailed": "Failed to clean up temporary files after install",
+        "installHelperFailed": "Update helper execution failed",
+        "installHelperHandshakeFailed": "The update helper did not become ready before the app tried to exit",
+        "installHelperInvalidArguments": "Update helper arguments are invalid",
+        "installInstallerBusy": "Another installer is already running. Please try again later.",
+        "installInstallerCancelled": "The update installer was cancelled",
+        "installInstallerFailed": "The update installer failed to complete",
+        "installInstallerFatal": "The update installer returned a fatal error",
+        "installInstallerTimedOut": "The update installer timed out before completion",
+        "installInsufficientSpace": "There is not enough free disk space to install the update",
+        "installInterrupted": "The last installation was not completed; please retry the installation",
+        "installLogWriteFailed": "Unable to write install log",
+        "installNotReady": "No downloaded update is ready to install",
+        "installRelaunchFailed": "The app could not be reopened after the update",
+        "installReplaceFailed": "Failed to replace the current installation",
+        "installSaveFailed": "Autosaving open content failed before install. Resolve it and try again.",
+        "installSaveTimedOut": "Timed out waiting for open windows to save before install",
+        "installSpawnFailed": "Failed to launch update helper",
+        "installStateWriteFailed": "Could not write the install state file",
+        "installTargetMissing": "The current install target no longer exists",
+        "installTaskJoinFailed": "Install task failed to complete",
+        "installUnsupportedKind": "This install type does not support in-app installation yet",
+        "installVersionMismatch": "The app reopened on the old version after install. Retry the install directly.",
+        "installWaitTimedOut": "Timed out waiting for the app to exit before installing",
+        "manifestAppIdMismatch": "The update manifest does not belong to this application",
+        "manifestAssetNotFound": "No matching update package found for the current platform",
+        "manifestInvalid": "Invalid update manifest format",
+        "manifestMissingAssets": "The update manifest does not contain any downloadable assets",
+        "manifestUnsupportedSchema": "The update manifest uses an unsupported schema version",
+        "platformUnsupported": "This platform or install type does not support in-app updates yet",
+        "portableManualOnly": "Portable builds must be updated manually by replacing the downloaded package",
+        "storeManagedManualOnly": "Updates are managed by the Microsoft Store. Get the latest version from the Microsoft Store.",
+        "providerFixtureUnreadable": "The local update manifest fixture could not be read",
+        "providerNotConfigured": "The update source has not been configured with a test manifest",
+        "secureStoreUnavailable": "System secure storage is unavailable. Try again later.",
+        "sourceNotConfigured": "Update sources are not configured; this stage only supports local manifest injection",
+        "stateCorrupted": "The update state file is corrupted and has been reset",
+        "stateLockTimeout": "Timed out waiting for the update state file lock; please try again later",
+        "versionInvalid": "Invalid version format"
+      },
+      "confirmInstall": "The app will save open content, close, install the update, and reopen when it is done. Continue?",
+      "download": "Download Update",
+      "downloaded": "Version {{version}} has finished downloading",
+      "interval": {
+        "custom": "{{hours}} hours",
+        "daily": "Daily",
+        "label": "Check frequency",
+        "weekly": "Weekly"
+      },
+      "install": "Install & Restart",
+      "installFailed": "The latest install attempt failed. Review the log and retry or download again.",
+      "installFailedTitle": "Update Installation Failed",
+      "installPreparing": "Preparing to exit the app and install the update...",
+      "installRetry": "Retry Install",
+      "installScheduled": "A legacy pending-install state was found. Click Install & Restart again to finish replacing the app.",
+      "installValidated": "The app will close to install the update and reopen when it is done.",
+      "latestVersion": "Pending version: {{version}}",
+      "loading": "Reading update settings...",
+      "msixNoInAppUpdate": "MSIX sideloaded builds don't support in-app updates. Get the latest version from GitHub or Microsoft Store.",
+      "notAvailable": "You are on the latest version",
+      "openInStore": "View updates in Microsoft Store",
+      "saved": "Update settings saved",
+      "settingsTitle": "Update Settings",
+      "speed": "Speed: {{speed}}",
+      "checkSource": {
+        "label": "Check API source",
+        "github": "GitHub",
+        "mirrorChyan": "MirrorChyan"
+      },
+      "source": {
+        "github": "GitHub",
+        "label": "Download source"
+      },
+      "title": "Updates"
+    },
+    "visibilityShortcut": "Show/Hide window shortcut",
+    "background": {
+      "label": "Background image",
+      "default": "Default background",
+      "choose": "Choose",
+      "clear": "Clear background image",
+      "dim": "Overlay",
+      "scale": "Scale",
+      "positionX": "Horizontal",
+      "positionY": "Vertical",
+      "blur": "Blur",
+      "fit": {
+        "cover": "Cover",
+        "contain": "Contain",
+        "repeat": "Repeat"
+      }
+    },
+    "quickTodoShortcut": "Quick todo shortcut"
+  },
+  "tile": {
+    "empty": "Empty"
+  },
+  "agenda": {
+    "title": "Schedule & Todos",
+    "nav": {
+      "calendar": "Schedule",
+      "todos": "Todos",
+      "courses": "Timetable",
+      "daily": "Daily"
+    },
+    "smart": {
+      "today": "Today",
+      "tomorrow": "Tomorrow",
+      "week": "This week",
+      "overdue": "Overdue",
+      "all": "All",
+      "done": "Completed"
+    },
+    "smartListTitle": "Lists",
+    "tags": "Tags",
+    "calendar": {
+      "prev": "Previous",
+      "next": "Next",
+      "today": "Today",
+      "newEvent": "New event",
+      "allDay": "All day",
+      "more": "+{{count}} more"
+    },
+    "view": {
+      "month": "Month",
+      "week": "Week"
+    },
+    "priority": {
+      "0": "None",
+      "1": "Low",
+      "2": "Medium",
+      "3": "High"
+    },
+    "todo": {
+      "markDone": "Mark as done",
+      "markUndone": "Mark as not done",
+      "hasNotes": "Notes",
+      "searchPlaceholder": "Search todos…",
+      "new": "New todo",
+      "quickPlaceholder": "Write a todo and press Enter",
+      "emptyDone": "No completed todos yet",
+      "empty": "No todos here yet",
+      "emptyHint": "Type above and press Enter to add one",
+      "noDate": "No date",
+      "editTitle": "Edit todo",
+      "titlePlaceholder": "What needs to be done?",
+      "titleRequired": "Please enter a title",
+      "dueDate": "Date",
+      "dueTime": "Time",
+      "priority": "Priority",
+      "estimate": "Estimate",
+      "estimateUnset": "Not estimated",
+      "estimateMinutes": "{{count}} min",
+      "tags": "Tags",
+      "tagsPlaceholder": "Work, Life",
+      "notes": "Notes",
+      "notesPlaceholder": "Add details…",
+      "kind": {
+        "assignment": "Assignment",
+        "reminder": "Reminder"
+      }
+    },
+    "event": {
+      "new": "New event",
+      "editTitle": "Edit event",
+      "titlePlaceholder": "Event title",
+      "titleRequired": "Please enter a title",
+      "startDate": "Start date",
+      "endDate": "End date",
+      "startTime": "Start time",
+      "endTime": "End time",
+      "color": "Color",
+      "notes": "Notes",
+      "notesPlaceholder": "Location, attendees, agenda…"
+    },
+    "toast": {
+      "saved": "Saved",
+      "deleted": "Deleted"
+    },
+    "confirmDelete": "Delete this item? This cannot be undone.",
+    "weekday": {
+      "1": "Mon",
+      "2": "Tue",
+      "3": "Wed",
+      "4": "Thu",
+      "5": "Fri",
+      "6": "Sat",
+      "7": "Sun"
+    },
+    "course": {
+      "new": "Course",
+      "add": "Add course",
+      "editTitle": "Edit course",
+      "nameRequired": "Please enter a course name",
+      "namePlaceholder": "Course name",
+      "period": "Period",
+      "addAt": "Add course",
+      "weekday": "Weekday",
+      "startPeriod": "Start",
+      "endPeriod": "End",
+      "location": "Location",
+      "locationPlaceholder": "Room 101",
+      "teacher": "Teacher",
+      "teacherPlaceholder": "Mr. Zhang",
+      "weeks": "Weeks",
+      "weeksPlaceholder": "1-16 weeks / odd / even",
+      "color": "Color",
+      "notes": "Notes",
+      "notesPlaceholder": "Exam scope, assignments…",
+      "clear": "Clear timetable",
+      "clearConfirm": "Clear all courses for this semester? This cannot be undone and course exceptions will be removed too.",
+      "cleared": "Cleared {{count}} course(s)",
+      "import": "Import",
+      "overview": "Overview",
+      "total": "Courses",
+      "countUnit": "",
+      "perWeek": "Periods/week",
+      "periodUnit": "",
+      "sidebarHint": "Click an empty cell to add a course, or import from a table or image.",
+      "tasks": "Assignments & todos",
+      "addTask": "Add",
+      "taskPlaceholder": "Assignment or todo",
+      "platformPlaceholder": "Platform, e.g. Canvas / Moodle",
+      "taskTitleRequired": "Please enter a title",
+      "saveFirst": "Save the course first, then add assignments, todos or reminders here.",
+      "noTasks": "No assignments or todos yet",
+      "currentWeek": "Current",
+      "weekUnset": "No semester",
+      "periodShort": "P{{period}}",
+      "taskKind": {
+        "assignment": "Assignment",
+        "task": "Todo",
+        "reminder": "Reminder"
+      }
+    },
+    "import": {
+      "fileTab": "Timetable file",
+      "textTab": "Paste text",
+      "fileHint": "Pick the .xls / .xlsx file exported by your school system. The weekday x period grid is detected automatically and course name, weeks, room and teacher are extracted — no copy-paste needed.",
+      "textHint": "Paste timetable text in any format, one course per line, any field order. Supports Mon/Wednesday, 1-2 / period 5, week 1-16, @room and teacher names.",
+      "insertSample": "Insert sample",
+      "preview": "Import {{count}} course(s)",
+      "fileSheet": "(sheet: {{sheet}})",
+      "fileReady": "{{count}} course(s) recognized",
+      "fileWarnings": "{{count}} cell(s) could not be parsed; add them manually after importing",
+      "fileEmpty": "No courses found. Make sure this is a timetable exported by the school system.",
+      "pickFile": "Choose timetable file",
+      "parsingFile": "Reading timetable…",
+      "fileFormats": ".xls / .xlsx, up to 10 MB",
+      "confirm": "Import {{count}}",
+      "errorCount": "{{count}} row(s) could not be parsed",
+      "imported": "Imported {{count}} course(s)"
+    },
+    "daily": {
+      "progressTitle": "Today's progress",
+      "progressHint": "Resets every day; each check-in is stored by date",
+      "empty": "No daily items yet. Add one to start.",
+      "add": "Add daily item",
+      "addShort": "Daily item",
+      "editTitle": "Edit daily item",
+      "titlePlaceholder": "e.g. Review 30 words",
+      "titleRequired": "Please enter a title",
+      "active": "Active",
+      "drawerHint": "Inactive items stay out of today's list, but past check-ins are kept.",
+      "history": "Last 7 days",
+      "historyHint": "Based on the current list",
+      "note": "Daily items are independent from todos. Deleting one also removes its check-in history.",
+      "sidebarHint": "Resets at midnight. The last 7 days are shown on the right."
+    },
+    "timetable": {
+      "settingsTitle": "Timetable settings",
+      "semesterStart": "Semester start",
+      "weekUnset": "Set a date to calculate the current week",
+      "weekNotStarted": "Semester has not started",
+      "currentWeek": "Week {{week}}",
+      "weekShort": "Week {{week}}",
+      "notStartedShort": "Not started",
+      "currentWeekOnly": "This week",
+      "periodTimes": "Period times",
+      "reset": "Reset",
+      "hint": "These times only affect timetable display and week calculation. They do not change events or todos."
+    },
+    "reminder": {
+      "settingsTitle": "Reminder settings",
+      "bannerTitle": "DeskMate · reminder",
+      "open": "Open",
+      "snooze5": "In 5 min",
+      "snooze60": "In 1 hour",
+      "dismissToday": "Skip today",
+      "openFailed": "The item no longer exists",
+      "enabled": "Enable reminders",
+      "hint": "Checked every 30 seconds. In-app reminders still work when system notifications are unavailable.",
+      "defaultMinutes": "Default lead time",
+      "minutesUnit": "min",
+      "todoReminders": "Todo and course reminders",
+      "quietHours": "Quiet hours",
+      "to": "to",
+      "muteDuringCourses": "Mute during classes",
+      "muteDuringCoursesHint": "Uses the timetable periods; reminders due in class are delivered after it ends.",
+      "autoReview": "Generate daily review automatically"
+    },
+    "review": {
+      "generate": "Generate today's review",
+      "generated": "Review note created",
+      "weekly": "Weekly review",
+      "weeklyGenerated": "Weekly review created",
+      "hint": "On the next launch, yesterday's completed todos, events, classes and habits become a note."
+    },
+    "partner": {
+      "title": "Shared timetable",
+      "short": "Shared",
+      "other": "Partner",
+      "hint": "Add a second person's timetable: both schedules appear stacked in one grid and shared free slots are highlighted. Their courses are read-only and never trigger reminders.",
+      "name": "Their name",
+      "namePlaceholder": "e.g. Alex",
+      "relation": "Relationship",
+      "relations": {
+        "partner": "Partner",
+        "sibling": "Sibling",
+        "classmate": "Classmate",
+        "friend": "Friend",
+        "other": "Other"
+      },
+      "color": "Color",
+      "saveProfile": "Save profile",
+      "courses": "Their courses",
+      "importFile": "Import their timetable",
+      "importReady": "Import {{count}}",
+      "imported": "Imported {{count}} course(s)",
+      "empty": "No courses yet. Import a file or add them later.",
+      "clear": "Clear",
+      "clearConfirm": "Clear all of their courses? Name and relationship are kept.",
+      "cleared": "Cleared {{count}} course(s)",
+      "show": "Show their timetable",
+      "hide": "Hide their timetable",
+      "visible": "Shown in grid",
+      "hidden": "Hidden",
+      "commonFree": "Shared free"
+    },
+    "plan": {
+      "title": "Smart planner",
+      "open": "Plan",
+      "today": "Today",
+      "week": "This week",
+      "hint": "Fills open slots by deadline and estimate. Everything is selected; uncheck as needed.",
+      "empty": "Nothing to schedule: add deadlines to todos or widen the range.",
+      "skipped": "{{count}} item(s) had no room and were left out",
+      "selected": "{{count}} event(s) will be created",
+      "generated": "Created {{count}} plan block(s)",
+      "generate": "Add to calendar",
+      "none": "These plans are already on the calendar"
+    },
+    "pressure": {
+      "title": "DDLs in 14 days",
+      "overdue": "{{count}} overdue",
+      "peak": "Peak {{day}}",
+      "peakCount": "{{count}} item(s)",
+      "clear": "No upcoming DDLs"
+    },
+    "progress": {
+      "label": "Week {{current}} / {{total}}",
+      "remaining": "{{count}} left",
+      "hint": "Calculated from the semester start and course weeks"
+    },
+    "note": {
+      "create": "Take note",
+      "createHint": "Archive a note for this course",
+      "created": "Filed under \"{{name}}\""
+    },
+    "print": {
+      "title": "Timetable",
+      "hint": "Generated locally by DeskMate. Print it or save as PDF.",
+      "print": "Print / Save as PDF",
+      "open": "Print"
+    },
+    "override": {
+      "title": "One-off change · {{name}}",
+      "short": "Change",
+      "hint": "Applies only to the selected date; the course itself is unchanged. Timetable, planner and weekly stats all respect it.",
+      "date": "Date",
+      "action": "Type",
+      "cancel": "Cancelled",
+      "move": "Moved",
+      "moveTo": "Moved to period {{start}}-{{end}}",
+      "notePlaceholder": "Note (optional), e.g. teacher away",
+      "existing": "Existing exceptions"
+    },
+    "widget": {
+      "scheduleTitle": "Today's schedule",
+      "todosTitle": "Today's todos",
+      "timeline": "Timeline",
+      "timelineShort": "Line",
+      "table": "Table",
+      "tableShort": "Grid",
+      "pin": "Always on top",
+      "refresh": "Refresh",
+      "allDay": "All day",
+      "typeEvent": "Event",
+      "typeCourse": "Class",
+      "typeTodo": "Todo",
+      "priorityHigh": "High",
+      "priorityMedium": "Medium",
+      "priorityLow": "Low",
+      "period": "P{{period}}",
+      "overdue": "Overdue",
+      "emptySchedule": "Nothing scheduled today",
+      "emptyScheduleHint": "Today's events and classes will appear here automatically.",
+      "emptyTodos": "No todos for today",
+      "emptyTodosHint": "Overdue items and anything due today will appear here.",
+      "upcomingCourses": "{{count}} class(es) on {{day}}",
+      "tomorrow": "Tomorrow",
+      "combinedTitle": "Today",
+      "tabSchedule": "Schedule",
+      "tabTodos": "Todos",
+      "openCombined": "Open the combined desktop widget (schedule / todos)",
+      "openCombinedShort": "Desktop widget",
+      "count": "{{count}} items",
+      "updated": "Updated {{time}}",
+      "colTime": "Time",
+      "colTitle": "Item",
+      "colInfo": "Info",
+      "openSchedule": "Pin today's schedule to the desktop",
+      "openScheduleShort": "Schedule",
+      "openTodos": "Pin today's todos to the desktop",
+      "openTodosShort": "Todos",
+      "fontSize": {
+        "title": "Font size",
+        "small": "Small",
+        "normal": "Normal",
+        "large": "Large",
+        "xlarge": "Extra large"
+      }
+    }
+  },
+  "quickTodo": {
+    "title": "Quick todo",
+    "placeholder": "Write a todo and press Enter",
+    "hint": "Enter to save · Esc to close",
+    "hintSyntax": "#tag · !priority · tomorrow 15:00 · 30m before",
+    "parsed": "Tags, dates and priority are detected as you type",
+    "warnRecurrence": "Recurring rules are not supported yet",
+    "warnDate": "Some dates could not be parsed",
+    "empty": "Type something first",
+    "due": {
+      "today": "Today",
+      "tomorrow": "Tomorrow",
+      "dayAfter": "In 2 days",
+      "noDate": "No date",
+      "custom": "Custom",
+      "customHint": "Pick any date"
+    }
+  }
+}
