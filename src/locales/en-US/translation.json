@@ -769,7 +769,8 @@
       "dailyTitle": "Daily tasks"
     },
     "week": {
-      "courseTag": "Class"
+      "courseTag": "Class",
+      "courseCount": "{{count}} classes"
     },
     "dayPanel": {
       "add": "+ Add",

@@ -68,6 +68,7 @@ import { ConfirmSaveDialog } from "./components/ConfirmSaveDialog";
 import { DayAgendaPanel } from "./components/DayAgendaPanel";
 import { useDrawerController, type DrawerKind, type DrawerTarget } from "./drawerController";
 import { expandWeekCourses } from "./weekCourses";
+import { expandWeekCourseBlocks } from "./weekCourseBlocks";
 import type { PlanBlock } from "./schedulePlanner";
 
 const DRAWER_LABELS: Record<DrawerKind, string> = {
@@ -434,6 +435,31 @@ export function AgendaWorkspace({
   const selectedWeekday = useMemo(
     () => ((parseDayKey(selectedDay).getDay() + 6) % 7) + 1,
     [selectedDay],
+  );
+
+  // 周视图显示的那一周对应的学期周次（周视图可以翻看任意一周）
+  const viewWeek = useMemo(
+    () => semesterWeek(snapshot.timetableSettings.semesterStart, weekStartKey),
+    [snapshot.timetableSettings.semesterStart, weekStartKey],
+  );
+
+  // 周视图里的课程块：按周次过滤 + 应用调课例外 + 节次换算成时间轴位置
+  const weekCourseBlocks = useMemo(
+    () =>
+      expandWeekCourseBlocks(
+        snapshot.courses,
+        snapshot.courseOverrides,
+        snapshot.timetableSettings,
+        weekStartKey,
+        viewWeek,
+      ),
+    [
+      snapshot.courses,
+      snapshot.courseOverrides,
+      snapshot.timetableSettings,
+      weekStartKey,
+      viewWeek,
+    ],
   );
 
   const visibleTodos = useMemo(() => {
@@ -1085,10 +1111,19 @@ export function AgendaWorkspace({
               weekStart={weekStartKey}
               selectedDay={selectedDay}
               events={snapshot.events}
+              courseBlocks={weekCourseBlocks}
               locale={locale}
               onSelectDay={handleSelectDayInCalendar}
               onOpenEvent={(event) => openDrawerWithPanelClosed({ kind: "event", event, day: eventStartKey(event) })}
               onCreateEvent={(day, minutes) => openDrawerWithPanelClosed({ kind: "event", event: null, day, minutes })}
+              onOpenCourse={(course) =>
+                openDrawerWithPanelClosed({
+                  kind: "course",
+                  course,
+                  weekday: course.weekday,
+                  period: course.startPeriod,
+                })
+              }
             />
           )
         ) : mode === "courses" ? (

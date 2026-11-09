@@ -750,7 +750,8 @@
       "dailyTitle": "每日必做"
     },
     "week": {
-      "courseTag": "課"
+      "courseTag": "課",
+      "courseCount": "{{count}} 節課"
     },
     "dayPanel": {
       "add": "+ 新增",
