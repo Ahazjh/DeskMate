@@ -16,6 +16,7 @@ import { getCurrentWindow } from "@tauri-apps/api/window";
 import { exportMarkdownNote, importMarkdownNote } from "../features/importExport/api";
 import { MarkdownPreviewLazy as MarkdownPreview } from "../features/markdown/MarkdownPreviewLazy";
 import { showToast } from "./Toast";
+import { useNoteSearch } from "../features/notes/useNoteSearch";
 import {
   createScrollSyncMap,
   interpolateScrollOffset,
@@ -72,7 +73,6 @@ import { useImageBaseDir } from "../features/images/useImageBaseDir";
 import type { ExternalFile, Note, NoteMetadata } from "../features/notes/types";
 import {
   countNoteChars,
-  filterNotes,
   formatShortDate,
   formatTime,
   getDisplayTitle,
@@ -595,12 +595,18 @@ export function MainWindow({
     setAboutUpdateReminder((current) => dismissAboutUpdateReminderText(current));
   }, []);
 
-  const filteredNotes = useMemo(() => filterNotes(notes, searchQuery), [notes, searchQuery]);
+  // 笔记搜索：本地即时筛选 + 后端全文搜索（正文靠后的内容也能搜到）
+  const { notes: filteredNotes, searching: noteSearching } = useNoteSearch(notes, searchQuery);
 
-  const categoryGroups = useMemo(
-    () => groupNotesByCategory(filteredNotes, categories),
-    [filteredNotes, categories],
-  );
+  const categoryGroups = useMemo(() => {
+    const groups = groupNotesByCategory(filteredNotes, categories);
+    // 搜索态下不显示「空文件夹」：否则所有没命中的分类都会冒出来，
+    // 把真正的「没有匹配的笔记」提示淹没
+    if (searchQuery.trim()) {
+      return groups.filter((group) => group.notes.length > 0);
+    }
+    return groups;
+  }, [filteredNotes, categories, searchQuery]);
 
   // 打字时输入框优先响应：预览渲染与字数/字节统计使用延迟值，
   // 连续输入期间 React 会自动合并这些重计算，停顿时再追上
@@ -2230,6 +2236,12 @@ export function MainWindow({
                         })}
                         className="flex-1 text-[12px] font-body text-ink placeholder:text-ink-ghost/60 bg-transparent"
                       />
+                      {noteSearching ? (
+                        <span
+                          className="w-2.5 h-2.5 shrink-0 rounded-full border border-ink-ghost/40 border-t-transparent animate-spin"
+                          title={t("main.sidebar.searching", { defaultValue: "正在搜索全文…" })}
+                        />
+                      ) : null}
                       {searchQuery && (
                         <button
                           onClick={() => setSearchQuery("")}

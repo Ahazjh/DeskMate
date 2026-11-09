@@ -8,6 +8,7 @@ import type { AgendaWidgetKind } from "../windows/windowRoutes";
 import {
   agendaSnapshot,
   saveWidgetBounds,
+  toggleDailyTask,
   toggleTodo,
 } from "./api";
 import {
@@ -22,7 +23,7 @@ import { addDaysToKey } from "./dateUtils";
 import { courseMatchesWeek, semesterWeek } from "./timetable";
 import { DdlPressureStrip } from "./components/DdlPressureStrip";
 import { DailyProgressStrip } from "./components/DailyProgressStrip";
-import type { AgendaSnapshot } from "./types";
+import type { AgendaSnapshot, DailyTask } from "./types";
 
 type ViewMode = "timeline" | "table";
 
@@ -318,6 +319,15 @@ export function AgendaWidgetWindow(_props: AgendaWidgetWindowProps) {
     if (!item.todoId) return;
     try {
       await toggleTodo(item.todoId, !item.done);
+      await reload();
+    } catch (cause) {
+      showToast(getErrorMessage(cause));
+    }
+  };
+
+  const handleToggleDaily = async (task: DailyTask, done: boolean) => {
+    try {
+      await toggleDailyTask(task.id, today, done);
       await reload();
     } catch (cause) {
       showToast(getErrorMessage(cause));
@@ -655,6 +665,7 @@ export function AgendaWidgetWindow(_props: AgendaWidgetWindowProps) {
                   <DailyProgressStrip
                     tasks={activeDailyTasks}
                     doneIds={dailyDoneIds}
+                    onToggle={(task, done) => void handleToggleDaily(task, done)}
                   />
                   <div className="px-2 pb-1 shrink-0">
                     <DdlPressureStrip todos={snapshot.todos} today={today} locale={locale} compact />

@@ -22,7 +22,7 @@ import {
   todayKey,
 } from "./dateUtils";
 import { filterTodos } from "./todoFilters";
-import { splitQueryKeywords } from "../notes/noteUtils";
+import { matchesKeywords, splitQueryKeywords } from "../notes/noteUtils";
 import { eventStartKey } from "./eventUtils";
 import { courseMatchesWeek, semesterWeek } from "./timetable";
 import { generateDailyReview, onReminder, openAgendaWidget } from "./api";
@@ -476,10 +476,8 @@ export function AgendaWorkspace({
         todo.priority > 0
           ? t(`agenda.priority.${todo.priority}`, { defaultValue: "优先级" })
           : "",
-      ]
-        .join(" ")
-        .toLowerCase();
-      return keywords.every((keyword) => haystack.includes(keyword));
+      ].join(" ");
+      return matchesKeywords(haystack, keywords);
     });
   }, [snapshot.todos, activeList, activeTag, search, now, t]);
 
@@ -517,10 +515,8 @@ export function AgendaWorkspace({
         entry.location,
         entry.course.teacher,
         entry.course.note,
-      ]
-        .join(" ")
-        .toLowerCase();
-      return keywords.every((keyword) => haystack.includes(keyword));
+      ].join(" ");
+      return matchesKeywords(haystack, keywords);
     });
   }, [activeList, snapshot.courses, snapshot.courseOverrides, now, currentWeek, search]);
 

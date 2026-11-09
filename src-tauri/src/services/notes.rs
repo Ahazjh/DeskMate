@@ -765,6 +765,51 @@ impl NoteStore {
         })
     }
 
+    /// 全文搜索：读取每篇笔记的完整正文做匹配。
+    ///
+    /// 之前前端只拿到 metadata（preview 被截断到 240 字符），
+    /// 于是正文靠后的内容永远搜不到；这里改为在后端读全文匹配，
+    /// 只把命中的笔记 id 返回给前端，避免把全部正文传到前端。
+    ///
+    /// 关键词之间是 AND 关系，大小写不敏感。
+    pub fn search_notes(&self, query: &str) -> Result<Vec<String>, AppError> {
+        self.ensure_storage()?;
+        let keywords: Vec<String> = query
+            .split_whitespace()
+            .map(|word| word.to_lowercase())
+            .filter(|word| !word.is_empty())
+            .collect();
+        if keywords.is_empty() {
+            return Ok(Vec::new());
+        }
+
+        let metadata = self.load_metadata()?.notes;
+        let mut matched = Vec::new();
+
+        for note in metadata {
+            let path = self.note_path_in_category(&note.file_name, &note.category);
+            if !path.exists() {
+                continue;
+            }
+            let Ok(content) = fs::read_to_string(&path) else {
+                continue;
+            };
+
+            // 标题、文件名、分类、正文一起参与匹配
+            let haystack = format!(
+                "{}\n{}\n{}\n{}",
+                note.title, note.file_name, note.category, content
+            )
+            .to_lowercase();
+
+            if keywords.iter().all(|keyword| haystack.contains(keyword)) {
+                matched.push(note.id);
+            }
+        }
+
+        Ok(matched)
+    }
+
     pub fn create_note(&self, request: SaveNoteRequest) -> Result<Note, AppError> {
         self.ensure_storage()?;
         let id = Uuid::new_v4().to_string();
@@ -2465,5 +2510,93 @@ mod tests {
             fs::read_to_string(export_path).expect("read exported markdown"),
             content
         );
+    }
+
+    #[test]
+    fn searches_note_content_beyond_the_preview_length() {
+        let store = test_store("search-fulltext");
+
+        // 正文很长，关键字只在末尾 —— 旧的 preview（240 字符）截不到
+        let filler = "占位内容 ".repeat(60);
+        let created = store
+            .create_note(SaveNoteRequest {
+                title: "长笔记".into(),
+                content: format!("{filler}关键词在这里"),
+                category: String::new(),
+            })
+            .expect("create note");
+
+        let listed = store.list_notes().expect("list notes");
+        assert!(!listed[0].preview.contains("关键词"));
+
+        let hits = store.search_notes("关键词").expect("search");
+        assert_eq!(hits, vec![created.id]);
+    }
+
+    #[test]
+    fn search_matches_title_and_category_and_is_case_insensitive() {
+        let store = test_store("search-fields");
+
+        let a = store
+            .create_note(SaveNoteRequest {
+                title: "线性代数".into(),
+                content: "Matrix 与行列式".into(),
+                category: "课程笔记".into(),
+            })
+            .expect("create note");
+        let b = store
+            .create_note(SaveNoteRequest {
+                title: "概率论".into(),
+                content: "随机变量".into(),
+                category: String::new(),
+            })
+            .expect("create note");
+
+        // 标题命中
+        assert_eq!(store.search_notes("线性代数").expect("search"), vec![a.id.clone()]);
+        // 分类命中
+        assert_eq!(store.search_notes("课程笔记").expect("search"), vec![a.id.clone()]);
+        // 正文命中
+        assert_eq!(store.search_notes("随机变量").expect("search"), vec![b.id.clone()]);
+        // 大小写不敏感
+        assert_eq!(store.search_notes("MATRIX").expect("search"), vec![a.id.clone()]);
+    }
+
+    #[test]
+    fn search_requires_all_keywords() {
+        let store = test_store("search-and");
+
+        let a = store
+            .create_note(SaveNoteRequest {
+                title: "高等数学".into(),
+                content: "极限与连续".into(),
+                category: String::new(),
+            })
+            .expect("create note");
+        store
+            .create_note(SaveNoteRequest {
+                title: "高等代数".into(),
+                content: "线性空间".into(),
+                category: String::new(),
+            })
+            .expect("create note");
+
+        let hits = store.search_notes("高等 极限").expect("search");
+        assert_eq!(hits, vec![a.id.clone()]);
+    }
+
+    #[test]
+    fn empty_search_returns_no_results() {
+        let store = test_store("search-empty");
+        store
+            .create_note(SaveNoteRequest {
+                title: "任意".into(),
+                content: "内容".into(),
+                category: String::new(),
+            })
+            .expect("create note");
+
+        assert!(store.search_notes("").expect("search").is_empty());
+        assert!(store.search_notes("   ").expect("search").is_empty());
     }
 }

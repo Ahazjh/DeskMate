@@ -31,6 +31,11 @@ export function getNote(id: string): Promise<Note> {
   return invoke("notes_get", { id });
 }
 
+/** 全文搜索：返回命中笔记的 id 列表（关键词之间 AND 关系）。 */
+export function searchNotes(query: string): Promise<string[]> {
+  return invoke("notes_search", { query });
+}
+
 export function createNote(request: SaveNoteRequest): Promise<Note> {
   return invoke("notes_create", { request });
 }

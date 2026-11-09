@@ -118,7 +118,8 @@
       "clearSearch": "Clear search",
       "importMarkdown": "Import Markdown",
       "newNote": "New Note",
-      "searchPlaceholder": "Search notes…"
+      "searchPlaceholder": "Search notes…",
+      "searching": "Searching full text…"
     },
     "images": {
       "cleanUnused": "Clean unused images",
@@ -179,7 +180,8 @@
     "search": {
       "clear": "Clear search",
       "noResults": "No matching notes",
-      "placeholder": "Search notes…"
+      "placeholder": "Search notes…",
+      "searching": "Searching full text…"
     },
     "error": {
       "copyUnsupported": "Copy is not supported in this environment"
@@ -766,7 +768,9 @@
         "large": "Large",
         "xlarge": "Extra large"
       },
-      "dailyTitle": "Daily tasks"
+      "dailyTitle": "Daily tasks",
+      "dailyPending": "{{count}} left to do",
+      "dailyAllDone": "All done for today"
     },
     "week": {
       "courseTag": "Class",

@@ -1,7 +1,8 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { openNoteInEditor } from "../features/windows/api";
-import { filterNotes, formatShortDate, getDisplayTitle } from "../features/notes/noteUtils";
+import { formatShortDate, getDisplayTitle } from "../features/notes/noteUtils";
+import { useNoteSearch } from "../features/notes/useNoteSearch";
 import type { NoteMetadata } from "../features/notes/types";
 
 interface NotepadOpenPanelProps {
@@ -14,7 +15,7 @@ export function NotepadOpenPanel({ notes, onOpenNote }: NotepadOpenPanelProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [hoveredNote, setHoveredNote] = useState<string | null>(null);
 
-  const filteredNotes = useMemo(() => filterNotes(notes, searchQuery), [notes, searchQuery]);
+  const { notes: filteredNotes, searching } = useNoteSearch(notes, searchQuery);
 
   return (
     <div className="flex flex-col flex-1 min-h-0">
@@ -40,6 +41,12 @@ export function NotepadOpenPanel({ notes, onOpenNote }: NotepadOpenPanelProps) {
             placeholder={t("notepad.search.placeholder", { defaultValue: "搜索笔记…" })}
             className="flex-1 text-[12px] font-body text-ink placeholder:text-ink-ghost/60 bg-transparent"
           />
+          {searching ? (
+            <span
+              className="w-2.5 h-2.5 shrink-0 rounded-full border border-ink-ghost/40 border-t-transparent animate-spin"
+              title={t("notepad.search.searching", { defaultValue: "正在搜索全文…" })}
+            />
+          ) : null}
           {searchQuery && (
             <button
               type="button"

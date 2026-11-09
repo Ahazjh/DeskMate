@@ -118,7 +118,8 @@
       "clearSearch": "清除搜尋",
       "importMarkdown": "匯入 Markdown",
       "newNote": "新增筆記",
-      "searchPlaceholder": "搜尋筆記…"
+      "searchPlaceholder": "搜尋筆記…",
+      "searching": "正在搜尋全文…"
     },
     "images": {
       "cleanUnused": "清理未使用圖片",
@@ -179,7 +180,8 @@
     "search": {
       "clear": "清除搜尋",
       "noResults": "沒有符合的筆記",
-      "placeholder": "搜尋筆記…"
+      "placeholder": "搜尋筆記…",
+      "searching": "正在搜尋全文…"
     },
     "error": {
       "copyUnsupported": "目前環境不支援複製"
@@ -747,7 +749,9 @@
         "large": "大",
         "xlarge": "特大"
       },
-      "dailyTitle": "每日必做"
+      "dailyTitle": "每日必做",
+      "dailyPending": "還有 {{count}} 項未完成",
+      "dailyAllDone": "今天都做完了"
     },
     "week": {
       "courseTag": "課",

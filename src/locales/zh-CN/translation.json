@@ -118,7 +118,8 @@
       "clearSearch": "清空搜索",
       "importMarkdown": "导入 Markdown",
       "newNote": "新建笔记",
-      "searchPlaceholder": "搜索笔记…"
+      "searchPlaceholder": "搜索笔记…",
+      "searching": "正在搜索全文…"
     },
     "images": {
       "cleanUnused": "清理未使用图片",
@@ -179,7 +180,8 @@
     "search": {
       "clear": "清空搜索",
       "noResults": "没有匹配的笔记",
-      "placeholder": "搜索笔记…"
+      "placeholder": "搜索笔记…",
+      "searching": "正在搜索全文…"
     },
     "error": {
       "copyUnsupported": "当前环境不支持复制"
@@ -766,7 +768,9 @@
         "large": "大",
         "xlarge": "特大"
       },
-      "dailyTitle": "每日必做"
+      "dailyTitle": "每日必做",
+      "dailyPending": "还有 {{count}} 项未完成",
+      "dailyAllDone": "今天都做完了"
     },
     "week": {
       "courseTag": "课",

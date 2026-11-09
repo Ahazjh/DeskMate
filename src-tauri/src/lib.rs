@@ -27,6 +27,12 @@ fn notes_get(id: String) -> Result<Note, AppError> {
     default_store()?.read_note(&id)
 }
 
+/// 全文搜索：返回命中笔记的 id 列表（关键词之间 AND 关系）。
+#[tauri::command]
+fn notes_search(query: String) -> Result<Vec<String>, AppError> {
+    default_store()?.search_notes(&query)
+}
+
 #[tauri::command]
 fn notes_create(app: AppHandle, request: SaveNoteRequest) -> Result<Note, AppError> {
     let note = default_store()?.create_note(request)?;
@@ -522,6 +528,7 @@ pub fn run() {
             app_name,
             notes_list,
             notes_get,
+            notes_search,
             notes_create,
             notes_update,
             notes_delete,

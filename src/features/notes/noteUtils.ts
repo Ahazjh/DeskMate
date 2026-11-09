@@ -117,18 +117,61 @@ export function splitQueryKeywords(query: string): string[] {
 }
 
 /**
- * 笔记搜索：标题 / 预览 / 文件名 / 显示标题。
+ * 把一段文本切分成用于匹配的「词元」。
+ *
+ * 纯 `includes` 子串匹配对数字很别扭：搜 "12" 会命中 "2026-12-03"，
+ * 搜 "3" 也会命中同一处，用户分不清到底匹配到了什么。
+ * 这里额外把连续的字母/数字串单独切出来，让 "12" 优先作为完整词元匹配。
+ */
+export function tokenizeForSearch(text: string): string[] {
+  const normalized = text.toLowerCase();
+  // 连续的数字串、字母串各自成为一个词元
+  const words = normalized.match(/[a-z0-9]+|[^\sa-z0-9]+/g) ?? [];
+  return words.filter(Boolean);
+}
+
+/**
+ * 判断一段文本是否命中全部关键词。
+ *
+ * 规则（自上而下，先命中先返回）：
+ * 1. 关键词整体作为子串出现 → 命中（最宽松，保证「12月」能搜到）
+ * 2. 关键词拆出的词元全部出现在文本的词元集合里 → 命中
+ *    （保证搜 "12" 能命中 "第 12 章"，同时不会把 "3" 单独算作命中）
+ * 3. 否则不命中
+ */
+export function matchesKeywords(haystack: string, keywords: string[]): boolean {
+  if (keywords.length === 0) return true;
+
+  const lowered = haystack.toLowerCase();
+  const tokens = new Set(tokenizeForSearch(haystack));
+
+  return keywords.every((keyword) => {
+    if (lowered.includes(keyword)) return true;
+    // 关键词本身可能由多个词元组成（如 "12 章"），要求每个词元都在文本里
+    return tokenizeForSearch(keyword).every((token) => tokens.has(token));
+  });
+}
+
+/**
+ * 笔记搜索：标题 / 预览 / 文件名 / 分类。
  * 多关键词之间是 AND 关系。
+ *
+ * 注意：这只是**元数据级**的快速筛选，用于本地即时反馈；
+ * 完整的正文搜索走后端 notes_search（见 useNoteSearch）。
  */
 export function filterNotes(notes: NoteMetadata[], query: string): NoteMetadata[] {
   const keywords = splitQueryKeywords(query);
   if (keywords.length === 0) return notes;
 
   return notes.filter((note) => {
-    const haystack = [note.title, note.preview, note.fileName, getDisplayTitle(note)]
-      .join(" ")
-      .toLowerCase();
-    return keywords.every((keyword) => haystack.includes(keyword));
+    const haystack = [
+      note.title,
+      note.preview,
+      note.fileName,
+      note.category,
+      getDisplayTitle(note),
+    ].join(" ");
+    return matchesKeywords(haystack, keywords);
   });
 }
 
