@@ -269,7 +269,6 @@
       "followTheme": "跟隨主題",
       "label": "磁貼顏色"
     },
-    "tileCtrlClose": "Ctrl+右鍵快速關閉磁貼",
     "tileRenderMarkdown": "磁貼渲染 Markdown",
     "tileDoubleClickToEdit": "雙擊磁貼進入編輯",
     "tileSaveReturnsToPin": "儲存後回到磁貼",
@@ -466,7 +465,8 @@
       "kind": {
         "assignment": "作業",
         "reminder": "提醒"
-      }
+      },
+      "noResults": "沒有符合的待辦"
     },
     "event": {
       "new": "新增日程",
@@ -486,6 +486,13 @@
       "deleted": "已刪除"
     },
     "confirmDelete": "確定刪除？此操作無法復原。",
+    "drawer": {
+      "unsavedTitle": "有未儲存的修改",
+      "unsavedHint": "目前「{{label}}」裡的內容還沒有儲存，要儲存嗎？",
+      "unsavedSave": "儲存",
+      "unsavedDiscard": "放棄",
+      "unsavedCancel": "取消"
+    },
     "weekday": {
       "1": "週一",
       "2": "週二",
@@ -539,7 +546,8 @@
         "assignment": "作業",
         "task": "待辦",
         "reminder": "提醒"
-      }
+      },
+      "cancelledTag": "停課"
     },
     "import": {
       "fileTab": "課表檔案",
@@ -608,11 +616,12 @@
       "autoReview": "自動生成每日回顧"
     },
     "review": {
-      "generate": "生成今日回顧",
+      "generate": "今日回顧",
       "generated": "回顧筆記已生成",
       "weekly": "週回顧",
       "weeklyGenerated": "本週回顧已生成",
-      "hint": "次日啟動時把前一天完成的待辦、日程、課程與每日必做寫成一篇筆記。"
+      "hint": "把今天完成的待辦、日程、課程與每日必做寫成一篇筆記並立即開啟；每天首次啟動時也會自動生成前一天的回顧。",
+      "generatedHint": "已自動開啟今天的回顧筆記；每天首次啟動時也會自動生成前一天的回顧。"
     },
     "partner": {
       "title": "雙人課表",
@@ -737,7 +746,17 @@
         "normal": "標準",
         "large": "大",
         "xlarge": "特大"
-      }
+      },
+      "dailyTitle": "每日必做"
+    },
+    "week": {
+      "courseTag": "課"
+    },
+    "dayPanel": {
+      "add": "+ 新增",
+      "emptyEvent": "這天沒有日程",
+      "emptyTodo": "這天沒有待辦",
+      "emptyAll": "這天還沒有任何安排"
     }
   },
   "quickTodo": {

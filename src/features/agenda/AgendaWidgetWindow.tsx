@@ -21,6 +21,7 @@ import {
 import { addDaysToKey } from "./dateUtils";
 import { courseMatchesWeek, semesterWeek } from "./timetable";
 import { DdlPressureStrip } from "./components/DdlPressureStrip";
+import { DailyProgressStrip } from "./components/DailyProgressStrip";
 import type { AgendaSnapshot } from "./types";
 
 type ViewMode = "timeline" | "table";
@@ -296,6 +297,20 @@ export function AgendaWidgetWindow(_props: AgendaWidgetWindowProps) {
     () => (snapshot ? buildTodoItems(snapshot, today, labels) : []),
     [snapshot, today, labels],
   );
+
+  // 每日必做进度：只统计启用的模板
+  const activeDailyTasks = useMemo(
+    () => (snapshot ? snapshot.dailyTasks.filter((task) => task.active) : []),
+    [snapshot],
+  );
+  const dailyDoneIds = useMemo(() => {
+    const ids = new Set<string>();
+    if (!snapshot) return ids;
+    for (const id of snapshot.dailyChecks[today] ?? []) {
+      ids.add(id);
+    }
+    return ids;
+  }, [snapshot, today]);
 
   const title = t("agenda.widget.combinedTitle", { defaultValue: "今日一览" });
 
@@ -636,9 +651,15 @@ export function AgendaWidgetWindow(_props: AgendaWidgetWindowProps) {
                 )}
               </div>
               {snapshot ? (
-                <div className="px-2 pb-1 shrink-0">
-                  <DdlPressureStrip todos={snapshot.todos} today={today} locale={locale} compact />
-                </div>
+                <>
+                  <DailyProgressStrip
+                    tasks={activeDailyTasks}
+                    doneIds={dailyDoneIds}
+                  />
+                  <div className="px-2 pb-1 shrink-0">
+                    <DdlPressureStrip todos={snapshot.todos} today={today} locale={locale} compact />
+                  </div>
+                </>
               ) : null}
             </section>
           </div>

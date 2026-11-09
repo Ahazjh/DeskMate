@@ -269,7 +269,6 @@
       "followTheme": "Follow Theme",
       "label": "Tile color"
     },
-    "tileCtrlClose": "Ctrl+Right-click to close tile",
     "tileRenderMarkdown": "Render Markdown on tile",
     "tileDoubleClickToEdit": "Double-click tile to edit",
     "tileSaveReturnsToPin": "Return to tile after saving",
@@ -485,7 +484,8 @@
       "kind": {
         "assignment": "Assignment",
         "reminder": "Reminder"
-      }
+      },
+      "noResults": "No matching todos"
     },
     "event": {
       "new": "New event",
@@ -505,6 +505,13 @@
       "deleted": "Deleted"
     },
     "confirmDelete": "Delete this item? This cannot be undone.",
+    "drawer": {
+      "unsavedTitle": "Unsaved changes",
+      "unsavedHint": "The {{label}} you are editing has unsaved changes. Save them?",
+      "unsavedSave": "Save",
+      "unsavedDiscard": "Discard",
+      "unsavedCancel": "Cancel"
+    },
     "weekday": {
       "1": "Mon",
       "2": "Tue",
@@ -558,7 +565,8 @@
         "assignment": "Assignment",
         "task": "Todo",
         "reminder": "Reminder"
-      }
+      },
+      "cancelledTag": "Cancelled"
     },
     "import": {
       "fileTab": "Timetable file",
@@ -627,11 +635,12 @@
       "autoReview": "Generate daily review automatically"
     },
     "review": {
-      "generate": "Generate today's review",
+      "generate": "Today's review",
       "generated": "Review note created",
       "weekly": "Weekly review",
       "weeklyGenerated": "Weekly review created",
-      "hint": "On the next launch, yesterday's completed todos, events, classes and habits become a note."
+      "hint": "Write today's completed todos, events, classes and daily tasks into a note and open it right away. The previous day's review is generated automatically on the next launch.",
+      "generatedHint": "Today's review note has been opened for you; the previous day's review is generated automatically on the next launch."
     },
     "partner": {
       "title": "Shared timetable",
@@ -756,7 +765,17 @@
         "normal": "Normal",
         "large": "Large",
         "xlarge": "Extra large"
-      }
+      },
+      "dailyTitle": "Daily tasks"
+    },
+    "week": {
+      "courseTag": "Class"
+    },
+    "dayPanel": {
+      "add": "+ Add",
+      "emptyEvent": "No events this day",
+      "emptyTodo": "No todos this day",
+      "emptyAll": "Nothing planned this day"
     }
   },
   "quickTodo": {

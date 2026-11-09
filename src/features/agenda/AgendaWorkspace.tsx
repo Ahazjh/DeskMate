@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { showToast } from "../../components/Toast";
 import {
@@ -22,6 +22,7 @@ import {
   todayKey,
 } from "./dateUtils";
 import { filterTodos } from "./todoFilters";
+import { splitQueryKeywords } from "../notes/noteUtils";
 import { eventStartKey } from "./eventUtils";
 import { courseMatchesWeek, semesterWeek } from "./timetable";
 import { generateDailyReview, onReminder, openAgendaWidget } from "./api";
@@ -63,12 +64,19 @@ import { CourseOverrideDialog } from "./components/CourseOverrideDialog";
 import { buildWeeklyReview } from "./weeklyReview";
 import { buildSharedFreeGrid } from "./sharedSlots";
 import { PartnerDialog } from "./components/PartnerDialog";
+import { ConfirmSaveDialog } from "./components/ConfirmSaveDialog";
+import { DayAgendaPanel } from "./components/DayAgendaPanel";
+import { useDrawerController, type DrawerKind, type DrawerTarget } from "./drawerController";
+import { expandWeekCourses } from "./weekCourses";
 import type { PlanBlock } from "./schedulePlanner";
 
-type TodoDrawerState = { todo: Todo | null } | null;
-type EventDrawerState = { event: AgendaEvent | null; day: string; minutes?: number } | null;
-type CourseDrawerState = { course: Course | null; weekday: number; period: number } | null;
-type DailyDrawerState = { task: DailyTask | null } | null;
+const DRAWER_LABELS: Record<DrawerKind, string> = {
+  todo: "待办",
+  event: "日程",
+  course: "课程",
+  daily: "每日必做",
+};
+
 
 interface AgendaWorkspaceProps {
   initialMode?: AgendaMode;
@@ -119,10 +127,6 @@ export function AgendaWorkspace({
   const [activeList, setActiveList] = useState<SmartList>("today");
   const [activeTag, setActiveTag] = useState<string | null>(null);
   const [search, setSearch] = useState("");
-  const [todoDrawer, setTodoDrawer] = useState<TodoDrawerState>(null);
-  const [eventDrawer, setEventDrawer] = useState<EventDrawerState>(null);
-  const [courseDrawer, setCourseDrawer] = useState<CourseDrawerState>(null);
-  const [dailyDrawer, setDailyDrawer] = useState<DailyDrawerState>(null);
   const [importOpen, setImportOpen] = useState(false);
   const [timetableSettingsOpen, setTimetableSettingsOpen] = useState(false);
   const [reminderSettingsOpen, setReminderSettingsOpen] = useState(false);
@@ -138,6 +142,88 @@ export function AgendaWorkspace({
   const [weeklyBusy, setWeeklyBusy] = useState(false);
   const [onlyCurrentWeek, setOnlyCurrentWeek] = useState(true);
   const [now, setNow] = useState(() => new Date());
+  // 点日历某一天时弹出的「当日安排」面板
+  const [dayPanelOpen, setDayPanelOpen] = useState(false);
+
+  // 抽屉互斥：同一时刻只显示一个抽屉
+  const [pendingConfirm, setPendingConfirm] = useState<{
+    kind: DrawerKind;
+    resolve: (saved: boolean) => void;
+  } | null>(null);
+
+  const drawer = useDrawerController({
+    onConfirmSave: async (kind) => {
+      const result = await new Promise<boolean>((resolve) => {
+        setPendingConfirm({ kind, resolve });
+      });
+      return result;
+    },
+  });
+
+  const activeDrawer = drawer.active;
+  const todoDrawer =
+    activeDrawer?.kind === "todo" ? activeDrawer : null;
+  const eventDrawer =
+    activeDrawer?.kind === "event" ? activeDrawer : null;
+  const courseDrawer =
+    activeDrawer?.kind === "course" ? activeDrawer : null;
+  const dailyDrawer =
+    activeDrawer?.kind === "daily" ? activeDrawer : null;
+
+  const openDrawer = drawer.open;
+  const closeDrawer = drawer.close;
+
+  // 当日面板与抽屉互斥：开抽屉时收起面板，开面板时收起抽屉
+  const openDayPanel = useCallback(() => {
+    closeDrawer();
+    setDayPanelOpen(true);
+  }, [closeDrawer]);
+
+  const openDrawerWithPanelClosed = useCallback(
+    (target: DrawerTarget) => {
+      setDayPanelOpen(false);
+      openDrawer(target);
+    },
+    [openDrawer],
+  );
+  // 各抽屉的 dirty 上报与保存登记：稳定引用，避免抽屉内部 effect 反复触发
+  const setDirty = drawer.setDirty;
+  const registerSave = drawer.registerSave;
+  const runSave = drawer.runSave;
+
+  const handleTodoDirty = useCallback(
+    (dirty: boolean) => setDirty("todo", dirty),
+    [setDirty],
+  );
+  const handleEventDirty = useCallback(
+    (dirty: boolean) => setDirty("event", dirty),
+    [setDirty],
+  );
+  const handleCourseDirty = useCallback(
+    (dirty: boolean) => setDirty("course", dirty),
+    [setDirty],
+  );
+  const handleDailyDirty = useCallback(
+    (dirty: boolean) => setDirty("daily", dirty),
+    [setDirty],
+  );
+
+  const handleTodoRegisterSave = useCallback(
+    (save: (() => Promise<boolean>) | null) => registerSave("todo", save),
+    [registerSave],
+  );
+  const handleEventRegisterSave = useCallback(
+    (save: (() => Promise<boolean>) | null) => registerSave("event", save),
+    [registerSave],
+  );
+  const handleCourseRegisterSave = useCallback(
+    (save: (() => Promise<boolean>) | null) => registerSave("course", save),
+    [registerSave],
+  );
+  const handleDailyRegisterSave = useCallback(
+    (save: (() => Promise<boolean>) | null) => registerSave("daily", save),
+    [registerSave],
+  );
 
   useEffect(() => {
     const timer = window.setInterval(() => setNow(new Date()), 60_000);
@@ -157,14 +243,14 @@ export function AgendaWorkspace({
       const todo = snapshot.todos.find((entry) => entry.id === item.id);
       if (todo) {
         setMode("todos");
-        setTodoDrawer({ todo });
+        openDrawerWithPanelClosed({ kind: "todo", todo });
         return;
       }
     } else {
       const event = snapshot.events.find((entry) => entry.id === item.id);
       if (event) {
         setMode("calendar");
-        setEventDrawer({ event, day: eventStartKey(event) });
+        openDrawerWithPanelClosed({ kind: "event", event, day: eventStartKey(event) });
         return;
       }
     }
@@ -174,11 +260,18 @@ export function AgendaWorkspace({
   const handleGenerateReview = async () => {
     setReviewing(true);
     try {
-      await generateDailyReview(todayKey(now));
+      const noteId = await generateDailyReview(todayKey(now));
+      // 描述文字挂在图标上，鼠标移上去才显示；提示本身用不透明背景保证可读
       showToast(
         t("agenda.review.generated", { defaultValue: "回顾笔记已生成" }),
-        "info",
+        "success",
+        t("agenda.review.generatedHint", {
+          defaultValue: "已自动打开今天的回顾笔记；每天首次启动时也会自动生成前一天的回顾。",
+        }),
+        { opaque: true },
       );
+      // 点一下就直接拿到当天的报告
+      await openNoteInEditor(noteId).catch(() => undefined);
     } catch (cause) {
       showToast(getErrorMessage(cause));
     } finally {
@@ -345,12 +438,24 @@ export function AgendaWorkspace({
 
   const visibleTodos = useMemo(() => {
     const base = filterTodos(snapshot.todos, activeList, now, activeTag);
-    const query = search.trim().toLowerCase();
-    if (!query) return base;
-    return base.filter((todo) =>
-      [todo.title, todo.notes, ...todo.tags].join(" ").toLowerCase().includes(query),
-    );
-  }, [snapshot.todos, activeList, activeTag, search, now]);
+    const keywords = splitQueryKeywords(search);
+    if (keywords.length === 0) return base;
+    // 多关键词 AND 关系；除标题/备注/标签外，也搜提交平台与优先级
+    return base.filter((todo) => {
+      const haystack = [
+        todo.title,
+        todo.notes,
+        todo.platform,
+        ...todo.tags,
+        todo.priority > 0
+          ? t(`agenda.priority.${todo.priority}`, { defaultValue: "优先级" })
+          : "",
+      ]
+        .join(" ")
+        .toLowerCase();
+      return keywords.every((keyword) => haystack.includes(keyword));
+    });
+  }, [snapshot.todos, activeList, activeTag, search, now, t]);
 
   const activeDailyTasks = useMemo(
     () => snapshot.dailyTasks.filter((task) => task.active),
@@ -368,6 +473,30 @@ export function AgendaWorkspace({
     }
     return snapshot.courses.filter((course) => courseMatchesWeek(course.weeks, currentWeek));
   }, [snapshot.courses, onlyCurrentWeek, currentWeek]);
+
+  // 「本周」列表同步展示本周课程；其他清单不展示课程
+  const weekCourseEntries = useMemo(() => {
+    if (activeList !== "week") return [];
+    const entries = expandWeekCourses(
+      snapshot.courses,
+      snapshot.courseOverrides,
+      now,
+      currentWeek,
+    );
+    const keywords = splitQueryKeywords(search);
+    if (keywords.length === 0) return entries;
+    return entries.filter((entry) => {
+      const haystack = [
+        entry.course.name,
+        entry.location,
+        entry.course.teacher,
+        entry.course.note,
+      ]
+        .join(" ")
+        .toLowerCase();
+      return keywords.every((keyword) => haystack.includes(keyword));
+    });
+  }, [activeList, snapshot.courses, snapshot.courseOverrides, now, currentWeek, search]);
 
   const sharedFree = useMemo(
     () =>
@@ -420,11 +549,14 @@ export function AgendaWorkspace({
     setSelectedDay(key);
     setCursor(parseDayKey(key));
     setMode("calendar");
+    openDayPanel();
   };
 
   const handleSelectDayInCalendar = (key: string) => {
     setSelectedDay(key);
     setCursor(parseDayKey(key));
+    // 点日期即弹出当天的全部安排（日程 + 课程 + 待办），可点条目编辑
+    openDayPanel();
   };
 
   const handleToggle = (todo: Todo) => {
@@ -439,8 +571,8 @@ export function AgendaWorkspace({
     }
     void removeTodo(todo.id)
       .then(() => {
-        setTodoDrawer(null);
-        showToast(t("agenda.toast.deleted", { defaultValue: "已删除" }));
+        closeDrawer();
+        showToast(t("agenda.toast.deleted", { defaultValue: "已删除" }), "success");
       })
       .catch((cause) => showToast(getErrorMessage(cause)));
   };
@@ -453,8 +585,8 @@ export function AgendaWorkspace({
     }
     void removeEvent(event.id)
       .then(() => {
-        setEventDrawer(null);
-        showToast(t("agenda.toast.deleted", { defaultValue: "已删除" }));
+        closeDrawer();
+        showToast(t("agenda.toast.deleted", { defaultValue: "已删除" }), "success");
       })
       .catch((cause) => showToast(getErrorMessage(cause)));
   };
@@ -465,7 +597,7 @@ export function AgendaWorkspace({
     } else {
       await addTodo(input);
     }
-    showToast(t("agenda.toast.saved", { defaultValue: "已保存" }));
+    showToast(t("agenda.toast.saved", { defaultValue: "已保存" }), "success");
   };
 
   const handleEventSave = async (input: EventInput) => {
@@ -474,7 +606,7 @@ export function AgendaWorkspace({
     } else {
       await addEvent(input);
     }
-    showToast(t("agenda.toast.saved", { defaultValue: "已保存" }));
+    showToast(t("agenda.toast.saved", { defaultValue: "已保存" }), "success");
   };
 
   const handleQuickCreate = async (title: string, dueDate: string | null) => {
@@ -487,7 +619,7 @@ export function AgendaWorkspace({
     } else {
       await addCourse(input);
     }
-    showToast(t("agenda.toast.saved", { defaultValue: "已保存" }));
+    showToast(t("agenda.toast.saved", { defaultValue: "已保存" }), "success");
   };
 
   const handleDeleteCourse = (course: Course) => {
@@ -498,8 +630,8 @@ export function AgendaWorkspace({
     }
     void removeCourse(course.id)
       .then(() => {
-        setCourseDrawer(null);
-        showToast(t("agenda.toast.deleted", { defaultValue: "已删除" }));
+        closeDrawer();
+        showToast(t("agenda.toast.deleted", { defaultValue: "已删除" }), "success");
       })
       .catch((cause) => showToast(getErrorMessage(cause)));
   };
@@ -520,7 +652,7 @@ export function AgendaWorkspace({
     } else {
       await addDailyTask(input);
     }
-    showToast(t("agenda.toast.saved", { defaultValue: "已保存" }));
+    showToast(t("agenda.toast.saved", { defaultValue: "已保存" }), "success");
   };
 
   const handleDeleteDaily = (task: DailyTask) => {
@@ -531,8 +663,8 @@ export function AgendaWorkspace({
     }
     void removeDailyTask(task.id)
       .then(() => {
-        setDailyDrawer(null);
-        showToast(t("agenda.toast.deleted", { defaultValue: "已删除" }));
+        closeDrawer();
+        showToast(t("agenda.toast.deleted", { defaultValue: "已删除" }), "success");
       })
       .catch((cause) => showToast(getErrorMessage(cause)));
   };
@@ -556,12 +688,20 @@ export function AgendaWorkspace({
         activeList={activeList}
         activeTag={activeTag}
         locale={locale}
-        onModeChange={setMode}
+        onModeChange={(next) => {
+          setMode(next);
+          // 离开待办视图时清掉搜索词：搜索框不在其它视图里，
+          // 残留的搜索词会让列表莫名其妙是空的
+          if (next !== "todos") {
+            setSearch("");
+          }
+        }}
         onSelectDay={handleSelectDayFromMini}
         onCursorChange={setCursor}
         onSelectList={(list) => {
           setActiveList(list);
           setMode("todos");
+          setSearch("");
         }}
         onSelectTag={setActiveTag}
       />
@@ -725,14 +865,14 @@ export function AgendaWorkspace({
                 </div>
                 <button
                   type="button"
-                  onClick={() => setTodoDrawer({ todo: null })}
+                  onClick={() => openDrawerWithPanelClosed({ kind: "todo", todo: null })}
                   className="h-7 px-2.5 rounded-lg border border-paper-deep/50 text-[11px] font-body text-ink-faint hover:text-bamboo hover:border-bamboo/40 hover:bg-bamboo-mist/40 transition-colors cursor-pointer"
                 >
                   + {t("agenda.nav.todos", { defaultValue: "待办" })}
                 </button>
                 <button
                   type="button"
-                  onClick={() => setEventDrawer({ event: null, day: selectedDay })}
+                  onClick={() => openDrawerWithPanelClosed({ kind: "event", event: null, day: selectedDay })}
                   className="h-7 px-2.5 rounded-lg bg-bamboo text-cloud text-[11px] font-body hover:bg-bamboo-light transition-colors cursor-pointer"
                 >
                   + {t("agenda.nav.calendar", { defaultValue: "日程" })}
@@ -845,7 +985,7 @@ export function AgendaWorkspace({
                 <button
                   type="button"
                   onClick={() =>
-                    setCourseDrawer({ course: null, weekday: selectedWeekday, period: 1 })
+                    openDrawerWithPanelClosed({ kind: "course", course: null, weekday: selectedWeekday, period: 1 })
                   }
                   className="h-7 px-2.5 rounded-lg bg-bamboo text-cloud text-[11px] font-body hover:bg-bamboo-light transition-colors cursor-pointer"
                 >
@@ -859,7 +999,8 @@ export function AgendaWorkspace({
                   disabled={reviewing}
                   onClick={() => void handleGenerateReview()}
                   title={t("agenda.review.hint", {
-                    defaultValue: "把今天完成的待办、日程、课程与每日必做写成一篇笔记",
+                    defaultValue:
+                      "把今天完成的待办、日程、课程与每日必做写成一篇笔记并立即打开；每天首次启动时也会自动生成前一天的回顾。",
                   })}
                   className="h-7 px-2.5 rounded-lg border border-paper-deep/50 text-[11px] font-body text-ink-faint hover:text-bamboo hover:border-bamboo/40 hover:bg-bamboo-mist/40 transition-colors disabled:opacity-50 cursor-pointer"
                 >
@@ -869,7 +1010,7 @@ export function AgendaWorkspace({
                 </button>
                 <button
                   type="button"
-                  onClick={() => setDailyDrawer({ task: null })}
+                  onClick={() => openDrawerWithPanelClosed({ kind: "daily", task: null })}
                   className="h-7 px-2.5 rounded-lg bg-bamboo text-cloud text-[11px] font-body hover:bg-bamboo-light transition-colors cursor-pointer"
                 >
                   + {t("agenda.daily.addShort", { defaultValue: "每日必做" })}
@@ -879,14 +1020,14 @@ export function AgendaWorkspace({
               <>
                 <button
                   type="button"
-                  onClick={() => setTodoDrawer({ todo: null })}
+                  onClick={() => openDrawerWithPanelClosed({ kind: "todo", todo: null })}
                   className="h-7 px-2.5 rounded-lg border border-paper-deep/50 text-[11px] font-body text-ink-faint hover:text-bamboo hover:border-bamboo/40 hover:bg-bamboo-mist/40 transition-colors cursor-pointer"
                 >
                   + {t("agenda.nav.todos", { defaultValue: "待办" })}
                 </button>
                 <button
                   type="button"
-                  onClick={() => setEventDrawer({ event: null, day: selectedDay })}
+                  onClick={() => openDrawerWithPanelClosed({ kind: "event", event: null, day: selectedDay })}
                   className="h-7 px-2.5 rounded-lg bg-bamboo text-cloud text-[11px] font-body hover:bg-bamboo-light transition-colors cursor-pointer"
                 >
                   + {t("agenda.nav.calendar", { defaultValue: "日程" })}
@@ -932,10 +1073,10 @@ export function AgendaWorkspace({
               week={currentWeek}
               locale={locale}
               onSelectDay={handleSelectDayInCalendar}
-              onOpenEvent={(event) => setEventDrawer({ event, day: eventStartKey(event) })}
-              onCreateEvent={(day) => setEventDrawer({ event: null, day })}
+              onOpenEvent={(event) => openDrawerWithPanelClosed({ kind: "event", event, day: eventStartKey(event) })}
+              onCreateEvent={(day) => openDrawerWithPanelClosed({ kind: "event", event: null, day })}
               onOpenCourse={(course) =>
-                setCourseDrawer({ course, weekday: course.weekday, period: course.startPeriod })
+                openDrawerWithPanelClosed({ kind: "course", course, weekday: course.weekday, period: course.startPeriod })
               }
               onOpenPartner={() => setPartnerOpen(true)}
             />
@@ -946,8 +1087,8 @@ export function AgendaWorkspace({
               events={snapshot.events}
               locale={locale}
               onSelectDay={handleSelectDayInCalendar}
-              onOpenEvent={(event) => setEventDrawer({ event, day: eventStartKey(event) })}
-              onCreateEvent={(day, minutes) => setEventDrawer({ event: null, day, minutes })}
+              onOpenEvent={(event) => openDrawerWithPanelClosed({ kind: "event", event, day: eventStartKey(event) })}
+              onCreateEvent={(day, minutes) => openDrawerWithPanelClosed({ kind: "event", event: null, day, minutes })}
             />
           )
         ) : mode === "courses" ? (
@@ -964,9 +1105,10 @@ export function AgendaWorkspace({
             onOpenPartner={() => setPartnerOpen(true)}
             pendingByCourse={pendingByCourse}
             locale={locale}
-            onCreate={(weekday, period) => setCourseDrawer({ course: null, weekday, period })}
+            onCreate={(weekday, period) => openDrawerWithPanelClosed({ kind: "course", course: null, weekday, period })}
             onEdit={(course) =>
-              setCourseDrawer({
+              openDrawerWithPanelClosed({
+                kind: "course",
                 course,
                 weekday: course.weekday,
                 period: course.startPeriod,
@@ -980,9 +1122,9 @@ export function AgendaWorkspace({
             today={today}
             locale={locale}
             onToggle={handleToggleDaily}
-            onEdit={(task) => setDailyDrawer({ task })}
+            onEdit={(task) => openDrawerWithPanelClosed({ kind: "daily", task })}
             onDelete={handleDeleteDaily}
-            onAdd={() => setDailyDrawer({ task: null })}
+            onAdd={() => openDrawerWithPanelClosed({ kind: "daily", task: null })}
           />
         ) : (
           <div className="flex-1 min-h-0 flex flex-col">
@@ -995,47 +1137,95 @@ export function AgendaWorkspace({
               search={search}
               defaultDueDate={defaultDueDateForList}
               locale={locale}
+              weekCourses={weekCourseEntries}
+              timetableSettings={snapshot.timetableSettings}
               onSearchChange={setSearch}
               onCreate={handleQuickCreate}
-              onNewDetailed={() => setTodoDrawer({ todo: null })}
+              onNewDetailed={() => openDrawerWithPanelClosed({ kind: "todo", todo: null })}
               onToggle={handleToggle}
-              onOpen={(todo) => setTodoDrawer({ todo })}
+              onOpen={(todo) => openDrawerWithPanelClosed({ kind: "todo", todo })}
               onDelete={handleDeleteTodo}
+              onOpenCourse={(entry) =>
+                openDrawerWithPanelClosed({
+                  kind: "course",
+                  course: entry.course,
+                  weekday: entry.course.weekday,
+                  period: entry.startPeriod,
+                })
+              }
             />
           </div>
         )}
       </main>
 
+      {dayPanelOpen ? (
+        <DayAgendaPanel
+          day={selectedDay}
+          events={snapshot.events}
+          courses={snapshot.courses}
+          todos={snapshot.todos}
+          overrides={snapshot.courseOverrides}
+          timetableSettings={snapshot.timetableSettings}
+          week={currentWeek}
+          locale={locale}
+          onClose={() => setDayPanelOpen(false)}
+          onOpenEvent={(event) =>
+            openDrawerWithPanelClosed({ kind: "event", event, day: eventStartKey(event) })
+          }
+          onOpenCourse={(course) =>
+            openDrawerWithPanelClosed({
+              kind: "course",
+              course,
+              weekday: course.weekday,
+              period: course.startPeriod,
+            })
+          }
+          onOpenTodo={(todo) => openDrawerWithPanelClosed({ kind: "todo", todo })}
+          onCreateEvent={(day) => openDrawerWithPanelClosed({ kind: "event", event: null, day })}
+          onCreateTodo={(day) => {
+            openDrawerWithPanelClosed({ kind: "todo", todo: null });
+            setSelectedDay(day);
+          }}
+        />
+      ) : null}
+
       {todoDrawer ? (
         <TodoDrawer
+          key={`todo-${todoDrawer.todo?.id ?? "new"}`}
           todo={todoDrawer.todo}
           defaultDueDate={defaultDueDateForList}
-          onClose={() => setTodoDrawer(null)}
+          onClose={closeDrawer}
           onSave={handleTodoSave}
           onDelete={handleDeleteTodo}
+          onDirtyChange={handleTodoDirty}
+          onRegisterSave={handleTodoRegisterSave}
         />
       ) : null}
 
       {eventDrawer ? (
         <EventDrawer
+          key={`event-${eventDrawer.event?.id ?? `new-${eventDrawer.day}-${eventDrawer.minutes ?? ""}`}`}
           event={eventDrawer.event}
           defaultDay={eventDrawer.day}
           defaultMinutes={eventDrawer.minutes}
           locale={locale}
-          onClose={() => setEventDrawer(null)}
+          onClose={closeDrawer}
           onSave={handleEventSave}
           onDelete={handleDeleteEvent}
+          onDirtyChange={handleEventDirty}
+          onRegisterSave={handleEventRegisterSave}
         />
       ) : null}
 
       {courseDrawer ? (
         <CourseDrawer
+          key={`course-${courseDrawer.course?.id ?? `new-${courseDrawer.weekday}-${courseDrawer.period}`}`}
           course={courseDrawer.course}
           defaultWeekday={courseDrawer.weekday}
           defaultPeriod={courseDrawer.period}
           todos={snapshot.todos}
           overrides={snapshot.courseOverrides}
-          onClose={() => setCourseDrawer(null)}
+          onClose={closeDrawer}
           onSave={handleCourseSave}
           onDelete={handleDeleteCourse}
           onAddTask={async (input) => {
@@ -1044,22 +1234,49 @@ export function AgendaWorkspace({
           onToggleTask={handleToggle}
           onDeleteTask={handleDeleteTodo}
           onOpenTask={(todo) => {
-            setCourseDrawer(null);
-            setTodoDrawer({ todo });
+            openDrawerWithPanelClosed({ kind: "todo", todo });
           }}
           onCreateNote={(course) => void handleCreateCourseNote(course)}
           onOpenOverride={(course) => setOverrideCourse(course)}
+          onDirtyChange={handleCourseDirty}
+          onRegisterSave={handleCourseRegisterSave}
         />
       ) : null}
 
       {dailyDrawer ? (
         <DailyDrawer
+          key={`daily-${dailyDrawer.task?.id ?? "new"}`}
           task={dailyDrawer.task}
-          onClose={() => setDailyDrawer(null)}
+          onClose={closeDrawer}
           onSave={handleDailySave}
           onDelete={handleDeleteDaily}
+          onDirtyChange={handleDailyDirty}
+          onRegisterSave={handleDailyRegisterSave}
         />
       ) : null}
+
+      <ConfirmSaveDialog
+        open={pendingConfirm !== null}
+        label={pendingConfirm ? DRAWER_LABELS[pendingConfirm.kind] : ""}
+        onSave={() => {
+          const pending = pendingConfirm;
+          if (!pending) return;
+          setPendingConfirm(null);
+          void runSave(pending.kind).then((ok: boolean) => pending.resolve(ok));
+        }}
+        onDiscard={() => {
+          const pending = pendingConfirm;
+          if (!pending) return;
+          setPendingConfirm(null);
+          pending.resolve(false);
+        }}
+        onCancel={() => {
+          const pending = pendingConfirm;
+          if (!pending) return;
+          setPendingConfirm(null);
+          pending.resolve(false);
+        }}
+      />
 
       {importOpen ? (
         <CourseImportDialog

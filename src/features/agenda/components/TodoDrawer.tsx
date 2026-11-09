@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { showToast } from "../../../components/Toast";
 import { getErrorMessage } from "../../notes/api";
@@ -12,33 +12,71 @@ interface TodoDrawerProps {
   onClose: () => void;
   onSave: (input: TodoInput) => Promise<void>;
   onDelete: (todo: Todo) => void;
+  /** 抽屉互斥：上报未保存状态并登记保存处理器 */
+  onDirtyChange?: (dirty: boolean) => void;
+  onRegisterSave?: (save: (() => Promise<boolean>) | null) => void;
 }
 
 const PRIORITIES: Priority[] = [0, 1, 2, 3];
 
-export function TodoDrawer({ todo, defaultDueDate, onClose, onSave, onDelete }: TodoDrawerProps) {
+export function TodoDrawer({
+  todo,
+  defaultDueDate,
+  onClose,
+  onSave,
+  onDelete,
+  onDirtyChange,
+  onRegisterSave,
+}: TodoDrawerProps) {
   const { t } = useTranslation();
   const titleRef = useRef<HTMLInputElement>(null);
+  const initialDueDate = todo?.dueDate ?? (todo?.dueAt ? isoDayKey(todo.dueAt) : (defaultDueDate ?? ""));
   const [title, setTitle] = useState(todo?.title ?? "");
   const [notes, setNotes] = useState(todo?.notes ?? "");
-  const [dueDate, setDueDate] = useState(
-    todo?.dueDate ?? (todo?.dueAt ? isoDayKey(todo.dueAt) : (defaultDueDate ?? "")),
-  );
+  const [dueDate, setDueDate] = useState(initialDueDate);
   const [dueTime, setDueTime] = useState(todo?.dueAt ? isoTime(todo.dueAt) : "");
   const [priority, setPriority] = useState<Priority>(todo?.priority ?? 0);
   const [estimateMinutes, setEstimateMinutes] = useState(todo?.estimateMinutes ?? 0);
   const [tags, setTags] = useState((todo?.tags ?? []).join(", "));
   const [saving, setSaving] = useState(false);
 
+  // 与初始值比较得出「有未保存输入」
+  const dirty = useMemo(() => {
+    const initialTags = (todo?.tags ?? []).join(", ");
+    return (
+      title !== (todo?.title ?? "") ||
+      notes !== (todo?.notes ?? "") ||
+      dueDate !== initialDueDate ||
+      dueTime !== (todo?.dueAt ? isoTime(todo.dueAt) : "") ||
+      priority !== (todo?.priority ?? 0) ||
+      estimateMinutes !== (todo?.estimateMinutes ?? 0) ||
+      tags !== initialTags
+    );
+  }, [
+    title,
+    notes,
+    dueDate,
+    dueTime,
+    priority,
+    estimateMinutes,
+    tags,
+    todo,
+    initialDueDate,
+  ]);
+
+  useEffect(() => {
+    onDirtyChange?.(dirty);
+  }, [dirty, onDirtyChange]);
+
   useEffect(() => {
     titleRef.current?.focus();
   }, []);
 
-  const handleSave = async () => {
+  const handleSave = useCallback(async (): Promise<boolean> => {
     const trimmed = title.trim();
     if (!trimmed) {
       showToast(t("agenda.todo.titleRequired", { defaultValue: "请先填写标题" }));
-      return;
+      return false;
     }
 
     const resolvedDate = dueTime && !dueDate ? todayKey() : dueDate;
@@ -62,12 +100,20 @@ export function TodoDrawer({ todo, defaultDueDate, onClose, onSave, onDelete }: 
     try {
       await onSave(input);
       onClose();
+      return true;
     } catch (cause) {
       showToast(getErrorMessage(cause));
+      return false;
     } finally {
       setSaving(false);
     }
-  };
+  }, [title, notes, dueDate, dueTime, priority, estimateMinutes, tags, todo, onSave, onClose, t]);
+
+  // 登记保存处理器，供抽屉互斥时调用
+  useEffect(() => {
+    onRegisterSave?.(() => handleSave());
+    return () => onRegisterSave?.(null);
+  }, [handleSave, onRegisterSave]);
 
   return (
     <aside className="w-[320px] shrink-0 flex flex-col border-l border-paper-deep/30 bg-cloud min-h-0">

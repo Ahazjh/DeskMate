@@ -3,14 +3,29 @@ import { useCallback, useEffect, useRef, useState } from "react";
 export interface ToastItem {
   id: number;
   message: string;
-  type?: "error" | "warning" | "info";
+  type?: "error" | "warning" | "info" | "success";
+  /** 悬停提示：挂在图标上，鼠标移上去才显示 */
+  description?: string;
+  /** 不透明背景：用于「回顾笔记已生成」这类需要清晰可读的提示 */
+  opaque?: boolean;
 }
 
 let nextId = 0;
 const listeners = new Set<(item: ToastItem) => void>();
 
-export function showToast(message: string, type: ToastItem["type"] = "error") {
-  const item: ToastItem = { id: nextId++, message, type };
+export function showToast(
+  message: string,
+  type: ToastItem["type"] = "error",
+  description?: string,
+  options?: { opaque?: boolean },
+) {
+  const item: ToastItem = {
+    id: nextId++,
+    message,
+    type,
+    description,
+    opaque: options?.opaque,
+  };
   listeners.forEach((fn) => fn(item));
 }
 const AUTO_DISMISS_MS = 5000;
@@ -38,12 +53,19 @@ const iconPaths: Record<NonNullable<ToastItem["type"]>, React.ReactNode> = {
       <line x1="9" y1="9" x2="15" y2="15" />
     </>
   ),
+  success: (
+    <>
+      <circle cx="12" cy="12" r="10" />
+      <polyline points="8 12.5 11 15.5 16 9.5" />
+    </>
+  ),
 };
 
 const iconColor: Record<NonNullable<ToastItem["type"]>, string> = {
   error: "text-red-400",
   warning: "text-amber-400",
   info: "text-ink-faint",
+  success: "text-emerald-600 dark:text-emerald-500",
 };
 
 function ToastEntry({ item, onDismiss }: { item: ToastItem; onDismiss: (id: number) => void }) {
@@ -63,9 +85,16 @@ function ToastEntry({ item, onDismiss }: { item: ToastItem; onDismiss: (id: numb
   const type = item.type ?? "error";
 
   return (
-    <div className={`toast-entry ${exiting ? "toast-exit" : "toast-enter"}`} role="alert">
+    <div
+      className={`toast-entry ${item.opaque ? "toast-entry-opaque" : ""} ${exiting ? "toast-exit" : "toast-enter"}`}
+      role="alert"
+    >
       <div className="flex items-start gap-2.5 min-w-0">
-        <span className={`mt-px shrink-0 ${iconColor[type]}`}>
+        <span
+          className={`mt-px shrink-0 ${iconColor[type]}`}
+          title={item.description}
+          aria-label={item.description}
+        >
           <svg
             width="14"
             height="14"

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { showToast } from "../../../components/Toast";
 import { getErrorMessage } from "../../notes/api";
@@ -24,6 +24,9 @@ interface CourseDrawerProps {
   onOpenTask: (todo: Todo) => void;
   onCreateNote: (course: Course) => void;
   onOpenOverride: (course: Course) => void;
+  /** 抽屉互斥：上报未保存状态并登记保存处理器 */
+  onDirtyChange?: (dirty: boolean) => void;
+  onRegisterSave?: (save: (() => Promise<boolean>) | null) => void;
 }
 
 const WEEKDAY_VALUES = [1, 2, 3, 4, 5, 6, 7];
@@ -45,6 +48,8 @@ export function CourseDrawer({
   onOpenTask,
   onCreateNote,
   onOpenOverride,
+  onDirtyChange,
+  onRegisterSave,
 }: CourseDrawerProps) {
   const { t } = useTranslation();
   const nameRef = useRef<HTMLInputElement>(null);
@@ -81,15 +86,31 @@ export function CourseDrawer({
 
   const pendingTaskCount = courseTasks.filter((todo) => !todo.done).length;
 
+  // 与初始值比较得出「有未保存输入」
+  const dirty =
+    name !== (course?.name ?? "") ||
+    weekday !== (course?.weekday ?? defaultWeekday) ||
+    startPeriod !== (course?.startPeriod ?? defaultPeriod) ||
+    endPeriod !== (course?.endPeriod ?? defaultPeriod) ||
+    location !== (course?.location ?? "") ||
+    teacher !== (course?.teacher ?? "") ||
+    weeks !== (course?.weeks ?? "") ||
+    color !== (course?.color ?? EVENT_COLORS[0]) ||
+    note !== (course?.note ?? "");
+
+  useEffect(() => {
+    onDirtyChange?.(dirty);
+  }, [dirty, onDirtyChange]);
+
   useEffect(() => {
     nameRef.current?.focus();
   }, []);
 
-  const handleSave = async () => {
+  const handleSave = useCallback(async (): Promise<boolean> => {
     const trimmed = name.trim();
     if (!trimmed) {
       showToast(t("agenda.course.nameRequired", { defaultValue: "请填写课程名称" }));
-      return;
+      return false;
     }
 
     const input: CourseInput = {
@@ -108,12 +129,36 @@ export function CourseDrawer({
     try {
       await onSave(input);
       onClose();
+      return true;
     } catch (cause) {
       showToast(getErrorMessage(cause));
+      return false;
     } finally {
       setSaving(false);
     }
-  };
+  }, [
+    name,
+    weekday,
+    startPeriod,
+    endPeriod,
+    location,
+    teacher,
+    weeks,
+    color,
+    note,
+    course,
+    defaultWeekday,
+    defaultPeriod,
+    onSave,
+    onClose,
+    t,
+  ]);
+
+  // 登记保存处理器，供抽屉互斥时调用
+  useEffect(() => {
+    onRegisterSave?.(() => handleSave());
+    return () => onRegisterSave?.(null);
+  }, [handleSave, onRegisterSave]);
 
   const handleAddTask = async () => {
     if (!course) return;
@@ -142,7 +187,7 @@ export function CourseDrawer({
       setTaskTime("");
       setTaskPlatform("");
       setTaskOpen(false);
-      showToast(t("agenda.toast.saved", { defaultValue: "已保存" }));
+      showToast(t("agenda.toast.saved", { defaultValue: "已保存" }), "success");
     } catch (cause) {
       showToast(getErrorMessage(cause));
     } finally {

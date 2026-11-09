@@ -8,6 +8,7 @@ import { useImageBaseDir } from "../features/images/useImageBaseDir";
 import { reportInstallPreparation } from "../features/update/api";
 import type { UpdateInstallPrepareRequest } from "../features/update/types";
 import { showToast } from "./Toast";
+import { TileEditorOverlay } from "./TileEditorOverlay";
 import type { Note, NoteMetadata } from "../features/notes/types";
 import { countNoteChars, metadataFromNote } from "../features/notes/noteUtils";
 import { listen } from "@tauri-apps/api/event";
@@ -127,6 +128,8 @@ export function NotePad({
 }: NotePadProps) {
   const { t } = useTranslation();
   const [surfaceMode, setSurfaceMode] = useState<NoteSurfaceMode>(initialSurfaceMode);
+  // 磁贴内编辑态：钉在桌面上的小窗也能直接改内容，不必先切回便签窗口
+  const [tileEditing, setTileEditing] = useState(false);
   const [mode, setMode] = useState<OpenMode>("new");
   const [notes, setNotes] = useState<NoteMetadata[]>([]);
   const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
@@ -746,26 +749,84 @@ export function NotePad({
           onMouseDown={handleDrag}
           onDoubleClick={handleTileDoubleClick}
         >
-          <button
-            type="button"
-            aria-label="取消钉屏"
-            title="取消钉屏"
-            onMouseDown={(event) => event.stopPropagation()}
-            onClick={() => void handleClose()}
-            className="absolute top-2 right-2 z-10 w-6 h-6 flex items-center justify-center rounded-full text-ink-ghost/70 hover:text-red-400 hover:bg-danger-bg/80 transition-colors cursor-pointer"
-          >
-            <svg
-              width="12"
-              height="12"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
+          <div className="absolute top-2 right-2 z-10 flex items-center gap-1">
+            {!tileEditing ? (
+              <button
+                type="button"
+                aria-label="编辑磁贴内容"
+                title="编辑磁贴内容"
+                onMouseDown={(event) => event.stopPropagation()}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setTileEditing(true);
+                }}
+                className="w-6 h-6 flex items-center justify-center rounded-full text-ink-ghost/70 hover:text-bamboo hover:bg-bamboo-mist/60 transition-colors cursor-pointer"
+              >
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M12 20h9" />
+                  <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
+                </svg>
+              </button>
+            ) : null}
+            <button
+              type="button"
+              aria-label="取消钉屏"
+              title="取消钉屏"
+              onMouseDown={(event) => event.stopPropagation()}
+              onClick={() => void handleClose()}
+              className="w-6 h-6 flex items-center justify-center rounded-full text-ink-ghost/70 hover:text-red-400 hover:bg-danger-bg/80 transition-colors cursor-pointer"
             >
-              <path d="M18 6L6 18M6 6l12 12" />
-            </svg>
-          </button>
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+              >
+                <path d="M18 6L6 18M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          {tileEditing ? (
+            <TileEditorOverlay
+              title={title}
+              content={content}
+              titleRef={titleRef}
+              contentRef={contentRef}
+              onTitleChange={(value) => {
+                titleValueRef.current = value;
+                setTitle(value);
+                statusRef.current = "dirty";
+                setStatus("dirty");
+              }}
+              onContentChange={(value) => {
+                contentValueRef.current = value;
+                setContent(value);
+                statusRef.current = "dirty";
+                setStatus("dirty");
+              }}
+              onSubmit={() => {
+                setTileEditing(false);
+                void handleSave();
+              }}
+              onCancel={() => {
+                setTileEditing(false);
+              }}
+              fontSize={surfaceFontSize}
+              showTitle={Boolean(editingNoteId)}
+            />
+          ) : null}
           <SurfaceResizeHandles />
         </Tile>
       ) : (

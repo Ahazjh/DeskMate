@@ -68,8 +68,6 @@ pub struct AppConfig {
     pub background_position_y: f64,
     #[serde(default = "default_remember_surface_size")]
     pub remember_surface_size: bool,
-    #[serde(default = "default_tile_ctrl_close")]
-    pub tile_ctrl_close: bool,
     #[serde(default)]
     pub tile_double_click_to_edit: bool,
     #[serde(default)]
@@ -1155,7 +1153,6 @@ impl NoteStore {
             background_position_x: default_background_position(),
             background_position_y: default_background_position(),
             remember_surface_size: default_remember_surface_size(),
-            tile_ctrl_close: default_tile_ctrl_close(),
             tile_double_click_to_edit: false,
             tile_save_returns_to_pin: false,
             tile_render_markdown: false,
@@ -1614,14 +1611,20 @@ fn count_words(content: &str) -> usize {
     content.chars().filter(|ch| !ch.is_whitespace()).count()
 }
 
+/// 笔记预览：用于列表展示与搜索索引。
+///
+/// 早期实现用 `split_whitespace()` 切分，中文正文没有空格，整篇会变成一个
+/// 超长 token 再被截断成 80 字符 —— 搜索时跨行/跨空格的查询词就命中不了。
+/// 现在改成按「换行 + 空白」切分并保留更多内容。
 fn preview(content: &str) -> String {
-    content
-        .split_whitespace()
+    let flattened = content
+        .replace("\r\n", "\n")
+        .lines()
+        .map(|line| line.split_whitespace().collect::<Vec<_>>().join(" "))
+        .filter(|line| !line.is_empty())
         .collect::<Vec<_>>()
-        .join(" ")
-        .chars()
-        .take(80)
-        .collect()
+        .join(" ");
+    flattened.chars().take(240).collect()
 }
 
 fn id_from_file_name(file_name: &str) -> Option<String> {
@@ -1735,9 +1738,6 @@ fn default_remember_surface_size() -> bool {
     true
 }
 
-fn default_tile_ctrl_close() -> bool {
-    true
-}
 
 fn default_split_scroll_sync() -> bool {
     true
@@ -1928,7 +1928,6 @@ mod tests {
             background_position_x: 50.0,
             background_position_y: 50.0,
             remember_surface_size: true,
-            tile_ctrl_close: true,
             tile_double_click_to_edit: true,
             tile_save_returns_to_pin: true,
             tile_render_markdown: false,

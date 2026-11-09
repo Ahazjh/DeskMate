@@ -22,7 +22,6 @@ export interface AppConfig {
   tabIndentSize: number;
   externalFileAutoSave: boolean;
   rememberSurfaceSize: boolean;
-  tileCtrlClose: boolean;
   tileDoubleClickToEdit: boolean;
   tileSaveReturnsToPin: boolean;
   tileRenderMarkdown: boolean;

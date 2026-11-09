@@ -224,11 +224,6 @@ export function SettingsPanel({ config, onChange, onMigrateDataDir, onClose }: S
         {/* 快捷键功能设置区域，与上方常规设置分开 */}
         <section className="space-y-2">
           <ToggleRow
-            label={t("settings.tileCtrlClose", { defaultValue: "Ctrl+右键快速关闭磁贴" })}
-            checked={config.tileCtrlClose}
-            onChange={(checked) => setConfigValue("tileCtrlClose", checked)}
-          />
-          <ToggleRow
             label={t("settings.openAtCursor", { defaultValue: "快捷键打开时跟随鼠标位置" })}
             checked={config.openAtCursor ?? true}
             onChange={(checked) => setConfigValue("openAtCursor", checked)}

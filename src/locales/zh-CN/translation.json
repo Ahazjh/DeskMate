@@ -269,7 +269,6 @@
       "followTheme": "跟随主题",
       "label": "磁贴颜色"
     },
-    "tileCtrlClose": "Ctrl+右键快速关闭磁贴",
     "tileRenderMarkdown": "磁贴渲染 Markdown",
     "tileDoubleClickToEdit": "双击磁贴进入编辑",
     "tileSaveReturnsToPin": "保存后回到磁贴",
@@ -485,7 +484,8 @@
       "kind": {
         "assignment": "作业",
         "reminder": "提醒"
-      }
+      },
+      "noResults": "没有匹配的待办"
     },
     "event": {
       "new": "新建日程",
@@ -505,6 +505,13 @@
       "deleted": "已删除"
     },
     "confirmDelete": "确定删除？此操作不可撤销。",
+    "drawer": {
+      "unsavedTitle": "有未保存的修改",
+      "unsavedHint": "当前「{{label}}」里的内容还没有保存，要保存吗？",
+      "unsavedSave": "保存",
+      "unsavedDiscard": "放弃",
+      "unsavedCancel": "取消"
+    },
     "weekday": {
       "1": "周一",
       "2": "周二",
@@ -558,7 +565,8 @@
         "assignment": "作业",
         "task": "待办",
         "reminder": "提醒"
-      }
+      },
+      "cancelledTag": "停课"
     },
     "import": {
       "fileTab": "课表文件",
@@ -627,11 +635,12 @@
       "autoReview": "自动生成每日回顾"
     },
     "review": {
-      "generate": "生成今日回顾",
+      "generate": "今日回顾",
       "generated": "回顾笔记已生成",
       "weekly": "周回顾",
       "weeklyGenerated": "本周回顾已生成",
-      "hint": "次日启动时把前一天完成的待办、日程、课程与每日必做写成一篇笔记。"
+      "hint": "把今天完成的待办、日程、课程与每日必做写成一篇笔记并立即打开；每天首次启动时也会自动生成前一天的回顾。",
+      "generatedHint": "已自动打开今天的回顾笔记；每天首次启动时也会自动生成前一天的回顾。"
     },
     "partner": {
       "title": "双人课表",
@@ -756,7 +765,17 @@
         "normal": "标准",
         "large": "大",
         "xlarge": "特大"
-      }
+      },
+      "dailyTitle": "每日必做"
+    },
+    "week": {
+      "courseTag": "课"
+    },
+    "dayPanel": {
+      "add": "+ 添加",
+      "emptyEvent": "这天没有日程",
+      "emptyTodo": "这天没有待办",
+      "emptyAll": "这天还没有任何安排"
     }
   },
   "quickTodo": {

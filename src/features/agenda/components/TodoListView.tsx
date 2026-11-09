@@ -4,8 +4,11 @@ import { showToast } from "../../../components/Toast";
 import { getErrorMessage } from "../../notes/api";
 import { addDaysToKey, formatDayHeading, todayKey } from "../dateUtils";
 import { isOverdue, todoDay } from "../todoFilters";
-import type { SmartList, Todo } from "../types";
+import type { SmartList, TimetableSettings, Todo } from "../types";
+import type { WeekCourseEntry } from "../weekCourses";
+import { defaultTimetableSettings } from "../timetable";
 import { TodoRow } from "./TodoRow";
+import { WeekCourseRow } from "./WeekCourseRow";
 
 interface TodoListViewProps {
   todos: Todo[];
@@ -13,18 +16,25 @@ interface TodoListViewProps {
   search: string;
   defaultDueDate: string | null;
   locale: string;
+  /** 「本周」列表里同步展示的课程条目 */
+  weekCourses?: WeekCourseEntry[];
+  timetableSettings?: TimetableSettings;
   onSearchChange: (value: string) => void;
   onCreate: (title: string, dueDate: string | null) => Promise<void>;
   onNewDetailed: () => void;
   onToggle: (todo: Todo) => void;
   onOpen: (todo: Todo) => void;
   onDelete: (todo: Todo) => void;
+  onOpenCourse?: (entry: WeekCourseEntry) => void;
 }
+
+const DEFAULT_TIMETABLE_SETTINGS = defaultTimetableSettings();
 
 interface TodoGroup {
   key: string;
   label: string;
   todos: Todo[];
+  courses: WeekCourseEntry[];
 }
 
 export function TodoListView({
@@ -33,12 +43,15 @@ export function TodoListView({
   search,
   defaultDueDate,
   locale,
+  weekCourses,
+  timetableSettings,
   onSearchChange,
   onCreate,
   onNewDetailed,
   onToggle,
   onOpen,
   onDelete,
+  onOpenCourse,
 }: TodoListViewProps) {
   const { t } = useTranslation();
   const [draft, setDraft] = useState("");
@@ -53,6 +66,7 @@ export function TodoListView({
           key: "done",
           label: t("agenda.smart.done", { defaultValue: "已完成" }),
           todos,
+          courses: [],
         },
       ];
     }
@@ -65,6 +79,7 @@ export function TodoListView({
             defaultValue: { today: "今天", tomorrow: "明天", overdue: "逾期" }[list],
           }),
           todos,
+          courses: [],
         },
       ];
     }
@@ -78,6 +93,14 @@ export function TodoListView({
       else buckets.set(key, [todo]);
     }
 
+    // 课程按自己的日期分桶，插入到同一天
+    const courseBuckets = new Map<string, WeekCourseEntry[]>();
+    for (const entry of weekCourses ?? []) {
+      const list = courseBuckets.get(entry.day);
+      if (list) list.push(entry);
+      else courseBuckets.set(entry.day, [entry]);
+    }
+
     const order = (key: string) => {
       if (key === "overdue") return 0;
       if (key === today) return 1;
@@ -87,10 +110,6 @@ export function TodoListView({
     };
 
     return [...buckets.entries()]
-      .sort(([left], [right]) => {
-        const delta = order(left) - order(right);
-        return delta !== 0 ? delta : left.localeCompare(right);
-      })
       .map(([key, groupTodos]) => {
         let label: string;
         if (key === "overdue") {
@@ -104,9 +123,29 @@ export function TodoListView({
         } else {
           label = formatDayHeading(key, locale);
         }
-        return { key, label, todos: groupTodos };
+        return {
+          key,
+          label,
+          todos: groupTodos,
+          courses: courseBuckets.get(key) ?? [],
+        };
+      })
+      .sort((left, right) => {
+        const delta = order(left.key) - order(right.key);
+        return delta !== 0 ? delta : left.key.localeCompare(right.key);
       });
-  }, [list, locale, t, today, todos, tomorrow]);
+  }, [list, locale, t, today, todos, tomorrow, weekCourses]);
+
+  // 只有课程、没有待办的日期，也要单独成组显示
+  const courseOnlyDays = useMemo(() => {
+    if (list !== "week" && list !== "all") return [];
+    const seen = new Set(groups.map((group) => group.key));
+    return (weekCourses ?? [])
+      .filter((entry) => !seen.has(entry.day))
+      .map((entry) => entry.day)
+      .filter((day, index, all) => all.indexOf(day) === index)
+      .sort();
+  }, [groups, list, weekCourses]);
 
   const handleSubmit = async () => {
     const title = draft.trim();
@@ -121,6 +160,8 @@ export function TodoListView({
       setSubmitting(false);
     }
   };
+
+  const isEmpty = todos.length === 0 && (weekCourses?.length ?? 0) === 0;
 
   return (
     <div className="flex-1 min-h-0 flex flex-col">
@@ -147,6 +188,26 @@ export function TodoListView({
               placeholder={t("agenda.todo.searchPlaceholder", { defaultValue: "搜索待办…" })}
               className="flex-1 text-[12px] font-body text-ink placeholder:text-ink-ghost/60 bg-transparent"
             />
+            {search ? (
+              <button
+                type="button"
+                onClick={() => onSearchChange("")}
+                aria-label={t("main.sidebar.clearSearch", { defaultValue: "清空搜索" })}
+                className="text-ink-ghost hover:text-ink-faint transition-colors cursor-pointer shrink-0"
+              >
+                <svg
+                  width="10"
+                  height="10"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                >
+                  <path d="M18 6L6 18M6 6l12 12" />
+                </svg>
+              </button>
+            ) : null}
           </div>
           <button
             type="button"
@@ -196,49 +257,95 @@ export function TodoListView({
       </div>
 
       <div className="flex-1 min-h-0 overflow-y-auto px-2 pb-3">
-        {todos.length === 0 ? (
+        {isEmpty ? (
           <div className="h-full flex flex-col items-center justify-center text-center px-6">
             <div className="text-[12px] font-body text-ink-ghost">
-              {list === "done"
-                ? t("agenda.todo.emptyDone", { defaultValue: "还没有已完成的待办" })
-                : t("agenda.todo.empty", { defaultValue: "这里还没有待办" })}
+              {search
+                ? t("agenda.todo.noResults", { defaultValue: "没有匹配的待办" })
+                : list === "done"
+                  ? t("agenda.todo.emptyDone", { defaultValue: "还没有已完成的待办" })
+                  : t("agenda.todo.empty", { defaultValue: "这里还没有待办" })}
             </div>
-            {list !== "done" ? (
+            {list !== "done" && !search ? (
               <div className="mt-1 text-[10px] font-body text-ink-ghost/60">
                 {t("agenda.todo.emptyHint", { defaultValue: "在上方输入框记一条，回车即可保存" })}
               </div>
             ) : null}
           </div>
         ) : (
-          groups.map((group) => (
-            <div key={group.key} className="mb-2">
-              {list === "all" || list === "week" ? (
-                <div className="px-3 pt-2 pb-1 flex items-center gap-2">
-                  <span
-                    className={`text-[10px] font-body font-medium ${
-                      group.key === "overdue" ? "text-red-400" : "text-ink-faint"
-                    }`}
-                  >
-                    {group.label}
-                  </span>
-                  <span className="text-[9px] font-mono text-ink-ghost/60">
-                    {group.todos.length}
-                  </span>
+          <>
+            {groups.map((group) => (
+              <div key={group.key} className="mb-2">
+                {list === "all" || list === "week" ? (
+                  <div className="px-3 pt-2 pb-1 flex items-center gap-2">
+                    <span
+                      className={`text-[10px] font-body font-medium ${
+                        group.key === "overdue" ? "text-red-400" : "text-ink-faint"
+                      }`}
+                    >
+                      {group.label}
+                    </span>
+                    <span className="text-[9px] font-mono text-ink-ghost/60">
+                      {group.todos.length + group.courses.length}
+                    </span>
+                  </div>
+                ) : null}
+                <div className="space-y-0.5">
+                  {group.courses.map((entry) => (
+                    <WeekCourseRow
+                      key={entry.key}
+                      entry={entry}
+                      settings={timetableSettings ?? DEFAULT_TIMETABLE_SETTINGS}
+                      onOpen={(item) => onOpenCourse?.(item)}
+                    />
+                  ))}
+                  {group.todos.map((todo) => (
+                    <TodoRow
+                      key={todo.id}
+                      todo={todo}
+                      onToggle={onToggle}
+                      onOpen={onOpen}
+                      onDelete={onDelete}
+                    />
+                  ))}
                 </div>
-              ) : null}
-              <div className="space-y-0.5">
-                {group.todos.map((todo) => (
-                  <TodoRow
-                    key={todo.id}
-                    todo={todo}
-                    onToggle={onToggle}
-                    onOpen={onOpen}
-                    onDelete={onDelete}
-                  />
-                ))}
               </div>
-            </div>
-          ))
+            ))}
+
+            {courseOnlyDays.map((day) => {
+              const entries = (weekCourses ?? []).filter(
+                (entry) => entry.day === day,
+              );
+              const label =
+                day === today
+                  ? `${t("agenda.smart.today", { defaultValue: "今天" })} · ${day.slice(5)}`
+                  : day === tomorrow
+                    ? `${t("agenda.smart.tomorrow", { defaultValue: "明天" })} · ${day.slice(5)}`
+                    : formatDayHeading(day, locale);
+              return (
+                <div key={`course-${day}`} className="mb-2">
+                  <div className="px-3 pt-2 pb-1 flex items-center gap-2">
+                    <span className="text-[10px] font-body font-medium text-ink-faint">
+                      {label}
+                    </span>
+                    <span className="text-[9px] font-mono text-ink-ghost/60">
+                      {entries.length}
+                    </span>
+                  </div>
+                  <div className="space-y-0.5">
+                    {entries.map((entry) => (
+                      <WeekCourseRow
+                        key={entry.key}
+                        entry={entry}
+                        settings={timetableSettings ?? DEFAULT_TIMETABLE_SETTINGS}
+                        onOpen={(item) => onOpenCourse?.(item)}
+                      />
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </>
         )}
       </div>
     </div>

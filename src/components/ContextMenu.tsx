@@ -1,9 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { listen } from "@tauri-apps/api/event";
 import { readText, writeText } from "@tauri-apps/plugin-clipboard-manager";
-import { getConfig } from "../features/settings/api";
-import type { AppConfig } from "../features/settings/types";
 import { requestSurfaceAction } from "../features/windows/surfaceActions";
 import { getTileContextMenuItems } from "../features/windows/tileContextMenu";
 import { POPUP_VIEWPORT_MARGIN, useViewportPopupPosition } from "./popupPosition";
@@ -29,22 +26,7 @@ export function ContextMenuProvider({ children }: { children: React.ReactNode })
   const editableTargetRef = useRef<HTMLInputElement | HTMLTextAreaElement | HTMLElement | null>(
     null,
   );
-  const tileCtrlCloseRef = useRef(true);
   const tileContextMenuItems = useMemo(() => getTileContextMenuItems(t), [t]);
-
-  useEffect(() => {
-    getConfig()
-      .then((c) => {
-        tileCtrlCloseRef.current = c.tileCtrlClose ?? true;
-      })
-      .catch(() => {});
-    const unlisten = listen<AppConfig>("config-changed", (event) => {
-      tileCtrlCloseRef.current = event.payload.tileCtrlClose ?? true;
-    });
-    return () => {
-      void unlisten.then((fn) => fn());
-    };
-  }, []);
 
   useEffect(() => {
     function handleContextMenu(event: MouseEvent) {
@@ -60,10 +42,6 @@ export function ContextMenuProvider({ children }: { children: React.ReactNode })
 
       event.preventDefault();
 
-      if (tileTarget && event.ctrlKey && tileCtrlCloseRef.current) {
-        requestSurfaceAction("close");
-        return;
-      }
       let selection = window.getSelection()?.toString() || "";
       if (target instanceof HTMLTextAreaElement || target instanceof HTMLInputElement) {
         selection = target.value.slice(target.selectionStart ?? 0, target.selectionEnd ?? 0);

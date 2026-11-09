@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { showToast } from "../../../components/Toast";
 import { getErrorMessage } from "../../notes/api";
@@ -14,6 +14,9 @@ interface EventDrawerProps {
   onClose: () => void;
   onSave: (input: EventInput) => Promise<void>;
   onDelete: (event: AgendaEvent) => void;
+  /** 抽屉互斥：上报未保存状态并登记保存处理器 */
+  onDirtyChange?: (dirty: boolean) => void;
+  onRegisterSave?: (save: (() => Promise<boolean>) | null) => void;
 }
 
 function minutesToTime(minutes: number): string {
@@ -30,6 +33,8 @@ export function EventDrawer({
   onClose,
   onSave,
   onDelete,
+  onDirtyChange,
+  onRegisterSave,
 }: EventDrawerProps) {
   const { t } = useTranslation();
   const titleRef = useRef<HTMLInputElement>(null);
@@ -54,15 +59,30 @@ export function EventDrawer({
   const [color, setColor] = useState(event?.color ?? DEFAULT_EVENT_COLOR);
   const [saving, setSaving] = useState(false);
 
+  // 与初始值比较得出「有未保存输入」
+  const dirty =
+    title !== (event?.title ?? "") ||
+    notes !== (event?.notes ?? "") ||
+    allDay !== (event?.allDay ?? false) ||
+    startDay !== (event ? (event.startDate ?? isoDayKey(event.startAt)) : defaultDay) ||
+    endDay !== (event ? (event.endDate ?? isoDayKey(event.endAt)) : defaultDay) ||
+    startTime !== initialStart ||
+    endTime !== (event ? isoTime(event.endAt) : minutesToTime(initialEndMinutes)) ||
+    color !== (event?.color ?? DEFAULT_EVENT_COLOR);
+
+  useEffect(() => {
+    onDirtyChange?.(dirty);
+  }, [dirty, onDirtyChange]);
+
   useEffect(() => {
     titleRef.current?.focus();
   }, []);
 
-  const handleSave = async () => {
+  const handleSave = useCallback(async (): Promise<boolean> => {
     const trimmed = title.trim();
     if (!trimmed) {
       showToast(t("agenda.event.titleRequired", { defaultValue: "请先填写标题" }));
-      return;
+      return false;
     }
 
     const safeEndDay = endDay < startDay ? startDay : endDay;
@@ -95,12 +115,36 @@ export function EventDrawer({
     try {
       await onSave(input);
       onClose();
+      return true;
     } catch (cause) {
       showToast(getErrorMessage(cause));
+      return false;
     } finally {
       setSaving(false);
     }
-  };
+  }, [
+    title,
+    notes,
+    allDay,
+    startDay,
+    endDay,
+    startTime,
+    endTime,
+    color,
+    initialStart,
+    initialEndMinutes,
+    defaultDay,
+    event,
+    onSave,
+    onClose,
+    t,
+  ]);
+
+  // 登记保存处理器，供抽屉互斥时调用
+  useEffect(() => {
+    onRegisterSave?.(() => handleSave());
+    return () => onRegisterSave?.(null);
+  }, [handleSave, onRegisterSave]);
 
   const dayLabel = (key: string) =>
     parseDayKey(key).toLocaleDateString(locale, { month: "short", day: "numeric" });

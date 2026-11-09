@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { showToast } from "../../../components/Toast";
 import { getErrorMessage } from "../../notes/api";
@@ -10,9 +10,19 @@ interface DailyDrawerProps {
   onClose: () => void;
   onSave: (input: DailyTaskInput) => Promise<void>;
   onDelete: (task: DailyTask) => void;
+  /** 抽屉互斥：上报未保存状态并登记保存处理器 */
+  onDirtyChange?: (dirty: boolean) => void;
+  onRegisterSave?: (save: (() => Promise<boolean>) | null) => void;
 }
 
-export function DailyDrawer({ task, onClose, onSave, onDelete }: DailyDrawerProps) {
+export function DailyDrawer({
+  task,
+  onClose,
+  onSave,
+  onDelete,
+  onDirtyChange,
+  onRegisterSave,
+}: DailyDrawerProps) {
   const { t } = useTranslation();
   const titleRef = useRef<HTMLInputElement>(null);
   const [title, setTitle] = useState(task?.title ?? "");
@@ -20,27 +30,45 @@ export function DailyDrawer({ task, onClose, onSave, onDelete }: DailyDrawerProp
   const [active, setActive] = useState(task?.active ?? true);
   const [saving, setSaving] = useState(false);
 
+  // 与初始值比较得出「有未保存输入」
+  const dirty =
+    title !== (task?.title ?? "") ||
+    color !== (task?.color ?? EVENT_COLORS[0]) ||
+    active !== (task?.active ?? true);
+
+  useEffect(() => {
+    onDirtyChange?.(dirty);
+  }, [dirty, onDirtyChange]);
+
   useEffect(() => {
     titleRef.current?.focus();
   }, []);
 
-  const handleSave = async () => {
+  const handleSave = useCallback(async (): Promise<boolean> => {
     const trimmed = title.trim();
     if (!trimmed) {
       showToast(t("agenda.daily.titleRequired", { defaultValue: "请填写内容" }));
-      return;
+      return false;
     }
 
     setSaving(true);
     try {
       await onSave({ title: trimmed, color, active });
       onClose();
+      return true;
     } catch (cause) {
       showToast(getErrorMessage(cause));
+      return false;
     } finally {
       setSaving(false);
     }
-  };
+  }, [title, color, active, onSave, onClose, t]);
+
+  // 登记保存处理器，供抽屉互斥时调用
+  useEffect(() => {
+    onRegisterSave?.(() => handleSave());
+    return () => onRegisterSave?.(null);
+  }, [handleSave, onRegisterSave]);
 
   return (
     <aside className="w-[320px] shrink-0 flex flex-col border-l border-paper-deep/30 bg-cloud min-h-0">
