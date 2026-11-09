@@ -83,7 +83,7 @@ export function ReminderSettingsDialog({ onClose }: ReminderSettingsDialogProps)
     setSaving(true);
     try {
       await saveReminderSettings(settings);
-      showToast(t("agenda.toast.saved", { defaultValue: "已保存" }), "info");
+      showToast(t("agenda.toast.saved", { defaultValue: "已保存" }), "success");
       onClose();
     } catch (cause) {
       showToast(getErrorMessage(cause));

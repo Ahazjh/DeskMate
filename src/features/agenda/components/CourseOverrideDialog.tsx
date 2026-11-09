@@ -50,7 +50,7 @@ export function CourseOverrideDialog({
         location: action === "move" ? location.trim() || null : null,
         note: note.trim(),
       });
-      showToast(t("agenda.toast.saved", { defaultValue: "已保存" }), "info");
+      showToast(t("agenda.toast.saved", { defaultValue: "已保存" }), "success");
       setNote("");
     } catch (cause) {
       showToast(getErrorMessage(cause));

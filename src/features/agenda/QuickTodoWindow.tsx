@@ -100,7 +100,7 @@ export function QuickTodoWindow() {
     setError(null);
     try {
       await createTodo({ ...input, title: finalTitle });
-      showToast(t("agenda.toast.saved", { defaultValue: "已保存" }), "info");
+      showToast(t("agenda.toast.saved", { defaultValue: "已保存" }), "success");
       hide();
     } catch (cause) {
       setError(getErrorMessage(cause));

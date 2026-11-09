@@ -59,7 +59,7 @@ export function PartnerDialog({
     setSaving(true);
     try {
       await onSaveProfile({ name: name.trim(), relation, color });
-      showToast(t("agenda.toast.saved", { defaultValue: "已保存" }), "info");
+      showToast(t("agenda.toast.saved", { defaultValue: "已保存" }), "success");
     } catch (cause) {
       showToast(getErrorMessage(cause));
     } finally {
