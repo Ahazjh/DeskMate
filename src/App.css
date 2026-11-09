@@ -76,35 +76,28 @@
   --color-danger-bg: rgba(220, 38, 38, 0.15);
 }
 
-/*
- * Theme transition — applied briefly during theme switch for a uniform crossfade.
- *
- * 只过渡根元素自身的背景与文字颜色。早期实现用 `html.theme-transition *`
- * 给页面里每一个元素（含伪元素）加 6 条 transition，切换瞬间浏览器要
- * 为成百上千个元素启动过渡并用 !important 覆盖它们自己的 transition，
- * 主线程忙于样式计算，动画明显卡顿。
- *
- * 圆形色幕（.theme-reveal-circle）已经把切换过程遮住了，这里只需要
- * 让根背景平滑跟上，视觉上察觉不到差异。
- */
+/* Theme transition — applied briefly during theme switch for a uniform crossfade */
 html.theme-transition,
-html.theme-transition body,
-html.theme-transition #root {
+html.theme-transition *,
+html.theme-transition *::before,
+html.theme-transition *::after {
   transition:
-    background-color 0.3s ease,
-    color 0.3s ease !important;
+    color 0.35s ease,
+    background-color 0.35s ease,
+    border-color 0.35s ease,
+    box-shadow 0.35s ease,
+    fill 0.35s ease,
+    stroke 0.35s ease !important;
   transition-delay: 0s !important;
 }
-/* 主题色板本身用 CSS 变量驱动，切换时变量在根上重新求值即可，
-   不需要给每个子元素单独加过渡。 */
 html.theme-transition .sliding-highlight {
   transition:
     left 0.25s cubic-bezier(0.22, 1, 0.36, 1),
     top 0.25s cubic-bezier(0.22, 1, 0.36, 1),
     width 0.25s cubic-bezier(0.22, 1, 0.36, 1),
     height 0.25s cubic-bezier(0.22, 1, 0.36, 1),
-    background-color 0.3s ease,
-    box-shadow 0.3s ease !important;
+    background-color 0.35s ease,
+    box-shadow 0.35s ease !important;
 }
 
 /* 桌面小窗：透明边距处铺不透明主题底色，避免深色模式下出现白边 */
@@ -124,9 +117,6 @@ html.widget-window #root {
   transform-origin: center;
   will-change: transform, opacity;
   backface-visibility: hidden;
-  /* 色幕是脱离文档流的固定定位元素，声明 layout/paint  containment
-     可以让它彻底不参与外层布局与绘制范围的计算 */
-  contain: layout paint;
 }
 
 /* Global resets */
