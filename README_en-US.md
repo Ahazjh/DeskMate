@@ -47,7 +47,11 @@ Most note, calendar and todo apps require an account, a long onboarding and a sl
 
 ![Main window](Docs/images/主窗口截图.png)
 
-![Desktop widget](Docs/images/小窗多开示例.gif)
+![Agenda & todos](Docs/images/日程待办截图.png)
+
+![Timetable](Docs/images/课程表截图.png)
+
+![Desktop widget](Docs/images/桌面小窗截图.png)
 
 ## Download
 

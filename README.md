@@ -47,7 +47,11 @@
 
 ![主窗口截图](Docs/images/主窗口截图.png)
 
-![桌面小窗](Docs/images/小窗多开示例.gif)
+![日程与待办](Docs/images/日程待办截图.png)
+
+![课程表](Docs/images/课程表截图.png)
+
+![桌面小窗](Docs/images/桌面小窗截图.png)
 
 ## 下载安装
 
