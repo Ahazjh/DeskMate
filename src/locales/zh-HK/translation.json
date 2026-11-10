@@ -380,7 +380,11 @@
         "github": "GitHub",
         "label": "下載來源"
       },
-      "title": "更新"
+      "title": "更新",
+      "updateNow": "立即更新",
+      "updateNowHint": "下載並安裝 {{version}}，完成後自動重新開啟",
+      "downloading": "下載中...",
+      "installing": "安裝中..."
     },
     "visibilityShortcut": "顯示／隱藏視窗快捷鍵",
     "background": {

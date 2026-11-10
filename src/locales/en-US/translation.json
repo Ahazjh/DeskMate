@@ -399,7 +399,11 @@
         "github": "GitHub",
         "label": "Download source"
       },
-      "title": "Updates"
+      "title": "Updates",
+      "updateNow": "Update now",
+      "updateNowHint": "Download and install {{version}}, then reopen automatically",
+      "downloading": "Downloading...",
+      "installing": "Installing..."
     },
     "visibilityShortcut": "Show/Hide window shortcut",
     "background": {

@@ -22,6 +22,7 @@ import {
   getInitialUpdateStatusNotice,
   getUpdateCheckCompletionNotice,
   getUpdateStatusHydrationNotice,
+  isNewerVersion,
   type UpdateInlineNotice,
 } from "./presentation";
 import { getUpdateErrorCode, getUpdateErrorMessage } from "./updateErrors";
@@ -55,7 +56,13 @@ type BusyAction = "settings" | "checking" | "cdk" | "download" | "cancel" | "ins
 interface UpdateSettingsSectionProps {
   initialSettings?: UpdateSettings;
   initialStatus?: UpdateState;
-  mode?: "full" | "checkOnly" | "settingsOnly";
+  /**
+   * - `full`：检查控件 + 更新设置都显示
+   * - `checkOnly`：只显示检查/下载/安装控件
+   * - `settingsOnly`：只显示更新设置
+   * - `manual`：检查控件 + 更新设置都显示，但检查区额外突出「立即更新」入口
+   */
+  mode?: "full" | "checkOnly" | "settingsOnly" | "manual";
 }
 
 type IntervalOption = string;
@@ -301,6 +308,17 @@ export function UpdateSettingsSection({
     status?.lastError?.action !== "retryDownload" &&
     !isInstalling;
 
+  /**
+   * 是否已经探到比当前版本更新的版本。
+   * 后端在检查完成后会把 latestVersion 一并带回来，这里再做一次版本比较，
+   * 避免「后端把 latestVersion 当作当前版本回填」时误显示「立即更新」。
+   */
+  const hasUpdate = useMemo(() => {
+    if (!status?.latestVersion) return false;
+    if (status.status === "downloading" || status.status === "installing") return false;
+    return isNewerVersion(status.latestVersion, status.currentVersion);
+  }, [status]);
+
   const persistSettings = async (nextSettings: UpdateSettings) => {
     latestChannelRef.current = nextSettings.channel;
     setSettings(nextSettings);
@@ -415,14 +433,15 @@ export function UpdateSettingsSection({
     }
   };
 
-  const handleInstall = async () => {
+  /** 弹出安装确认并执行安装；返回是否真的执行了安装。 */
+  const runInstall = async (): Promise<boolean> => {
     const confirmed = window.confirm(
       t("settings.update.confirmInstall", {
         defaultValue:
           "应用会先保存所有未保存内容，然后关闭、安装更新，并在完成后重新打开。是否继续？",
       }),
     );
-    if (!confirmed) return;
+    if (!confirmed) return false;
 
     setBusyAction("install");
     setNotice(null);
@@ -432,16 +451,61 @@ export function UpdateSettingsSection({
         tone: "success",
         text: getInstallSuccessMessage(result, t),
       });
+      return true;
     } catch (error) {
       setNotice({ tone: "error", text: getUpdateErrorMessage(error, t) });
-    } finally {
+      return false;
+    }
+  };
+
+  const handleInstall = async () => {
+    await runInstall();
+    try {
+      setStatus(await getUpdateStatus());
+    } catch (refreshError) {
+      console.warn("Failed to refresh update status after install", refreshError);
+    }
+    setBusyAction(null);
+  };
+
+  /**
+   * 「立即更新」：下载 + 安装一步到位。
+   * 已经下载好的话直接进安装流程，避免重复下载。
+   */
+  const handleUpdateNow = async () => {
+    const alreadyDownloaded =
+      status?.status === "downloaded" || status?.status === "installScheduled";
+    if (alreadyDownloaded) {
+      await handleInstall();
+      return;
+    }
+
+    setBusyAction("download");
+    setNotice(null);
+    try {
+      await downloadUpdate("github");
+    } catch (error) {
+      const message = getUpdateErrorMessage(error, t);
+      const cancelled = getUpdateErrorCode(error) === "updateDownloadCancelled";
+      setNotice({
+        tone: cancelled ? "idle" : "error",
+        text: cancelled
+          ? t("settings.update.cancelled", { defaultValue: "下载已取消" })
+          : message,
+      });
+      setDownloadProgress(null);
       try {
         setStatus(await getUpdateStatus());
       } catch (refreshError) {
-        console.warn("Failed to refresh update status after install", refreshError);
+        console.warn("Failed to refresh update status after download", refreshError);
       }
       setBusyAction(null);
+      return;
     }
+
+    setDownloadProgress(null);
+    // 下载完成，继续走安装确认
+    await handleInstall();
   };
 
   if (storeManaged) {
@@ -509,16 +573,36 @@ export function UpdateSettingsSection({
                       })}
               </p>
             </div>
-            <button
-              type="button"
-              disabled={controlsDisabled}
-              onClick={() => void handleCheck()}
-              className="h-8 px-3 rounded-lg border border-paper-deep/45 text-[11px] text-ink-faint hover:text-bamboo hover:bg-bamboo-mist/50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
-            >
-              {busyAction === "checking"
-                ? t("settings.update.busy", { defaultValue: "处理中" })
-                : t("settings.update.check", { defaultValue: "检查更新" })}
-            </button>
+            <div className="flex items-center gap-2 shrink-0">
+              {hasUpdate ? (
+                <button
+                  type="button"
+                  disabled={controlsDisabled}
+                  onClick={() => void handleUpdateNow()}
+                  title={t("settings.update.updateNowHint", {
+                    version: status?.latestVersion ?? "--",
+                    defaultValue: "下载并安装 {{version}}，完成后自动重新打开",
+                  })}
+                  className="h-8 px-3 rounded-lg bg-bamboo text-[11px] text-paper hover:bg-bamboo-light disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                >
+                  {busyAction === "download"
+                    ? t("settings.update.downloading", { defaultValue: "下载中..." })
+                    : busyAction === "install"
+                      ? t("settings.update.installing", { defaultValue: "安装中..." })
+                      : t("settings.update.updateNow", { defaultValue: "立即更新" })}
+                </button>
+              ) : null}
+              <button
+                type="button"
+                disabled={controlsDisabled}
+                onClick={() => void handleCheck()}
+                className="h-8 px-3 rounded-lg border border-paper-deep/45 text-[11px] text-ink-faint hover:text-bamboo hover:bg-bamboo-mist/50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
+              >
+                {busyAction === "checking"
+                  ? t("settings.update.busy", { defaultValue: "处理中" })
+                  : t("settings.update.check", { defaultValue: "检查更新" })}
+              </button>
+            </div>
           </div>
 
           {renderDownloadCard({
@@ -544,7 +628,7 @@ export function UpdateSettingsSection({
       {showSettingsControls ? (
         settings ? (
           <>
-            {!showCheckControls ? (
+            {!showCheckControls || mode === "manual" ? (
               <div>
                 <h3 className="text-[11px] font-body text-ink-faint">
                   {t("settings.update.settingsTitle", {
@@ -601,7 +685,7 @@ export function UpdateSettingsSection({
           </>
         ) : (
           <>
-            {!showCheckControls ? (
+            {!showCheckControls || mode === "manual" ? (
               <div>
                 <h3 className="text-[11px] font-body text-ink-faint">
                   {t("settings.update.settingsTitle", {

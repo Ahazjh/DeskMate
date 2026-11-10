@@ -4,6 +4,32 @@ import type { UpdateState } from "./types";
 
 export const ABOUT_UPDATE_LABEL_DURATION_MS = 30_000;
 
+/**
+ * 比较两个语义化版本号，判断 candidate 是否比 current 新。
+ *
+ * 只比较「主版本.次版本.修订号」三段数字，忽略 v 前缀与预发布后缀
+ * （1.2.1-beta 视作 1.2.1）。无法解析时返回 false —— 宁可保守地
+ * 不显示「立即更新」，也不要给用户一个点了会失败的按钮。
+ */
+export function isNewerVersion(candidate: string, current: string): boolean {
+  const parse = (value: string): number[] | null => {
+    const core = value.trim().replace(/^v/i, "").split(/[-+]/)[0];
+    if (!/^\d+(\.\d+)*$/.test(core)) return null;
+    const parts = core.split(".").map((part) => Number.parseInt(part, 10));
+    while (parts.length < 3) parts.push(0);
+    return parts.slice(0, 3);
+  };
+
+  const left = parse(candidate);
+  const right = parse(current);
+  if (!left || !right) return false;
+
+  for (let index = 0; index < 3; index += 1) {
+    if (left[index] !== right[index]) return left[index] > right[index];
+  }
+  return false;
+}
+
 export type UpdateNoticeTone = "idle" | "success" | "error";
 
 export interface UpdateInlineNotice {

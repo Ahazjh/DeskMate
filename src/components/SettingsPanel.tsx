@@ -462,7 +462,7 @@ export function SettingsPanel({ config, onChange, onMigrateDataDir, onClose }: S
           />
         </section>
 
-        <UpdateSettingsSection mode="settingsOnly" />
+        <UpdateSettingsSection mode="manual" />
 
         <section className="pt-2 border-t border-paper-deep/25">
           <p className="text-[10px] leading-relaxed text-ink-ghost/75">

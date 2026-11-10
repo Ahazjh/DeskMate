@@ -87,6 +87,84 @@ describe("UpdateSettingsSection", () => {
     expect(markup).not.toContain("待更新版本：1.0.5");
   });
 
+  test("manual mode shows both the check controls and the update settings", () => {
+    const markup = renderToStaticMarkup(
+      <UpdateSettingsSection
+        initialSettings={settings}
+        initialStatus={status}
+        mode="manual"
+      />,
+    );
+
+    // 手动检查入口
+    expect(markup).toContain("检查更新");
+    expect(markup).toContain("当前版本：1.0.4");
+    // 有新版本时给出「立即更新」
+    expect(markup).toContain("立即更新");
+    // 自动检查设置仍然保留
+    expect(markup).toContain("更新设置");
+    expect(markup).toContain("自动检查更新");
+    expect(markup).toContain("有新版本时自动下载");
+    expect(markup).toContain("检查频率");
+  });
+
+  test("manual mode hides the update-now button when already on the latest version", () => {
+    const upToDate: UpdateState = {
+      ...status,
+      status: "idle",
+      latestVersion: "1.0.4",
+      assetName: null,
+      assetSize: null,
+      assetPath: null,
+    };
+    const markup = renderToStaticMarkup(
+      <UpdateSettingsSection
+        initialSettings={settings}
+        initialStatus={upToDate}
+        mode="manual"
+      />,
+    );
+
+    expect(markup).toContain("检查更新");
+    expect(markup).not.toContain("立即更新");
+  });
+
+  test("manual mode hides the update-now button when the latest version is older", () => {
+    const older: UpdateState = {
+      ...status,
+      currentVersion: "2.0.0",
+      latestVersion: "1.0.5",
+    };
+    const markup = renderToStaticMarkup(
+      <UpdateSettingsSection
+        initialSettings={settings}
+        initialStatus={older}
+        mode="manual"
+      />,
+    );
+
+    expect(markup).toContain("检查更新");
+    expect(markup).not.toContain("立即更新");
+  });
+
+  test("manual mode still renders the Microsoft Store link for MSIX installs", () => {
+    const msixStatus: UpdateState = {
+      ...status,
+      installKind: "windowsMsix",
+    };
+    const markup = renderToStaticMarkup(
+      <UpdateSettingsSection
+        initialSettings={settings}
+        initialStatus={msixStatus}
+        mode="manual"
+      />,
+    );
+
+    expect(markup).toContain("在 Microsoft Store 中查看更新");
+    expect(markup).not.toContain("立即更新");
+    expect(markup).not.toContain("检查更新");
+  });
+
   test("preserves non-standard check interval values in the settings UI", () => {
     const markup = renderToStaticMarkup(
       <UpdateSettingsSection
