@@ -1663,6 +1663,7 @@ fn prewarm_notepad(app: &AppHandle) -> Result<(), AppError> {
     .skip_taskbar(true)
     .visible(false)
     .focused(false)
+    .background_color(tauri::utils::config::Color(0, 0, 0, 0))
     .build()?;
 
     // 预热窗口在池中等待期间保持低内存档位，激活时恢复 Normal
@@ -1971,6 +1972,15 @@ fn open_or_focus_window(
         .skip_taskbar(opts.skip_taskbar)
         .visible(false);
 
+    // 透明窗口必须把 WebView 自身的背景也设成全透明，否则 WebView2 会用白色
+    // 兜底，把 CSS 画出来的圆角外的透明边距填成白块（深色模式下尤其明显）。
+    // Windows 上只有 alpha 通道为 0 时该设置才生效。
+    let builder = if visual_options.transparent {
+        builder.background_color(tauri::utils::config::Color(0, 0, 0, 0))
+    } else {
+        builder
+    };
+
     // 仅主窗口使用 macOS 原生红绿灯（Overlay 标题栏）。notepad / tile 是
     // decorations: false 的透明无边框窗口，叠加红绿灯会渲染在内容区上方造成冲突
     #[cfg(target_os = "macos")]
@@ -2022,6 +2032,7 @@ fn tile_window_label(note_id: &str) -> String {
 fn dynamic_window_visual_options(label: &str) -> DynamicWindowVisualOptions {
     let is_app_surface = label == MAIN_WINDOW_LABEL
         || label == QUICK_TODO_WINDOW_LABEL
+        || label == AGENDA_WIDGET_LABEL
         || label.starts_with("notepad-")
         || label.starts_with("tile-");
 

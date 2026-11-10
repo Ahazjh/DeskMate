@@ -100,11 +100,36 @@ html.theme-transition .sliding-highlight {
     box-shadow 0.35s ease !important;
 }
 
-/* 桌面小窗：透明边距处铺不透明主题底色，避免深色模式下出现白边 */
+/*
+ * 桌面小窗：窗口本身是 transparent（见 desktop.rs 的
+ * dynamic_window_visual_options），靠 CSS 画出圆角，四个角透出桌面。
+ *
+ * 这里必须保持背景透明 —— 早期版本给 html/body/#root 铺不透明底色，
+ * 是为了掩盖「非 transparent 窗口 + 圆角」时边角露出的矩形底色；
+ * 改成 transparent 窗口后那层底色反而会把圆角盖掉。
+ */
 html.widget-window,
 html.widget-window body,
 html.widget-window #root {
-  background: var(--color-cloud) !important;
+  background: transparent !important;
+}
+
+/*
+ * 圆角之外的透明边距不吃鼠标事件。
+ *
+ * 注意：这只是让 WebView 内部的 DOM 不响应这些区域的点击，
+ * 并不能把点击真正穿透到下层窗口（那需要原生的窗口级命中测试）。
+ * 但配合透明背景，用户在圆角处点击时看到的是桌面，视觉上不会误以为
+ * 点中了小窗。
+ *
+ * pointer-events 是继承属性，必须把内部内容显式恢复成 auto，
+ * 否则整扇小窗都会变成「点不动」。
+ */
+html.widget-window .widget-hit-area {
+  pointer-events: none;
+}
+html.widget-window .widget-hit-area > * {
+  pointer-events: auto;
 }
 
 /* 主题切换：以按键为中心的圆形色幕，只动画 transform / opacity（合成层） */

@@ -335,7 +335,9 @@ export function AgendaWidgetWindow(_props: AgendaWidgetWindowProps) {
   };
 
   return (
-    <div className="h-screen w-screen p-1.5 bg-transparent select-none">
+    // 外层是透明的边距区：窗口本体是 transparent 窗口，这里留出 padding
+    // 让圆角外的四角透出桌面。边距不接收鼠标事件，点击可穿透到桌面。
+    <div className="h-screen w-screen p-1.5 bg-transparent select-none widget-hit-area">
       <div className="app-surface-frame relative h-full flex flex-col bg-cloud border border-paper-deep/60 shadow-[0_14px_36px_rgba(0,0,0,0.22)] overflow-hidden">
         <div
           data-tauri-drag-region="true"
