@@ -6,6 +6,7 @@ use std::path::Path;
 
 const MAX_FILE_BYTES: u64 = 10 * 1024 * 1024;
 const ALLOWED_EXTENSIONS: [&str; 2] = ["xls", "xlsx"];
+const PDF_MAX_BYTES: u64 = 20 * 1024 * 1024;
 
 fn app_error(code: &str, message: impl Into<String>) -> AppError {
     AppError {
@@ -315,6 +316,57 @@ fn parse_grid(sheet: &str, range: &Range<Data>) -> Option<CourseFileImport> {
     })
 }
 
+fn base64_encode(bytes: &[u8]) -> String {
+    const TABLE: &[u8; 64] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+    let mut out = String::with_capacity((bytes.len() + 2) / 3 * 4);
+    for chunk in bytes.chunks(3) {
+        let first = chunk[0] as u32;
+        let second = *chunk.get(1).unwrap_or(&0) as u32;
+        let third = *chunk.get(2).unwrap_or(&0) as u32;
+        let packed = (first << 16) | (second << 8) | third;
+        out.push(TABLE[((packed >> 18) & 63) as usize] as char);
+        out.push(TABLE[((packed >> 12) & 63) as usize] as char);
+        out.push(if chunk.len() > 1 {
+            TABLE[((packed >> 6) & 63) as usize] as char
+        } else {
+            '='
+        });
+        out.push(if chunk.len() > 2 {
+            TABLE[(packed & 63) as usize] as char
+        } else {
+            '='
+        });
+    }
+    out
+}
+
+/// 读取 PDF 课表文件的字节并转成 base64，交给前端 pdf.js 解析。
+///
+/// PDF 的表格是「画」出来的，缺少可供 Rust 侧复用的行列结构，
+/// 而 pdf.js 能给出每个文字项的坐标，因此解析放在前端做。
+pub fn read_pdf_base64(path: &str) -> Result<String, AppError> {
+    let path_ref = Path::new(path);
+    let extension = path_ref
+        .extension()
+        .and_then(|value| value.to_str())
+        .unwrap_or("")
+        .to_ascii_lowercase();
+    if extension != "pdf" {
+        return Err(app_error("courseFileType", "只支持 .pdf 课表文件"));
+    }
+    let metadata = std::fs::metadata(path_ref)
+        .map_err(|error| app_error("courseFileMissing", format!("无法读取课表文件：{error}")))?;
+    if metadata.len() == 0 {
+        return Err(app_error("courseFileEmpty", "课表文件是空的"));
+    }
+    if metadata.len() > PDF_MAX_BYTES {
+        return Err(app_error("courseFileTooLarge", "课表文件超过 20 MB"));
+    }
+    let bytes = std::fs::read(path_ref)
+        .map_err(|error| app_error("courseFileMissing", format!("无法读取课表文件：{error}")))?;
+    Ok(base64_encode(&bytes))
+}
+
 pub fn parse_course_file(path: &str) -> Result<CourseFileImport, AppError> {
     let path_ref = Path::new(path);
     let extension = path_ref
@@ -453,5 +505,28 @@ mod tests {
     #[test]
     fn rejects_lines_without_periods() {
         assert!(parse_course_line("只是备注", 1).is_none());
+    }
+
+    #[test]
+    fn encodes_base64_without_padding_artifacts() {
+        // 与标准实现对照的三个长度分支（含 1、2、3 字节余数）
+        assert_eq!(base64_encode(b""), "");
+        assert_eq!(base64_encode(b"f"), "Zg==");
+        assert_eq!(base64_encode(b"fo"), "Zm8=");
+        assert_eq!(base64_encode(b"foo"), "Zm9v");
+        assert_eq!(base64_encode(b"foob"), "Zm9vYg==");
+        assert_eq!(base64_encode(b"fooba"), "Zm9vYmE=");
+        assert_eq!(base64_encode(b"foobar"), "Zm9vYmFy");
+    }
+
+    #[test]
+    fn rejects_non_pdf_files_for_pdf_reader() {
+        let manifest = std::path::Path::new(env!("CARGO_MANIFEST_DIR"));
+        let xlsx = manifest.join("../testdata/课表-测试-本人.xlsx");
+        if !xlsx.exists() {
+            return;
+        }
+        let error = read_pdf_base64(xlsx.to_str().expect("path")).expect_err("should reject");
+        assert_eq!(error.code, "courseFileType");
     }
 }

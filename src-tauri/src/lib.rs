@@ -348,6 +348,17 @@ async fn agenda_course_file_import(
 }
 
 #[tauri::command]
+async fn agenda_course_pdf_bytes(path: String) -> Result<String, AppError> {
+    tauri::async_runtime::spawn_blocking(move || services::course_file::read_pdf_base64(&path))
+        .await
+        .map_err(|error| AppError {
+            code: "courseFileParse".into(),
+            message: error.to_string(),
+            details: Default::default(),
+        })?
+}
+
+#[tauri::command]
 async fn open_quick_todo_window(app: AppHandle) -> Result<String, AppError> {
     desktop::open_quick_todo_window(&app)
 }
@@ -557,6 +568,7 @@ pub fn run() {
             recycle_notepad_window,
             open_quick_todo_window,
             agenda_course_file_import,
+            agenda_course_pdf_bytes,
             open_agenda_widget,
             agenda_widget_bounds_get,
             agenda_widget_bounds_save,

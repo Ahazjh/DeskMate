@@ -577,20 +577,21 @@
     "import": {
       "fileTab": "Timetable file",
       "textTab": "Paste text",
-      "fileHint": "Pick the .xls / .xlsx file exported by your school system. The weekday x period grid is detected automatically and course name, weeks, room and teacher are extracted — no copy-paste needed.",
+      "fileHint": "Pick the .xls / .xlsx / .pdf file exported by your school system. The weekday x period grid is detected automatically and course name, weeks, room and teacher are extracted — no copy-paste needed. PDF supports landscape timetables printed straight from the school system, including tables that span pages.",
       "textHint": "Paste timetable text in any format, one course per line, any field order. Supports Mon/Wednesday, 1-2 / period 5, week 1-16, @room and teacher names.",
       "insertSample": "Insert sample",
       "preview": "Import {{count}} course(s)",
-      "fileSheet": "(sheet: {{sheet}})",
+      "fileSheet": "(source: {{sheet}})",
       "fileReady": "{{count}} course(s) recognized",
       "fileWarnings": "{{count}} cell(s) could not be parsed; add them manually after importing",
-      "fileEmpty": "No courses found. Make sure this is a timetable exported by the school system.",
+      "fileEmpty": "No courses found. Make sure this is a timetable exported by the school system with a 星期… / Mon…Sun header row.",
       "pickFile": "Choose timetable file",
       "parsingFile": "Reading timetable…",
-      "fileFormats": ".xls / .xlsx, up to 10 MB",
+      "fileFormats": ".xls / .xlsx / .pdf",
       "confirm": "Import {{count}}",
       "errorCount": "{{count}} row(s) could not be parsed",
-      "imported": "Imported {{count}} course(s)"
+      "imported": "Imported {{count}} course(s)",
+      "parsingPdf": "Parsing PDF timetable…"
     },
     "daily": {
       "progressTitle": "Today's progress",

@@ -577,20 +577,21 @@
     "import": {
       "fileTab": "课表文件",
       "textTab": "文字粘贴",
-      "fileHint": "直接选择教务系统导出的 .xls / .xlsx 课表文件，自动识别「星期 × 节次」表格并提取课程名、周次、地点、教师，不需要复制粘贴。",
+      "fileHint": "直接选择教务系统导出的 .xls / .xlsx / .pdf 课表文件，自动识别「星期 × 节次」表格并提取课程名、周次、地点、教师，不需要复制粘贴。PDF 支持教务系统直接打印出来的横向课表（含跨页表格）。",
       "textHint": "粘贴任意格式的课表文字，每行一门课，字段顺序不限。支持「周一 / 星期三 / Mon」「1-2节 / 第5节」「1-16周 / 单周」「@教室」「张老师」。",
       "insertSample": "插入示例",
       "preview": "将导入 {{count}} 门课程",
-      "fileSheet": "（工作表：{{sheet}}）",
+      "fileSheet": "（来源：{{sheet}}）",
       "fileReady": "识别到 {{count}} 门课程",
       "fileWarnings": "{{count}} 个单元格无法解析，可导入后手工补录",
-      "fileEmpty": "文件里没有识别到课程，请确认是教务系统导出的课表文件。",
+      "fileEmpty": "文件里没有识别到课程，请确认是教务系统导出的课表文件（需要含「星期一…星期日」表头）。",
       "pickFile": "选择课表文件",
       "parsingFile": "正在读取课表…",
-      "fileFormats": "支持 .xls / .xlsx，最大 10 MB",
+      "fileFormats": "支持 .xls / .xlsx / .pdf",
       "confirm": "导入 {{count}} 门",
       "errorCount": "{{count}} 条无法解析",
-      "imported": "已导入 {{count}} 门课程"
+      "imported": "已导入 {{count}} 门课程",
+      "parsingPdf": "正在解析 PDF 课表…"
     },
     "daily": {
       "progressTitle": "今日进度",

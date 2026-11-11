@@ -23,6 +23,7 @@
     "i18next": "^26.2.0",
     "indent-textarea": "^4.0.0",
     "katex": "^0.16.47",
+    "pdfjs-dist": "^4.10.38",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-i18next": "^17.0.8",

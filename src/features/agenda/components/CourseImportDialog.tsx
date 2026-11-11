@@ -5,6 +5,7 @@ import { getErrorMessage } from "../../notes/api";
 import type { CourseParseResult } from "../courseImport";
 import { FREE_TEXT_TEMPLATE, parseFreeTextCourses } from "../freeTextCourses";
 import { importCourseFile, pickCourseFile } from "../api";
+import { importCoursesFromPdf } from "../pdfCourseImport";
 import type { CourseFileImport, CourseInput } from "../types";
 
 interface CourseImportDialogProps {
@@ -19,6 +20,7 @@ export function CourseImportDialog({ onClose, onImport }: CourseImportDialogProp
   const [tab, setTab] = useState<ImportTab>("file");
   const [freeText, setFreeText] = useState("");
   const [parsing, setParsing] = useState(false);
+  const [parsingPdf, setParsingPdf] = useState(false);
   const [fileName, setFileName] = useState("");
   const [fileResult, setFileResult] = useState<CourseFileImport | null>(null);
   const [fileError, setFileError] = useState<string | null>(null);
@@ -37,10 +39,14 @@ export function CourseImportDialog({ onClose, onImport }: CourseImportDialogProp
       const path = await pickCourseFile();
       if (!path) return;
       setParsing(true);
+      setParsingPdf(/\.pdf$/i.test(path));
       setFileError(null);
       setFileResult(null);
       setFileName(path.split(/[\\/]/).pop() ?? path);
-      const result = await importCourseFile(path);
+      // PDF 课表靠文字坐标还原表格，解析在前端做；表格文件走 Rust
+      const result = /\.pdf$/i.test(path)
+        ? await importCoursesFromPdf(path)
+        : await importCourseFile(path);
       setFileResult(result);
       if (result.courses.length === 0) {
         setFileError(
@@ -55,6 +61,7 @@ export function CourseImportDialog({ onClose, onImport }: CourseImportDialogProp
       setFileError(getErrorMessage(cause));
     } finally {
       setParsing(false);
+      setParsingPdf(false);
     }
   };
 
@@ -137,7 +144,9 @@ export function CourseImportDialog({ onClose, onImport }: CourseImportDialogProp
                 </svg>
                 <span className="text-[11px] font-body">
                   {parsing
-                    ? t("agenda.import.parsingFile", { defaultValue: "正在读取课表…" })
+                    ? parsingPdf
+                      ? t("agenda.import.parsingPdf", { defaultValue: "正在解析 PDF 课表…" })
+                      : t("agenda.import.parsingFile", { defaultValue: "正在读取课表…" })
                     : t("agenda.import.pickFile", { defaultValue: "选择课表文件" })}
                 </span>
                 <span className="text-[9px] font-body text-ink-ghost/60">

@@ -81,7 +81,7 @@ export async function pickCourseFile(): Promise<string | null> {
   const selected = await open({
     multiple: false,
     directory: false,
-    filters: [{ name: "课表文件", extensions: ["xls", "xlsx"] }],
+    filters: [{ name: "课表文件", extensions: ["xls", "xlsx", "pdf"] }],
   });
   return typeof selected === "string" ? selected : null;
 }
@@ -108,6 +108,11 @@ export function clearPartnerCourses(): Promise<number> {
 
 export function importCourseFile(path: string): Promise<CourseFileImport> {
   return invoke("agenda_course_file_import", { path });
+}
+
+/** 读取 PDF 课表文件的字节（base64），交给前端 pdf.js 解析 */
+export function readCoursePdfBytes(path: string): Promise<string> {
+  return invoke("agenda_course_pdf_bytes", { path });
 }
 
 export function importCourses(courses: CourseInput[]): Promise<Course[]> {

@@ -558,20 +558,21 @@
     "import": {
       "fileTab": "課表檔案",
       "textTab": "文字貼上",
-      "fileHint": "直接選擇教務系統匯出的 .xls / .xlsx 課表檔案，自動辨識「星期 × 節次」表格並擷取課程名稱、週次、地點、教師，不需要複製貼上。",
+      "fileHint": "直接選擇教務系統匯出的 .xls / .xlsx / .pdf 課表檔案，自動辨識「星期 × 節次」表格並擷取課程名稱、週次、地點、教師，不需要複製貼上。PDF 支援教務系統直接列印出來的橫向課表（含跨頁表格）。",
       "textHint": "貼上任意格式的課表文字，每行一門課，欄位順序不限。支援「週一 / 星期三 / Mon」「1-2節 / 第5節」「1-16週 / 單週」「@教室」「張老師」。",
       "insertSample": "插入範例",
       "preview": "將匯入 {{count}} 門課程",
-      "fileSheet": "（工作表：{{sheet}}）",
+      "fileSheet": "（來源：{{sheet}}）",
       "fileReady": "辨識到 {{count}} 門課程",
       "fileWarnings": "{{count}} 個儲存格無法解析，可匯入後手動補登",
-      "fileEmpty": "檔案裡沒有辨識到課程，請確認是教務系統匯出的課表檔案。",
+      "fileEmpty": "檔案裡沒有辨識到課程，請確認是教務系統匯出的課表檔案（需要含「星期一…星期日」表頭）。",
       "pickFile": "選擇課表檔案",
       "parsingFile": "正在讀取課表…",
-      "fileFormats": "支援 .xls / .xlsx，最大 10 MB",
+      "fileFormats": "支援 .xls / .xlsx / .pdf",
       "confirm": "匯入 {{count}} 門",
       "errorCount": "{{count}} 條無法解析",
-      "imported": "已匯入 {{count}} 門課程"
+      "imported": "已匯入 {{count}} 門課程",
+      "parsingPdf": "正在解析 PDF 課表…"
     },
     "daily": {
       "progressTitle": "今日進度",
