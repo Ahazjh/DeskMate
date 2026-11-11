@@ -2484,4 +2484,16 @@ mod tests {
         assert_eq!(settings.period_times.len(), 14);
         assert!(settings.schedule.is_some());
     }
+
+    #[test]
+    fn legacy_settings_file_without_schedule_loads_as_manual() {
+        let raw = r#"{"schemaVersion":1,"settings":{"semesterStart":"2026-09-21","periodTimes":[{"period":1,"start":"08:00","end":"08:45"},{"period":2,"start":"08:55","end":"09:40"}]}}"#;
+        let file: TimetableSettingsFile = serde_json::from_str(raw).expect("deserialize");
+        assert!(
+            file.settings.schedule.is_none(),
+            "老数据没有 schedule 字段时必须解析为手动模式"
+        );
+        assert_eq!(file.settings.period_times.len(), 2);
+        assert_eq!(file.settings.semester_start.as_deref(), Some("2026-09-21"));
+    }
 }
