@@ -806,6 +806,7 @@ mod tests {
             timetable_settings: TimetableSettings {
                 semester_start: None,
                 period_times: Vec::new(),
+                schedule: None,
             },
         }
     }

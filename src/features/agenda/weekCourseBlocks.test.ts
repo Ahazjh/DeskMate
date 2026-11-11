@@ -52,7 +52,8 @@ describe("clockToMinutes", () => {
 });
 
 describe("expandWeekCourseBlocks", () => {
-  const settings = defaultTimetableSettings();
+  // 手动时刻模式：保持经典 12 节时刻，专注测试展开与调课逻辑
+  const settings = { ...defaultTimetableSettings(), schedule: null };
 
   it("按周起始日展开七天", () => {
     const blocks = expandWeekCourseBlocks(

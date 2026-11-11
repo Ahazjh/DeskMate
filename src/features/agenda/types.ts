@@ -52,9 +52,57 @@ export interface PeriodTime {
   end: string;
 }
 
+/** 早 / 下午 / 晚上三段的节数分布 */
+export interface SessionPeriodCounts {
+  morning: number;
+  afternoon: number;
+  evening: number;
+}
+
+/** 早 / 下午 / 晚上三段的开始上课时间（HH:mm） */
+export interface SessionStartTimes {
+  morning: string;
+  afternoon: string;
+  evening: string;
+}
+
+/**
+ * 课表的作息参数。节次时刻由这些参数推算出来，
+ * 用户也可以逐节微调 —— 那部分存在 periodTimes 里。
+ */
+export interface TimetableSchedule {
+  /** 每小节课时长（分钟） */
+  periodMinutes: number;
+  /** 每大节时长（分钟，不含课间） */
+  majorPeriodMinutes: number;
+  /** 小课间（分钟），同一大节内两小节之间 */
+  shortBreakMinutes: number;
+  /** 大课间（分钟），两个大节之间 */
+  longBreakMinutes: number;
+  /** 每日节数分布 */
+  sessionPeriods: SessionPeriodCounts;
+  /** 三段开始上课时间 */
+  sessionStarts: SessionStartTimes;
+  /** 是否启用夏令时 / 冬令时两套作息 */
+  seasonal: boolean;
+  /** 夏令时三段开始时间 */
+  summerStarts: SessionStartTimes;
+  /** 冬令时三段开始时间 */
+  winterStarts: SessionStartTimes;
+  /** 切换到夏令时的日期（MM-DD，每年重复） */
+  summerStartDate: string;
+  /** 切换到冬令时的日期（MM-DD，每年重复） */
+  winterStartDate: string;
+}
+
 export interface TimetableSettings {
   semesterStart: string | null;
   periodTimes: PeriodTime[];
+  /**
+   * 作息参数。为 null 表示沿用逐节手动设置的时刻（老数据），
+   * 非 null 时节次时刻由参数推算。
+   */
+  schedule: TimetableSchedule | null;
 }
 
 export interface Course {

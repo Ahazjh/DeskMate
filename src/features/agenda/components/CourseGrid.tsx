@@ -1,7 +1,8 @@
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { weekdayLabels } from "../dateUtils";
 import { EVENT_COLORS } from "../eventUtils";
-import { formatCourseTime, periodTime } from "../timetable";
+import { formatCourseTime, resolvePeriodTimes } from "../timetable";
 import { PartnerIcon } from "./PartnerIcon";
 import type { Course, CourseOverride, PartnerRelation, TimetableSettings } from "../types";
 
@@ -22,7 +23,6 @@ interface CourseGridProps {
   onEdit: (course: Course) => void;
 }
 
-const PERIODS = Array.from({ length: 12 }, (_, index) => index + 1);
 const DAYS = [1, 2, 3, 4, 5, 6, 7];
 
 export function CourseGrid({
@@ -43,6 +43,15 @@ export function CourseGrid({
 }: CourseGridProps) {
   const { t } = useTranslation();
   const labels = weekdayLabels(locale);
+  // 节数随「课程表设置」变化，不再固定 12 节
+  const periodList = useMemo(
+    () => resolvePeriodTimes(settings).map((item) => item.period),
+    [settings],
+  );
+  const timeByPeriod = useMemo(
+    () => new Map(resolvePeriodTimes(settings).map((item) => [item.period, item])),
+    [settings],
+  );
 
   return (
     <div className="flex-1 min-h-0 flex flex-col">
@@ -84,8 +93,8 @@ export function CourseGrid({
           </div>
         ))}
 
-        {PERIODS.map((period) => {
-          const time = periodTime(settings, period);
+        {periodList.map((period) => {
+          const time = timeByPeriod.get(period);
           return (
             <div
               key={`period-${period}`}
@@ -104,7 +113,7 @@ export function CourseGrid({
         })}
 
         {DAYS.map((weekday) =>
-          PERIODS.map((period) => {
+          periodList.map((period) => {
             const free = showPartner && sharedFree?.[weekday - 1]?.[period - 1] === true;
             return (
               <button

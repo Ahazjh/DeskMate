@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import { addDaysToKey } from "./dateUtils";
-import { courseMatchesWeek } from "./timetable";
+import { addDaysToKey, parseDayKey } from "./dateUtils";
+import { courseMatchesWeek, resolvePeriodTimes } from "./timetable";
 import type { Course, CourseOverride, TimetableSettings } from "./types";
 
 export interface WeekCourseBlock {
@@ -44,7 +44,8 @@ export function expandWeekCourseBlocks(
   semesterWeekNumber: number | null = null,
 ): WeekCourseBlock[] {
   const periodMinutes = new Map<number, { start: number; end: number }>();
-  for (const item of settings.periodTimes) {
+  // 节次时刻按作息参数推算，并按当天所处的夏/冬令时取值
+  for (const item of resolvePeriodTimes(settings, parseDayKey(weekStart))) {
     periodMinutes.set(item.period, {
       start: clockToMinutes(item.start),
       end: clockToMinutes(item.end),

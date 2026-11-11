@@ -59,6 +59,7 @@ function snapshot(overrides: Partial<AgendaSnapshot> = {}): AgendaSnapshot {
         { period: 2, start: "08:55", end: "09:40" },
         { period: 3, start: "10:00", end: "10:45" },
       ],
+      schedule: null,
     },
     ...overrides,
   };

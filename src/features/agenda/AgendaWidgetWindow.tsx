@@ -19,8 +19,8 @@ import {
   startOfDayIso,
   todayKey,
 } from "./dateUtils";
-import { addDaysToKey } from "./dateUtils";
-import { courseMatchesWeek, semesterWeek } from "./timetable";
+import { addDaysToKey, parseDayKey } from "./dateUtils";
+import { courseMatchesWeek, resolvePeriodTimes, semesterWeek } from "./timetable";
 import { DdlPressureStrip } from "./components/DdlPressureStrip";
 import { DailyProgressStrip } from "./components/DailyProgressStrip";
 import type { AgendaSnapshot, DailyTask } from "./types";
@@ -113,12 +113,12 @@ function buildScheduleItems(
     if (currentWeek !== null && currentWeek > 0 && !courseMatchesWeek(course.weeks, currentWeek)) {
       continue;
     }
-    const startPeriod = snapshot.timetableSettings.periodTimes.find(
-      (item) => item.period === course.startPeriod,
+    const periodTimes = resolvePeriodTimes(
+      snapshot.timetableSettings,
+      parseDayKey(today),
     );
-    const endPeriod = snapshot.timetableSettings.periodTimes.find(
-      (item) => item.period === course.endPeriod,
-    );
+    const startPeriod = periodTimes.find((item) => item.period === course.startPeriod);
+    const endPeriod = periodTimes.find((item) => item.period === course.endPeriod);
     const meta = [course.location, course.teacher, course.weeks].filter(Boolean).join(" · ");
     items.push({
       id: `course-${course.id}`,

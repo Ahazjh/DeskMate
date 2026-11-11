@@ -63,8 +63,9 @@ describe("timetable utilities", () => {
 
   test("formats course clock time from period settings", () => {
     expect(formatCourseTime(course(), settings)).toBe("08:00–09:40");
+    // 默认作息：第 5 节 11:50 开始（早上 5 节），第 6 节 14:15 结束（下午 13:30 开始）
     expect(formatCourseTime(course({ startPeriod: 5, endPeriod: 6 }), settings)).toBe(
-      "14:00–15:40",
+      "11:50–14:15",
     );
   });
 });

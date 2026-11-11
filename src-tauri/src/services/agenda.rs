@@ -227,6 +227,87 @@ pub struct PeriodTime {
     pub end: String,
 }
 
+/// 早 / 下午 / 晚上三段的节数分布
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub struct SessionPeriodCounts {
+    #[serde(default = "default_morning_periods")]
+    pub morning: u8,
+    #[serde(default = "default_afternoon_periods")]
+    pub afternoon: u8,
+    #[serde(default = "default_evening_periods")]
+    pub evening: u8,
+}
+
+/// 早 / 下午 / 晚上三段的开始上课时间（HH:mm）
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub struct SessionStartTimes {
+    #[serde(default = "default_morning_start")]
+    pub morning: String,
+    #[serde(default = "default_afternoon_start")]
+    pub afternoon: String,
+    #[serde(default = "default_evening_start")]
+    pub evening: String,
+}
+
+/// 课表作息参数。为 None 表示沿用逐节手动设置的时刻（老数据）。
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub struct TimetableSchedule {
+    /// 每小节课时长（分钟）
+    #[serde(default = "default_period_minutes")]
+    pub period_minutes: u16,
+    /// 每大节时长（分钟，不含课间）
+    #[serde(default = "default_major_period_minutes")]
+    pub major_period_minutes: u16,
+    /// 小课间（分钟）
+    #[serde(default = "default_short_break_minutes")]
+    pub short_break_minutes: u16,
+    /// 大课间（分钟）
+    #[serde(default = "default_long_break_minutes")]
+    pub long_break_minutes: u16,
+    #[serde(default)]
+    pub session_periods: SessionPeriodCounts,
+    #[serde(default)]
+    pub session_starts: SessionStartTimes,
+    /// 是否启用夏令时 / 冬令时两套作息
+    #[serde(default)]
+    pub seasonal: bool,
+    #[serde(default)]
+    pub summer_starts: SessionStartTimes,
+    #[serde(default)]
+    pub winter_starts: SessionStartTimes,
+    /// 切换到夏令时的日期（MM-DD，每年重复）
+    #[serde(default = "default_summer_start_date")]
+    pub summer_start_date: String,
+    /// 切换到冬令时的日期（MM-DD，每年重复）
+    #[serde(default = "default_winter_start_date")]
+    pub winter_start_date: String,
+}
+
+impl Default for TimetableSchedule {
+    fn default() -> Self {
+        Self {
+            period_minutes: default_period_minutes(),
+            major_period_minutes: default_major_period_minutes(),
+            short_break_minutes: default_short_break_minutes(),
+            long_break_minutes: default_long_break_minutes(),
+            session_periods: SessionPeriodCounts::default(),
+            session_starts: SessionStartTimes::default(),
+            seasonal: false,
+            summer_starts: SessionStartTimes {
+                morning: "07:00".to_string(),
+                afternoon: "12:30".to_string(),
+                evening: "17:30".to_string(),
+            },
+            winter_starts: SessionStartTimes::default(),
+            summer_start_date: default_summer_start_date(),
+            winter_start_date: default_winter_start_date(),
+        }
+    }
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct TimetableSettings {
@@ -234,6 +315,9 @@ pub struct TimetableSettings {
     pub semester_start: Option<String>,
     #[serde(default = "default_period_times")]
     pub period_times: Vec<PeriodTime>,
+    /// 作息参数。缺省（老数据）时按 None 处理，保留用户逐节设置的时刻。
+    #[serde(default)]
+    pub schedule: Option<TimetableSchedule>,
 }
 
 impl Default for TimetableSettings {
@@ -241,6 +325,7 @@ impl Default for TimetableSettings {
         Self {
             semester_start: None,
             period_times: default_period_times(),
+            schedule: Some(TimetableSchedule::default()),
         }
     }
 }
@@ -331,6 +416,74 @@ struct TimetableSettingsFile {
     schema_version: u32,
     #[serde(default)]
     settings: TimetableSettings,
+}
+
+impl Default for SessionPeriodCounts {
+    fn default() -> Self {
+        Self {
+            morning: default_morning_periods(),
+            afternoon: default_afternoon_periods(),
+            evening: default_evening_periods(),
+        }
+    }
+}
+
+impl Default for SessionStartTimes {
+    fn default() -> Self {
+        Self {
+            morning: default_morning_start(),
+            afternoon: default_afternoon_start(),
+            evening: default_evening_start(),
+        }
+    }
+}
+
+fn default_morning_periods() -> u8 {
+    5
+}
+
+fn default_afternoon_periods() -> u8 {
+    4
+}
+
+fn default_evening_periods() -> u8 {
+    3
+}
+
+fn default_morning_start() -> String {
+    "08:00".to_string()
+}
+
+fn default_afternoon_start() -> String {
+    "13:30".to_string()
+}
+
+fn default_evening_start() -> String {
+    "18:30".to_string()
+}
+
+fn default_period_minutes() -> u16 {
+    45
+}
+
+fn default_major_period_minutes() -> u16 {
+    90
+}
+
+fn default_short_break_minutes() -> u16 {
+    10
+}
+
+fn default_long_break_minutes() -> u16 {
+    15
+}
+
+fn default_summer_start_date() -> String {
+    "05-01".to_string()
+}
+
+fn default_winter_start_date() -> String {
+    "10-01".to_string()
 }
 
 fn default_period_times() -> Vec<PeriodTime> {
@@ -534,55 +687,130 @@ fn normalize_clock(value: &str) -> Option<String> {
     Some(format!("{hour:02}:{minute:02}"))
 }
 
+/// 每天最多排多少节
+const MAX_PERIODS_PER_DAY: u8 = 20;
+
+fn normalize_session_starts(input: SessionStartTimes) -> SessionStartTimes {
+    SessionStartTimes {
+        morning: normalize_clock(&input.morning).unwrap_or_else(default_morning_start),
+        afternoon: normalize_clock(&input.afternoon).unwrap_or_else(default_afternoon_start),
+        evening: normalize_clock(&input.evening).unwrap_or_else(default_evening_start),
+    }
+}
+
+/// "05-01" → 合法则原样返回，否则回退到默认
+fn normalize_switch_date(value: &str, fallback: fn() -> String) -> String {
+    let trimmed = value.trim();
+    let Some((month, day)) = trimmed.split_once('-') else {
+        return fallback();
+    };
+    let (Ok(month), Ok(day)) = (month.parse::<u32>(), day.parse::<u32>()) else {
+        return fallback();
+    };
+    if !(1..=12).contains(&month) || !(1..=31).contains(&day) {
+        return fallback();
+    }
+    format!("{month:02}-{day:02}")
+}
+
+fn normalize_timetable_schedule(input: TimetableSchedule) -> TimetableSchedule {
+    let period_minutes = input.period_minutes.clamp(5, 240);
+    let major_period_minutes = input.major_period_minutes.clamp(period_minutes, 480);
+    let short_break_minutes = input.short_break_minutes.min(180);
+    let long_break_minutes = input.long_break_minutes.min(240);
+
+    // 节数分布：先各自封顶，再保证合计不超过上限（从晚上开始削减）
+    let mut morning = input.session_periods.morning.min(MAX_PERIODS_PER_DAY);
+    let mut afternoon = input.session_periods.afternoon.min(MAX_PERIODS_PER_DAY);
+    let mut evening = input.session_periods.evening.min(MAX_PERIODS_PER_DAY);
+    let mut total = morning as u16 + afternoon as u16 + evening as u16;
+    while total > MAX_PERIODS_PER_DAY as u16 {
+        if evening > 0 {
+            evening -= 1;
+        } else if afternoon > 0 {
+            afternoon -= 1;
+        } else {
+            morning -= 1;
+        }
+        total -= 1;
+    }
+
+    TimetableSchedule {
+        period_minutes,
+        major_period_minutes,
+        short_break_minutes,
+        long_break_minutes,
+        session_periods: SessionPeriodCounts {
+            morning,
+            afternoon,
+            evening,
+        },
+        session_starts: normalize_session_starts(input.session_starts),
+        seasonal: input.seasonal,
+        summer_starts: normalize_session_starts(input.summer_starts),
+        winter_starts: normalize_session_starts(input.winter_starts),
+        summer_start_date: normalize_switch_date(
+            &input.summer_start_date,
+            default_summer_start_date,
+        ),
+        winter_start_date: normalize_switch_date(
+            &input.winter_start_date,
+            default_winter_start_date,
+        ),
+    }
+}
+
 fn normalize_timetable_settings(input: TimetableSettings) -> Result<TimetableSettings, AppError> {
     let semester_start = normalize_day(input.semester_start)?;
-    let defaults = default_period_times();
-    let mut period_times = Vec::with_capacity(defaults.len());
+    let mut period_times: Vec<PeriodTime> = Vec::with_capacity(input.period_times.len());
 
-    for default in defaults {
-        let provided = input
-            .period_times
-            .iter()
-            .find(|item| item.period == default.period);
-
-        let start = match provided {
-            Some(item) => normalize_clock(&item.start).ok_or_else(|| {
-                let mut error = app_error("agendaInvalidTime", "节次开始时间格式无效");
-                error
-                    .details
-                    .insert("period".into(), item.period.to_string());
-                error
-            })?,
-            None => default.start,
-        };
-        let end = match provided {
-            Some(item) => normalize_clock(&item.end).ok_or_else(|| {
-                let mut error = app_error("agendaInvalidTime", "节次结束时间格式无效");
-                error
-                    .details
-                    .insert("period".into(), item.period.to_string());
-                error
-            })?,
-            None => default.end,
-        };
+    // 节次数量不再固定 12：用户排多少节就存多少节
+    for item in &input.period_times {
+        if period_times.len() >= MAX_PERIODS_PER_DAY as usize {
+            break;
+        }
+        if period_times.iter().any(|existing| existing.period == item.period) {
+            continue;
+        }
+        let start = normalize_clock(&item.start).ok_or_else(|| {
+            let mut error = app_error("agendaInvalidTime", "节次开始时间格式无效");
+            error
+                .details
+                .insert("period".into(), item.period.to_string());
+            error
+        })?;
+        let end = normalize_clock(&item.end).ok_or_else(|| {
+            let mut error = app_error("agendaInvalidTime", "节次结束时间格式无效");
+            error
+                .details
+                .insert("period".into(), item.period.to_string());
+            error
+        })?;
         if end <= start {
             let mut error = app_error("agendaInvalidTime", "节次结束时间需晚于开始时间");
             error
                 .details
-                .insert("period".into(), default.period.to_string());
+                .insert("period".into(), item.period.to_string());
             return Err(error);
         }
-
         period_times.push(PeriodTime {
-            period: default.period,
+            period: item.period,
             start,
             end,
         });
     }
 
+    if period_times.is_empty() {
+        period_times = default_period_times();
+    }
+    period_times.sort_by_key(|item| item.period);
+
+    let schedule = input.schedule.map(normalize_timetable_schedule);
+
     Ok(TimetableSettings {
         semester_start,
         period_times,
+        schedule,
     })
 }
 
@@ -2180,5 +2408,80 @@ mod tests {
         assert_eq!(todo.kind, "assignment");
         assert_eq!(todo.course_id.as_deref(), Some("course-1"));
         assert_eq!(todo.platform, "学习通");
+    }
+
+    #[test]
+    fn clamps_out_of_range_schedule_values() {
+        let schedule = normalize_timetable_schedule(TimetableSchedule {
+            period_minutes: 1,
+            major_period_minutes: 9999,
+            short_break_minutes: 9999,
+            long_break_minutes: 9999,
+            session_periods: SessionPeriodCounts {
+                morning: 30,
+                afternoon: 30,
+                evening: 30,
+            },
+            session_starts: SessionStartTimes {
+                morning: "乱写".to_string(),
+                afternoon: "13:30".to_string(),
+                evening: "18:30".to_string(),
+            },
+            seasonal: true,
+            summer_starts: SessionStartTimes::default(),
+            winter_starts: SessionStartTimes::default(),
+            summer_start_date: "13-45".to_string(),
+            winter_start_date: "10-01".to_string(),
+        });
+
+        assert_eq!(schedule.period_minutes, 5);
+        assert_eq!(schedule.major_period_minutes, 480);
+        assert_eq!(schedule.short_break_minutes, 180);
+        assert_eq!(schedule.long_break_minutes, 240);
+        // 三段合计不超过上限
+        let total = schedule.session_periods.morning as u16
+            + schedule.session_periods.afternoon as u16
+            + schedule.session_periods.evening as u16;
+        assert!(total <= MAX_PERIODS_PER_DAY as u16);
+        // 非法时间与日期退回默认值
+        assert_eq!(schedule.session_starts.morning, "08:00");
+        assert_eq!(schedule.summer_start_date, "05-01");
+        assert_eq!(schedule.winter_start_date, "10-01");
+    }
+
+    #[test]
+    fn keeps_manual_period_times_when_schedule_is_absent() {
+        let settings = normalize_timetable_settings(TimetableSettings {
+            semester_start: None,
+            period_times: vec![PeriodTime {
+                period: 1,
+                start: "07:00".to_string(),
+                end: "07:45".to_string(),
+            }],
+            schedule: None,
+        })
+        .expect("normalize");
+        assert!(settings.schedule.is_none());
+        assert_eq!(settings.period_times.len(), 1);
+        assert_eq!(settings.period_times[0].start, "07:00");
+    }
+
+    #[test]
+    fn accepts_more_than_twelve_periods() {
+        let period_times: Vec<PeriodTime> = (1..=14)
+            .map(|period| PeriodTime {
+                period,
+                start: format!("{:02}:00", 6 + period / 2),
+                end: format!("{:02}:40", 6 + period / 2),
+            })
+            .collect();
+        let settings = normalize_timetable_settings(TimetableSettings {
+            semester_start: None,
+            period_times,
+            schedule: Some(TimetableSchedule::default()),
+        })
+        .expect("normalize");
+        assert_eq!(settings.period_times.len(), 14);
+        assert!(settings.schedule.is_some());
     }
 }

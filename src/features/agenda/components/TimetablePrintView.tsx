@@ -1,6 +1,7 @@
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { weekdayLabels } from "../dateUtils";
-import { periodTime } from "../timetable";
+import { resolvePeriodTimes } from "../timetable";
 import type { Course, TimetableSettings } from "../types";
 
 interface TimetablePrintViewProps {
@@ -10,7 +11,6 @@ interface TimetablePrintViewProps {
   onClose: () => void;
 }
 
-const PERIODS = Array.from({ length: 12 }, (_, index) => index + 1);
 const DAYS = [1, 2, 3, 4, 5, 6, 7];
 
 export function TimetablePrintView({
@@ -21,6 +21,15 @@ export function TimetablePrintView({
 }: TimetablePrintViewProps) {
   const { t } = useTranslation();
   const labels = weekdayLabels(locale);
+  // 节数随「课程表设置」变化
+  const periodList = useMemo(
+    () => resolvePeriodTimes(settings).map((item) => item.period),
+    [settings],
+  );
+  const timeByPeriod = useMemo(
+    () => new Map(resolvePeriodTimes(settings).map((item) => [item.period, item])),
+    [settings],
+  );
 
   return (
     <div
@@ -65,8 +74,8 @@ export function TimetablePrintView({
             </tr>
           </thead>
           <tbody>
-            {PERIODS.map((period) => {
-              const time = periodTime(settings, period);
+            {periodList.map((period) => {
+              const time = timeByPeriod.get(period);
               return (
                 <tr key={period}>
                   <th className="border border-black/15 py-1 font-normal text-[9px] text-black/60">

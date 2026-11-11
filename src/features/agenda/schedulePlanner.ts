@@ -1,5 +1,6 @@
-import { addDaysToKey, combineDateTime, isoDayKey, isoTime } from "./dateUtils";
+import { addDaysToKey, combineDateTime, isoDayKey, isoTime, parseDayKey } from "./dateUtils";
 import { todoDeadlineDay } from "./ddlPressure";
+import { resolvePeriodTimes } from "./timetable";
 import type { AgendaEvent, AgendaSnapshot, Todo } from "./types";
 
 export interface PlanBlock {
@@ -76,8 +77,12 @@ function courseIntervalsForDay(dateKey: string, snapshot: AgendaSnapshot): Inter
       override?.action === "move" && override.startPeriod ? override.startPeriod : course.startPeriod;
     const endPeriod =
       override?.action === "move" && override.endPeriod ? override.endPeriod : course.endPeriod;
-    const start = snapshot.timetableSettings.periodTimes.find((item) => item.period === startPeriod);
-    const end = snapshot.timetableSettings.periodTimes.find((item) => item.period === endPeriod);
+    const periodTimes = resolvePeriodTimes(
+      snapshot.timetableSettings,
+      parseDayKey(dateKey),
+    );
+    const start = periodTimes.find((item) => item.period === startPeriod);
+    const end = periodTimes.find((item) => item.period === endPeriod);
     const from = start ? clockToMinutes(start.start) : null;
     const to = end ? clockToMinutes(end.end) : null;
     if (from !== null && to !== null && to > from) {

@@ -1,5 +1,5 @@
 import { addDaysToKey, isoDayKey, parseDayKey, startOfWeek } from "./dateUtils";
-import { courseMatchesWeek, semesterWeek } from "./timetable";
+import { courseMatchesWeek, resolvePeriodTimes, semesterWeek } from "./timetable";
 import type { AgendaSnapshot } from "./types";
 
 export const WEEKLY_REVIEW_CATEGORY = "每周回顾";
@@ -52,10 +52,12 @@ export function weeklyStats(snapshot: AgendaSnapshot, today: string): WeeklyStat
         override?.action === "move" && override.endPeriod
           ? override.endPeriod
           : course.endPeriod;
-      const from = snapshot.timetableSettings.periodTimes.find(
-        (item) => item.period === startPeriod,
+      const periodTimes = resolvePeriodTimes(
+        snapshot.timetableSettings,
+        parseDayKey(today),
       );
-      const to = snapshot.timetableSettings.periodTimes.find((item) => item.period === endPeriod);
+      const from = periodTimes.find((item) => item.period === startPeriod);
+      const to = periodTimes.find((item) => item.period === endPeriod);
       const startMinutes = from ? minutesOf(from.start) : null;
       const endMinutes = to ? minutesOf(to.end) : null;
       if (startMinutes !== null && endMinutes !== null && endMinutes > startMinutes) {
