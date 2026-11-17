@@ -1,23 +1,20 @@
-import { applyTheme } from "./theme";
+import { applyTheme, setThemeRevealing } from "./theme";
 import type { ThemeOption } from "./types";
 
 type Origin = { x: number; y: number };
+type ViewTransitionLike = {
+  ready: Promise<void>;
+  finished: Promise<void>;
+  skipTransition: () => void;
+};
+type DocumentWithViewTransition = Document & {
+  startViewTransition?: (callback: () => void) => ViewTransitionLike;
+};
 
 const EXPAND_DURATION = 460;
-const FADE_DURATION = 140;
 const EXPAND_EASING = "cubic-bezier(0.25, 0.46, 0.45, 0.94)";
 
-const LIGHT_GRADIENT =
-  "radial-gradient(circle at center, rgba(246,243,236,0.45) 0%, rgba(246,243,236,0.45) 70%, rgba(246,243,236,0) 100%)";
-const DARK_GRADIENT =
-  "radial-gradient(circle at center, rgba(34,33,32,0.45) 0%, rgba(34,33,32,0.45) 70%, rgba(34,33,32,0) 100%)";
-
-function resolveTheme(option: ThemeOption): "light" | "dark" {
-  if (option === "system") {
-    return window.matchMedia?.("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-  }
-  return option;
-}
+let activeTransition: ViewTransitionLike | null = null;
 
 function prefersReducedMotion(): boolean {
   return window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
@@ -48,58 +45,60 @@ function coverRadius(origin: Origin): number {
   );
 }
 
+function stopActiveTransition(): void {
+  if (!activeTransition) return;
+  activeTransition.skipTransition();
+  activeTransition = null;
+  setThemeRevealing(false);
+}
+
 /**
- * 以被点击的按键为中心，用单个圆形色幕由圆心向外扩散完成深浅色转换。
- * 只动画 transform / opacity（GPU 合成层），不做全屏快照，避免卡顿。
- * 圆覆盖整屏后才切换 data-theme，随后淡出色幕露出新主题界面，全程无跳变。
+ * 以被点击的按键为圆心，让新主题页面从圆心向外揭示旧主题页面。
+ *
+ * 用 View Transition 的快照做 clip-path 揭示：旧主题在下、新主题在上，
+ * 不是半透明色幕叠在页面上，所以过渡中不会出现灰蒙蒙的叠加效果。
  */
 export function switchThemeWithReveal(option: ThemeOption, origin?: Origin): void {
-  const root = document.documentElement;
-  const apply = () => applyTheme(option, false);
-
-  if (prefersReducedMotion() || root.classList.contains("theme-revealing")) {
-    apply();
-    return;
-  }
-
   const center = resolveOrigin(origin);
   const radius = coverRadius(center);
-  const circle = document.createElement("div");
-  circle.className = "theme-reveal-circle";
-  circle.style.width = `${radius * 2}px`;
-  circle.style.height = `${radius * 2}px`;
-  circle.style.left = `${center.x - radius}px`;
-  circle.style.top = `${center.y - radius}px`;
-  circle.style.background = resolveTheme(option) === "dark" ? DARK_GRADIENT : LIGHT_GRADIENT;
-  document.body.appendChild(circle);
+  const doc = document as DocumentWithViewTransition;
 
-  if (typeof circle.animate !== "function") {
-    circle.remove();
-    apply();
+  if (prefersReducedMotion() || typeof doc.startViewTransition !== "function") {
+    stopActiveTransition();
+    applyTheme(option);
     return;
   }
 
-  root.classList.add("theme-revealing");
-  const expand = circle.animate(
-    [
-      { transform: "scale(0)", opacity: 1 },
-      { transform: "scale(1)", opacity: 1 },
-    ],
-    { duration: EXPAND_DURATION, easing: EXPAND_EASING, fill: "forwards" },
-  );
+  // 动画途中改选：跳过上一轮，从新按键重新开始揭示
+  stopActiveTransition();
+  setThemeRevealing(true);
 
-  void expand.finished
-    .then(() => {
-      // 圆已覆盖整屏，此时切主题被色幕遮住，不会闪
-      apply();
-      return circle.animate(
-        [{ opacity: 1 }, { opacity: 0 }],
-        { duration: FADE_DURATION, easing: "ease-out", fill: "forwards" },
-      ).finished;
-    })
+  const transition = doc.startViewTransition(() => applyTheme(option, false));
+  activeTransition = transition;
+
+  void transition.ready
+    .then(() =>
+      document.documentElement.animate(
+        {
+          clipPath: [
+            `circle(0px at ${center.x}px ${center.y}px)`,
+            `circle(${radius}px at ${center.x}px ${center.y}px)`,
+          ],
+        },
+        {
+          duration: EXPAND_DURATION,
+          easing: EXPAND_EASING,
+          fill: "forwards",
+          pseudoElement: "::view-transition-new(root)",
+        },
+      ).finished,
+    )
     .catch(() => undefined)
     .finally(() => {
-      circle.remove();
-      root.classList.remove("theme-revealing");
+      // 只清理自己那一轮，不能被旧动画误关
+      if (activeTransition === transition) {
+        activeTransition = null;
+        setThemeRevealing(false);
+      }
     });
 }

@@ -9,7 +9,7 @@ import { TileShowcase } from "./components/TileShowcase";
 import { ToastContainer } from "./components/Toast";
 import { tabToIndentListener } from "indent-textarea";
 import { getConfig } from "./features/settings/api";
-import { applyTheme, watchSystemTheme } from "./features/settings/theme";
+import { applyTheme, isThemeRevealing, watchSystemTheme } from "./features/settings/theme";
 import type { AppConfig, ThemeOption } from "./features/settings/types";
 import { getInitialRoute } from "./features/windows/windowRoutes";
 import { syncLanguage } from "./locales";
@@ -40,7 +40,7 @@ function App() {
     let themeCleanup = () => {};
     const unlisten = listen<AppConfig>("config-changed", (event) => {
       const theme = (event.payload.theme || "system") as ThemeOption;
-      applyTheme(theme);
+      if (!isThemeRevealing()) applyTheme(theme);
       themeCleanup();
       themeCleanup = watchSystemTheme(theme);
       document.documentElement.style.setProperty(

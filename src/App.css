@@ -132,16 +132,20 @@ html.widget-window .widget-hit-area > * {
   pointer-events: auto;
 }
 
-/* 主题切换：以按键为中心的圆形色幕，只动画 transform / opacity（合成层） */
-.theme-reveal-circle {
-  position: fixed;
-  z-index: 2147483647;
-  pointer-events: none;
-  border-radius: 50%;
-  transform: scale(0);
-  transform-origin: center;
-  will-change: transform, opacity;
-  backface-visibility: hidden;
+/*
+ * 主题切换：新主题页面以按键为圆心揭示旧主题页面。
+ * 关掉默认的交叉淡入淡出，避免两层半透明叠加出灰色蒙版。
+ */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+::view-transition-old(root) {
+  z-index: 0;
+}
+::view-transition-new(root) {
+  z-index: 1;
 }
 
 /* Global resets */
